@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:gramify/core/common/shared/colors.dart';
+import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 
 class InputBoxMobile extends StatelessWidget {
-  const InputBoxMobile({super.key});
+  const InputBoxMobile({super.key, required this.hintText});
 
+  final String hintText;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -10,8 +13,10 @@ class InputBoxMobile extends StatelessWidget {
 
       child: TextField(
         decoration: InputDecoration(
+          labelText: hintText,
+          labelStyle: txtStyle(15, lightBlackforText),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black, width: 1),
+            borderSide: BorderSide(color: Colors.black, width: 2),
             borderRadius: BorderRadius.circular(15),
           ),
           border: OutlineInputBorder(

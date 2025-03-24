@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gramify/auth/presentation/login_res_page.dart';
+import 'package:gramify/auth/presentation/signup_res_page.dart';
+import 'package:gramify/core/routes/app_routes_config.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -16,12 +18,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: MyAppRoutes.router,
       title: 'Gramify',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const Gramify(),
     );
   }
 }
@@ -31,6 +33,6 @@ class Gramify extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LoginResPage();
+    return SignupResPage();
   }
 }

@@ -17,11 +17,13 @@ class LoginPageMobile extends StatelessWidget {
     var wiidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Align(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+        child: SizedBox(
+          height: heeight,
+          child: Column(
+            mainAxisAlignment:
+                MainAxisAlignment.spaceBetween, // Pushes elements apart
+            children: [
+              Column(
                 children: [
                   GestureDetector(
                     onTap: () {
@@ -41,23 +43,41 @@ class LoginPageMobile extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Gap(heeight / 6),
+                  Gap(heeight / 10),
                   Image.asset(
                     'assets/images/logo_black.png',
                     color: themeColor,
                     width: wiidth / 3,
-                    height: heeight / 8,
+                    height: heeight / 10,
                   ),
-                  Gap(heeight / 6),
+                  Gap(heeight / 8),
                   Padding(
-                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Column(
-                      children: [InputBoxMobile(), InputBoxMobile()],
+                      children: [
+                        InputBoxMobile(hintText: 'Email'),
+                        InputBoxMobile(hintText: 'Password'),
+                        Gap(heeight / 25),
+                        CustomButton(
+                          buttonRadius: 18,
+                          isFilled: true,
+                          buttonText: 'Log in',
+                        ),
+                        forgotPasswordButton(),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: CustomButton(
+                  buttonRadius: 18,
+                  isFilled: false,
+                  buttonText: 'Create new account',
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -95,6 +115,13 @@ class LoginPageMobile extends StatelessWidget {
       },
     );
   }
+
+  Widget forgotPasswordButton() => TextButton(
+    onPressed: () {
+      log('tapped line 121');
+    },
+    child: Text('Forgot Password?', style: txtStyle(18, Colors.black87)),
+  );
 }
 
 class LoginPageWeb extends StatelessWidget {
@@ -112,7 +139,7 @@ class LoginPageWeb extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.black, Color(0xFF2E2E2E)],
+            colors: [webBackGrad1, webBackGrad2],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -189,7 +216,11 @@ class LoginPageWeb extends StatelessWidget {
                                           Gap(20),
                                           InputBox(hintText: 'Password'),
                                           Gap(30),
-                                          CustomButton(),
+                                          CustomButton(
+                                            buttonRadius: 12,
+                                            isFilled: true,
+                                            buttonText: 'Log in',
+                                          ),
                                           Gap(20),
                                           _orDivider(),
                                           Gap(20),
