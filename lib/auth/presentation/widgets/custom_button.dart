@@ -8,17 +8,24 @@ class CustomButton extends StatelessWidget {
     required this.buttonRadius,
     required this.isFilled,
     required this.buttonText,
+    required this.isFacebookButton,
   });
   final double buttonRadius;
   final bool isFilled;
   final String buttonText;
+  final bool isFacebookButton;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height / 18,
       decoration: BoxDecoration(
-        color: isFilled ? Color(0xFF66FF00) : Colors.transparent,
+        color:
+            isFilled && isFacebookButton
+                ? facebookBlue
+                : isFilled
+                ? themeColor
+                : Colors.transparent,
         border:
             isFilled
                 ? Border.all(width: 1, color: Colors.black)
@@ -28,8 +35,20 @@ class CustomButton extends StatelessWidget {
       child: Center(
         child: Text(
           buttonText,
-          style: txtStyle(22, isFilled ? Colors.black54 : themeColor).copyWith(
-            fontWeight: !isFilled ? FontWeight.w400 : FontWeight.normal,
+          style: txtStyle(
+            isFilled && isFacebookButton ? 13 : 22,
+            isFilled && isFacebookButton
+                ? Colors.white
+                : isFilled
+                ? Colors.black54
+                : themeColor,
+          ).copyWith(
+            fontWeight:
+                isFilled && isFacebookButton
+                    ? FontWeight.bold
+                    : !isFilled
+                    ? FontWeight.w400
+                    : FontWeight.normal,
           ),
         ),
       ),

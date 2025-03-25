@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gramify/auth/presentation/login_res_page.dart';
 import 'package:gramify/auth/presentation/signup_res_page.dart';
 import 'package:gramify/core/routes/app_routes_config.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

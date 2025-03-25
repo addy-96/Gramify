@@ -62,6 +62,7 @@ class LoginPageMobile extends StatelessWidget {
                           buttonRadius: 18,
                           isFilled: true,
                           buttonText: 'Log in',
+                          isFacebookButton: false,
                         ),
                         forgotPasswordButton(),
                       ],
@@ -72,6 +73,7 @@ class LoginPageMobile extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: CustomButton(
+                  isFacebookButton: false,
                   buttonRadius: 18,
                   isFilled: false,
                   buttonText: 'Create new account',
@@ -217,6 +219,7 @@ class LoginPageWeb extends StatelessWidget {
                                           InputBox(hintText: 'Password'),
                                           Gap(30),
                                           CustomButton(
+                                            isFacebookButton: false,
                                             buttonRadius: 12,
                                             isFilled: true,
                                             buttonText: 'Log in',
