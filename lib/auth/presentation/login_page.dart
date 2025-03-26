@@ -15,71 +15,75 @@ class LoginPageMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     var heeight = MediaQuery.of(context).size.height;
     var wiidth = MediaQuery.of(context).size.width;
+
+    log('height : $heeight');
+    log('width : $wiidth');
     return Scaffold(
       body: SafeArea(
         child: SizedBox(
           height: heeight,
-          child: Column(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween, // Pushes elements apart
-            children: [
-              Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      onLanguageSelector(context); // yet to implement
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'English (India)',
-                          style: txtStyle(15, lightBlackforText),
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_down_outlined,
-                          color: lightBlackforText,
-                        ),
-                      ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween, // Pushes elements apart
+              children: [
+                Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        onLanguageSelector(context); // yet to implement
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'English (India)',
+                            style: txtStyle(15, lightBlackforText),
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_down_outlined,
+                            color: lightBlackforText,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Gap(heeight / 10),
-                  Image.asset(
-                    'assets/images/logo_black.png',
-                    color: themeColor,
-                    width: wiidth / 3,
-                    height: heeight / 10,
-                  ),
-                  Gap(heeight / 8),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      children: [
-                        InputBoxMobile(hintText: 'Email'),
-                        InputBoxMobile(hintText: 'Password'),
-                        Gap(heeight / 25),
-                        CustomButton(
-                          buttonRadius: 18,
-                          isFilled: true,
-                          buttonText: 'Log in',
-                          isFacebookButton: false,
-                        ),
-                        forgotPasswordButton(),
-                      ],
+                    Gap(heeight / 10),
+                    Image.asset(
+                      'assets/images/logo_black.png',
+                      color: themeColor,
+                      width: wiidth / 3,
+                      height: heeight / 10,
                     ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: CustomButton(
-                  isFacebookButton: false,
-                  buttonRadius: 18,
-                  isFilled: false,
-                  buttonText: 'Create new account',
+                    Gap(heeight / 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Column(
+                        children: [
+                          InputBoxMobile(hintText: 'Email'),
+                          InputBoxMobile(hintText: 'Password'),
+                          Gap(heeight / 25),
+                          CustomButton(
+                            buttonRadius: 18,
+                            isFilled: true,
+                            buttonText: 'Log in',
+                            isFacebookButton: false,
+                          ),
+                          forgotPasswordButton(),
+                          Gap(30),
+                          CustomButton(
+                            isFacebookButton: false,
+                            buttonRadius: 18,
+                            isFilled: false,
+                            buttonText: 'Create new account',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

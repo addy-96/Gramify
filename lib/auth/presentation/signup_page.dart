@@ -11,7 +11,60 @@ class SignupPageMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    final heeight = MediaQuery.of(context).size.height;
+    final wiidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      body: SafeArea(
+        child: Flex(
+          direction: Axis.vertical,
+          children: [
+            Flexible(
+              flex: /* (heeight / 3).toInt() */ 3,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8, left: 12, right: 12),
+                child: Column(
+                  children: [
+                    Text(
+                      'What\'s your email address?',
+                      style: txtStyle(
+                        25,
+                        Colors.black,
+                      ).copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      'Enter the email address at which you can be contacted. No one will see this on your profile.',
+                      textAlign: TextAlign.center,
+                      style: txtStyle(15, Colors.black87),
+                    ),
+                    Gap(10),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        children: [
+                          TextField(
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 0.1,
+                                  color: Colors.black38,
+                                ),
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(flex: 3, child: Container(color: Colors.purple)),
+            Expanded(flex: 1, child: Container(color: Colors.green)),
+          ],
+        ),
+      ),
+    );
   }
 }
 
