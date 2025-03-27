@@ -43,6 +43,8 @@ class SignupPageMobile extends StatelessWidget {
                         children: [
                           TextField(
                             decoration: InputDecoration(
+                              labelText: 'Email',
+                              labelStyle: txtStyle(18, Colors.black),
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   width: 0.1,
@@ -52,6 +54,24 @@ class SignupPageMobile extends StatelessWidget {
                               ),
                             ),
                           ),
+                          Gap(30),
+                          SizedBox(
+                            height: heeight / 12,
+                            child: CustomButton(
+                              buttonRadius: 8,
+                              isFilled: true,
+                              buttonText: 'Submit',
+                              isFacebookButton: false,
+                              onTapEvent: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => SignUpDetailsPageMobile(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -59,9 +79,125 @@ class SignupPageMobile extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(flex: 3, child: Container(color: Colors.purple)),
-            Expanded(flex: 1, child: Container(color: Colors.green)),
+            Flexible(
+              flex: 1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Already have an account?',
+                      style: txtStyle(
+                        18,
+                        themeColor,
+                      ).copyWith(fontWeight: FontWeight.w400),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class SignUpDetailsPageMobile extends StatefulWidget {
+  const SignUpDetailsPageMobile({super.key});
+
+  @override
+  State<SignUpDetailsPageMobile> createState() =>
+      _SignUpDetailsPageMobileState();
+}
+
+class _SignUpDetailsPageMobileState extends State<SignUpDetailsPageMobile> {
+  @override
+  Widget build(BuildContext context) {
+    final heeight = MediaQuery.of(context).size.height;
+    final wiidth = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      appBar: AppBar(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8, left: 12, right: 12),
+                child: Column(
+                  children: [
+                    Text(
+                      'Enter your details',
+                      style: txtStyle(
+                        25,
+                        Colors.black,
+                      ).copyWith(fontWeight: FontWeight.w400),
+                    ),
+                    Text(
+                      'No worries, this information can be changed later.',
+                      textAlign: TextAlign.center,
+                      style: txtStyle(15, Colors.black87),
+                    ),
+                    Gap(10),
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Full Name',
+                        labelStyle: txtStyle(18, Colors.black),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 0.1,
+                            color: Colors.black38,
+                          ),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ),
+                    Gap(15),
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Username',
+                        labelStyle: txtStyle(18, Colors.black),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 0.1,
+                            color: Colors.black38,
+                          ),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ),
+                    Gap(15),
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        labelStyle: txtStyle(18, Colors.black),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 0.1,
+                            color: Colors.black38,
+                          ),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ),
+                    Gap(20),
+                    SizedBox(
+                      height: heeight / 12,
+                      child: CustomButton(
+                        buttonRadius: 12,
+                        isFilled: true,
+                        buttonText: 'Create account',
+                        isFacebookButton: false,
+                        onTapEvent: () {},
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -134,6 +270,7 @@ class _SignupPageWebState extends State<SignupPageWeb> {
                           buttonRadius: 8,
                           isFilled: true,
                           buttonText: 'Log in with Facebook',
+                          onTapEvent: () {}, //yet to implement
                         ),
                       ),
                       Gap(heiight / 70),
@@ -152,6 +289,7 @@ class _SignupPageWebState extends State<SignupPageWeb> {
                           isFilled: true,
                           buttonText: 'Sign up.',
                           isFacebookButton: false,
+                          onTapEvent: () {}, //yet to implement
                         ),
                       ),
                     ],

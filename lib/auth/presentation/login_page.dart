@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:gramify/auth/presentation/widgets/custom_button.dart';
@@ -68,6 +67,7 @@ class LoginPageMobile extends StatelessWidget {
                             isFilled: true,
                             buttonText: 'Log in',
                             isFacebookButton: false,
+                            onTapEvent: (){}, //yet to implemnt
                           ),
                           forgotPasswordButton(),
                           Gap(30),
@@ -76,6 +76,7 @@ class LoginPageMobile extends StatelessWidget {
                             buttonRadius: 18,
                             isFilled: false,
                             buttonText: 'Create new account',
+                            onTapEvent: (){}, //yet to implement
                           ),
                         ],
                       ),
@@ -227,6 +228,7 @@ class LoginPageWeb extends StatelessWidget {
                                             buttonRadius: 12,
                                             isFilled: true,
                                             buttonText: 'Log in',
+                                            onTapEvent: (){},
                                           ),
                                           Gap(20),
                                           _orDivider(),
