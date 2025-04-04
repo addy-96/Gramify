@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:gramify/core/errors/server_exception.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -9,25 +10,21 @@ abstract interface class AuthRemoteDatasource {
     required String password,
   });
 
-  Future<String> logUserIn({
-    required String email,
-    required String password,
-  });
+  Future<String> logUserIn({required String email, required String password});
 
   Future<String> logUserOut();
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
-  AuthRemoteDatasourceImpl({
-    required this.supabase,
-  
-  });
+  AuthRemoteDatasourceImpl({required this.supabase});
 
   final Supabase supabase;
 
   @override
-  Future<String> logUserIn(
-      {required String email, required String password}) async {
+  Future<String> logUserIn({
+    required String email,
+    required String password,
+  }) async {
     try {
       final res = await supabase.client.auth.signInWithPassword(
         password: password,
@@ -40,9 +37,6 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
         throw ServerException(message: 'Authentication Failed!');
       }
       log('${res.user!.id} Signed Up');
-
-
-
       return res.user!.id;
     } on ServerException catch (err) {
       throw ServerException(message: err.toString());

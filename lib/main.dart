@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gramify/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/auth/presentation/signup_res_page.dart';
 import 'package:gramify/core/routes/app_routes_config.dart';
 import 'package:gramify/dependencies.dart';
@@ -20,11 +22,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: MyAppRoutes.router,
-      title: 'Gramify',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create:
+              (context) => AuthBloc(
+                loginUsecase: servicelocator(),
+                signupUsecase: servicelocator(),
+              ),
+        ),
+      ],
+      child: MaterialApp.router(
+        routerConfig: MyAppRoutes.router,
+        title: 'Gramify',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
       ),
     );
   }

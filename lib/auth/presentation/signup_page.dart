@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:gramify/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/auth/presentation/widgets/custom_button.dart';
 import 'package:gramify/core/common/shared/colors.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
@@ -213,11 +215,33 @@ class SignupPageWeb extends StatefulWidget {
 
 class _SignupPageWebState extends State<SignupPageWeb> {
   final ScrollController _scrollController = ScrollController();
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _emailController.dispose();
+    _fullNameController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
     super.dispose();
+  }
+
+  void _onSignup() async {
+    if (_formkey.currentState!.validate()) {
+      context.read<AuthBloc>().add(
+        SignUpRequested(
+          email: _emailController.text,
+          password: _passwordController.text,
+          fullname: _fullNameController.text,
+          username: _usernameController.text,
+        ),
+      );
+    }
   }
 
   @override
@@ -246,53 +270,58 @@ class _SignupPageWebState extends State<SignupPageWeb> {
                 ),
                 child: Padding(
                   padding: EdgeInsets.only(top: 30, left: 40, right: 40),
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/images/logo_black.png',
-                        color: themeColor,
-                        width: getWiidth(wiidth) / 1.8,
-                      ),
-                      Gap(heiight / 50),
-                      Text(
-                        'Sign up to see photos and videos from your friends.',
-                        textAlign: TextAlign.center,
-                        style: txtStyle(
-                          13,
-                          Color(0xFFa8a892),
-                        ).copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      Gap(heiight / 60),
-                      SizedBox(
-                        height: 40,
-                        child: CustomButton(
-                          isFacebookButton: true,
-                          buttonRadius: 8,
-                          isFilled: true,
-                          buttonText: 'Log in with Facebook',
-                          onTapEvent: () {}, //yet to implement
+                  child: Form(
+                    key: _formkey,
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          'assets/images/logo_black.png',
+                          color: themeColor,
+                          width: getWiidth(wiidth) / 1.8,
                         ),
-                      ),
-                      Gap(heiight / 70),
-                      _orDivider(),
-                      _inputBox('Email'),
-                      _inputBox('Full Name'),
-                      _inputBox('Username'),
-                      _inputBox('Password'),
-                      Gap(5),
-                      _policyText(),
-                      Gap(20),
-                      SizedBox(
-                        height: 40,
-                        child: CustomButton(
-                          buttonRadius: 8,
-                          isFilled: true,
-                          buttonText: 'Sign up.',
-                          isFacebookButton: false,
-                          onTapEvent: () {}, //yet to implement
+                        Gap(heiight / 50),
+                        Text(
+                          'Sign up to see photos and videos from your friends.',
+                          textAlign: TextAlign.center,
+                          style: txtStyle(
+                            13,
+                            Color(0xFFa8a892),
+                          ).copyWith(fontWeight: FontWeight.w600),
                         ),
-                      ),
-                    ],
+                        Gap(heiight / 60),
+                        SizedBox(
+                          height: 40,
+                          child: CustomButton(
+                            isFacebookButton: true,
+                            buttonRadius: 8,
+                            isFilled: true,
+                            buttonText: 'Log in with Facebook',
+                            onTapEvent: () {}, //yet to implement
+                          ),
+                        ),
+                        Gap(heiight / 70),
+                        _orDivider(),
+                        _inputBox('Email', _emailController),
+                        _inputBox('Full Name', _fullNameController),
+                        _inputBox('Username', _usernameController),
+                        _inputBox('Password', _passwordController),
+                        Gap(5),
+                        _policyText(),
+                        Gap(20),
+                        SizedBox(
+                          height: 40,
+                          child: CustomButton(
+                            buttonRadius: 8,
+                            isFilled: true,
+                            buttonText: 'Sign up.',
+                            isFacebookButton: false,
+                            onTapEvent: () {
+                              _onSignup();
+                            }, //yet to implement
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -357,12 +386,51 @@ class _SignupPageWebState extends State<SignupPageWeb> {
     );
   }
 
-  Widget _inputBox(String hintText) {
+  Widget _inputBox(String hintText, TextEditingController textcontroller) {
+     
+    
     return Padding(
+
+      
       padding: const EdgeInsets.only(top: 6, bottom: 6),
       child: SizedBox(
         height: 38,
-        child: TextField(
+        child: TextFormField(
+          keyboardType: TextInputType.emailAddress,
+          validator: (value) {
+            if (hintText == 'Email') {
+              return textcontroller.text.trim().isEmpty
+                  ? 'Please Enter the email to proceeed'
+                  : !textcontroller.text.contains('@') ||
+                      !textcontroller.text.contains('.') ||
+                      !textcontroller.text.trim().contains(' ')
+                  ? 'Invalid Email'
+                  : '';
+                  
+            }
+            
+            else if (hintText == 'Full name') {
+              return textcontroller.text.trim().length > 25
+                  ? 'Full name can be max. 25 charchters.'
+                  : '';
+            }
+            else if (hintText == 'Username') {
+              return textcontroller.text.trim().length < 5 ||
+                      textcontroller.text.trim().length > 15
+                  ? 'Username should be between 5 to 15 charcters.'
+                  : textcontroller.text.trim().contains(' ')
+                  ? 'Sorry! No spaces allowed in Username'
+                  : '';
+            }
+            else if (hintText == 'Password') {
+              return textcontroller.text.trim().length < 8 ||
+                      textcontroller.text.trim().length > 18
+                  ? 'Password can be between 8 to 18 charcters'
+                  : '';
+            }
+            return null;
+          },
+          controller: textcontroller,
           style: txtStyle(14, Colors.white60),
           cursorColor: Colors.white,
           decoration: InputDecoration(
