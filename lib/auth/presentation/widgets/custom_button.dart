@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gramify/core/common/shared/colors.dart';
+import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 
 class CustomButton extends StatelessWidget {
@@ -9,7 +9,7 @@ class CustomButton extends StatelessWidget {
     required this.isFilled,
     required this.buttonText,
     required this.isFacebookButton,
-    required this.onTapEvent
+    required this.onTapEvent,
   });
   final double buttonRadius;
   final bool isFilled;

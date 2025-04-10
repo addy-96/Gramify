@@ -4,7 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:gramify/auth/presentation/widgets/custom_button.dart';
 import 'package:gramify/auth/presentation/widgets/input_box.dart';
 import 'package:gramify/auth/presentation/widgets/input_box_mobile.dart';
-import 'package:gramify/core/common/shared/colors.dart';
+import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 
 class LoginPageMobile extends StatelessWidget {
@@ -67,7 +67,7 @@ class LoginPageMobile extends StatelessWidget {
                             isFilled: true,
                             buttonText: 'Log in',
                             isFacebookButton: false,
-                            onTapEvent: (){}, //yet to implemnt
+                            onTapEvent: () {}, //yet to implemnt
                           ),
                           forgotPasswordButton(),
                           Gap(30),
@@ -76,7 +76,7 @@ class LoginPageMobile extends StatelessWidget {
                             buttonRadius: 18,
                             isFilled: false,
                             buttonText: 'Create new account',
-                            onTapEvent: (){}, //yet to implement
+                            onTapEvent: () {}, //yet to implement
                           ),
                         ],
                       ),
@@ -228,7 +228,7 @@ class LoginPageWeb extends StatelessWidget {
                                             buttonRadius: 12,
                                             isFilled: true,
                                             buttonText: 'Log in',
-                                            onTapEvent: (){},
+                                            onTapEvent: () {},
                                           ),
                                           Gap(20),
                                           _orDivider(),

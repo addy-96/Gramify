@@ -16,15 +16,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   _onLogInRequested(LogInRequested event, Emitter<AuthState> emit) async {
+    emit(AuthloadingState());
     final res = await loginUsecase.call(
       LoginUserParams(email: event.email, password: event.password),
     );
 
     res.fold(
-      (l) => emit(AuthFilure(errorMessage: l.message)),
+      (l) => emit(AuthFailure(errorMessage: l.message)),
       (r) => emit(AuthLogInSuccess()),
     );
   }
 
-  _onSignUpRequested(SignUpRequested event, Emitter<AuthState> emit) {}
+  _onSignUpRequested(SignUpRequested event, Emitter<AuthState> emit) async {
+    emit(AuthloadingState());
+    final res = await signupUsecase.call(
+      UserSignUpParams(
+        email: event.email,
+        username: event.username,
+        password: event.password,
+      ),
+    );
+
+    res.fold(
+      (l) => emit(AuthFailure(errorMessage: l.message)),
+      (r) => emit(AuthSignUpSuccess(userID: r, username: r)),
+    );
+  }
 }

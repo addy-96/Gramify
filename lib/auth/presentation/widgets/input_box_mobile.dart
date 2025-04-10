@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gramify/core/common/shared/colors.dart';
+import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 
 class InputBoxMobile extends StatelessWidget {

@@ -4,11 +4,18 @@ sealed class AuthState {}
 
 final class AuthInitialState extends AuthState {}
 
-final class AuthSignUpSuccess extends AuthState {}
+final class AuthloadingState extends AuthState {}
+
+final class AuthSignUpSuccess extends AuthState {
+  final String userID;
+  final String username;
+
+  AuthSignUpSuccess({required this.userID, required this.username});
+}
 
 final class AuthLogInSuccess extends AuthState {}
 
-final class AuthFilure extends AuthState {
+final class AuthFailure extends AuthState {
   final String errorMessage;
-  AuthFilure({required this.errorMessage});
+  AuthFailure({required this.errorMessage});
 }

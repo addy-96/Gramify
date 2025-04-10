@@ -1,15 +1,48 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:gramify/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/auth/presentation/widgets/custom_button.dart';
-import 'package:gramify/core/common/shared/colors.dart';
+import 'package:gramify/core/common/shared_attri/colors.dart';
+import 'package:gramify/core/common/shared_fun/csnack.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
+import 'package:gramify/test.dart';
 
-class SignupPageMobile extends StatelessWidget {
+class SignupPageMobile extends StatefulWidget {
   const SignupPageMobile({super.key});
+
+  @override
+  State<SignupPageMobile> createState() => _SignupPageMobileState();
+}
+
+class _SignupPageMobileState extends State<SignupPageMobile> {
+  final TextEditingController _emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  void _onSubmit() {
+    if (_emailController.text.trim().isEmpty) {
+      return csnack(context, 'Enter email to proceed', themeColor);
+    } else if (!_emailController.text.trim().contains('@') ||
+        !_emailController.text.trim().contains('.')) {
+      return csnack(context, 'Invalid Email!', themeColor);
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder:
+            (ctx) => SignUpDetailsPageMobile(
+              userEmail: _emailController.text.trim(),
+            ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +77,7 @@ class SignupPageMobile extends StatelessWidget {
                       child: Column(
                         children: [
                           TextField(
+                            controller: _emailController,
                             decoration: InputDecoration(
                               labelText: 'Email',
                               labelStyle: txtStyle(18, Colors.black),
@@ -65,12 +99,7 @@ class SignupPageMobile extends StatelessWidget {
                               buttonText: 'Submit',
                               isFacebookButton: false,
                               onTapEvent: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => SignUpDetailsPageMobile(),
-                                  ),
-                                );
+                                _onSubmit();
                               },
                             ),
                           ),
@@ -107,7 +136,9 @@ class SignupPageMobile extends StatelessWidget {
 }
 
 class SignUpDetailsPageMobile extends StatefulWidget {
-  const SignUpDetailsPageMobile({super.key});
+  const SignUpDetailsPageMobile({super.key, required this.userEmail});
+
+  final String userEmail;
 
   @override
   State<SignUpDetailsPageMobile> createState() =>
@@ -115,96 +146,178 @@ class SignUpDetailsPageMobile extends StatefulWidget {
 }
 
 class _SignUpDetailsPageMobileState extends State<SignUpDetailsPageMobile> {
+  final TextEditingController _fullNameColtroller = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool validInput = false;
+
+  validateInput() {
+    if (_fullNameColtroller.text.trim().isEmpty) {
+      return csnack(context, 'Enter FUll name to proceed.', themeColor);
+    } else if (_fullNameColtroller.text.length < 5 ||
+        _fullNameColtroller.text.length > 25) {
+      return csnack(
+        context,
+        'Fullname should be between 5 to 25 charcters.',
+        themeColor,
+      );
+    }
+
+    if (_usernameController.text.trim().isEmpty) {
+      return csnack(context, 'Enter username to proceed', themeColor);
+    } else if (_usernameController.text.trim().length < 8 ||
+        _usernameController.text.trim().length > 19 ||
+        _usernameController.text.contains(' ')) {
+      return csnack(
+        context,
+        'Username should be between 8 to 19 charcters withou spaces',
+        themeColor,
+      );
+    }
+
+    if (_passwordController.text.trim().isEmpty) {
+      return csnack(context, 'Enter password to proceed', themeColor);
+    } else if (_passwordController.text.trim().length < 8 ||
+        _passwordController.text.trim().length > 30) {
+      return csnack(
+        context,
+        'Password should be between 8 to 30 charcters',
+        themeColor,
+      );
+    }
+
+    validInput = true;
+  }
+
+  _onCreateAccount() {
+    validInput = false;
+    validateInput();
+    if (validInput) {
+      context.read<AuthBloc>().add(
+        SignUpRequested(
+          email: widget.userEmail,
+          password: _passwordController.text.trim(),
+          fullname: _fullNameColtroller.text.trim(),
+          username: _usernameController.text.trim(),
+        ),
+      );
+    } else {
+      log('Invalid Input');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final heeight = MediaQuery.of(context).size.height;
     final wiidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      appBar: AppBar(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 8, left: 12, right: 12),
-                child: Column(
-                  children: [
-                    Text(
-                      'Enter your details',
-                      style: txtStyle(
-                        25,
-                        Colors.black,
-                      ).copyWith(fontWeight: FontWeight.w400),
-                    ),
-                    Text(
-                      'No worries, this information can be changed later.',
-                      textAlign: TextAlign.center,
-                      style: txtStyle(15, Colors.black87),
-                    ),
-                    Gap(10),
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Full Name',
-                        labelStyle: txtStyle(18, Colors.black),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 0.1,
-                            color: Colors.black38,
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthSignUpSuccess) {
+          context.go('/home/:${state.userID}/:Aditya');
+        }
+
+        if (state is AuthFailure) {
+          csnack(context, state.errorMessage, Colors.red);
+        }
+      },
+
+      builder: (context, state) {
+        if (state is AuthloadingState) {
+          return Scaffold(body: Center(child: CircularProgressIndicator()));
+        }
+
+        return Scaffold(
+          appBar: AppBar(),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, left: 12, right: 12),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(child: Text('Hello'));
+                              },
+                            );
+                          },
+                          child: Text(
+                            widget.userEmail,
+                            style: txtStyle(
+                              22,
+                              Colors.black,
+                            ).copyWith(fontWeight: FontWeight.bold),
                           ),
-                          borderRadius: BorderRadius.circular(14),
                         ),
-                      ),
-                    ),
-                    Gap(15),
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Username',
-                        labelStyle: txtStyle(18, Colors.black),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 0.1,
-                            color: Colors.black38,
+                        Gap(15),
+                        Text(
+                          'Enter your details',
+                          style: txtStyle(
+                            25,
+                            Colors.black,
+                          ).copyWith(fontWeight: FontWeight.w400),
+                        ),
+                        Text(
+                          'No worries, this information can be changed later.',
+                          textAlign: TextAlign.center,
+                          style: txtStyle(15, Colors.black87),
+                        ),
+                        Gap(10),
+                        _inputField('FUll Name', _fullNameColtroller),
+                        Gap(15),
+                        _inputField('Username', _usernameController),
+                        Gap(15),
+                        _inputField('Password', _passwordController),
+                        Gap(20),
+                        SizedBox(
+                          height: heeight / 12,
+                          child: CustomButton(
+                            buttonRadius: 12,
+                            isFilled: true,
+                            buttonText: 'Create account',
+                            isFacebookButton: false,
+                            onTapEvent: () {
+                              _onCreateAccount();
+                            },
                           ),
-                          borderRadius: BorderRadius.circular(14),
                         ),
-                      ),
+                      ],
                     ),
-                    Gap(15),
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        labelStyle: txtStyle(18, Colors.black),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 0.1,
-                            color: Colors.black38,
-                          ),
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                      ),
-                    ),
-                    Gap(20),
-                    SizedBox(
-                      height: heeight / 12,
-                      child: CustomButton(
-                        buttonRadius: 12,
-                        isFilled: true,
-                        buttonText: 'Create account',
-                        isFacebookButton: false,
-                        onTapEvent: () {},
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
+        );
+      },
+    );
+  }
+
+  Widget _inputField(String labelText, TextEditingController textController) {
+    return TextField(
+      controller: textController,
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: txtStyle(18, Colors.black),
+        border: OutlineInputBorder(
+          borderSide: BorderSide(width: 0.1, color: Colors.black38),
+          borderRadius: BorderRadius.circular(14),
         ),
       ),
     );
   }
 }
+
+//
+//
+//
+// web signup page
 
 class SignupPageWeb extends StatefulWidget {
   const SignupPageWeb({super.key});
@@ -231,8 +344,58 @@ class _SignupPageWebState extends State<SignupPageWeb> {
     super.dispose();
   }
 
+  bool validInput = false;
+
+  validateInput() {
+    if (_emailController.text.trim().isEmpty) {
+      return csnack(context, 'Enter Email to proceed.', themeColor);
+    } else if (!_emailController.text.contains('@') ||
+        !_emailController.text.contains('.') ||
+        _emailController.text.trim().contains(' ')) {
+      return csnack(context, 'Invalid email', themeColor);
+    }
+
+    if (_fullNameController.text.trim().isEmpty) {
+      return csnack(context, 'Enter FUll name to proceed.', themeColor);
+    } else if (_fullNameController.text.length < 5 ||
+        _fullNameController.text.length > 25) {
+      return csnack(
+        context,
+        'Fullname should be between 5 to 25 charcters.',
+        themeColor,
+      );
+    }
+
+    if (_usernameController.text.trim().isEmpty) {
+      return csnack(context, 'Enter username to proceed', themeColor);
+    } else if (_usernameController.text.trim().length < 8 ||
+        _usernameController.text.trim().length > 19 ||
+        _usernameController.text.contains(' ')) {
+      return csnack(
+        context,
+        'Username should be between 8 to 19 charcters withou spaces',
+        themeColor,
+      );
+    }
+
+    if (_passwordController.text.trim().isEmpty) {
+      return csnack(context, 'Enter password to proceed', themeColor);
+    } else if (_passwordController.text.trim().length < 8 ||
+        _passwordController.text.trim().length > 30) {
+      return csnack(
+        context,
+        'Password should be between 8 to 30 charcters',
+        themeColor,
+      );
+    }
+
+    validInput = true;
+  }
+
   void _onSignup() async {
-    if (_formkey.currentState!.validate()) {
+    validInput = false;
+    validateInput();
+    if (validInput) {
       context.read<AuthBloc>().add(
         SignUpRequested(
           email: _emailController.text,
@@ -241,6 +404,8 @@ class _SignupPageWebState extends State<SignupPageWeb> {
           username: _usernameController.text,
         ),
       );
+    } else {
+      log('Invalid Input');
     }
   }
 
@@ -250,6 +415,34 @@ class _SignupPageWebState extends State<SignupPageWeb> {
     final wiidth = MediaQuery.of(context).size.width;
     log('height : $heiight');
     log('width : $wiidth');
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthFailure) {
+          return csnack(context, state.errorMessage, Colors.red);
+        }
+
+        if (state is AuthSignUpSuccess) {
+          context.go('/home/${state.userID}/Aditya');
+        }
+      },
+      builder: (context, state) {
+        if (state is AuthFailure) {
+          _emailController.clear();
+          _fullNameController.clear();
+          _usernameController.clear();
+          _passwordController.clear();
+        }
+
+        if (state is AuthloadingState) {
+          return formWithLoadingScreen(heiight, wiidth);
+        }
+        return formSection(heiight, wiidth);
+      },
+    );
+  }
+
+  //gneral form // default
+  Widget formSection(double heiight, double wiidth) {
     return Scaffold(
       body: Container(
         height: double.infinity,
@@ -341,7 +534,11 @@ class _SignupPageWebState extends State<SignupPageWeb> {
                         style: txtStyle(15, Colors.white),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => Test()),
+                          );
+                        },
                         child: Text(
                           'Log in.',
                           style: txtStyle(
@@ -361,8 +558,24 @@ class _SignupPageWebState extends State<SignupPageWeb> {
     );
   }
 
+  //form with loading overaly
+  Widget formWithLoadingScreen(double heiight, double wiidth) {
+    return Stack(
+      children: [
+        formSection(heiight, wiidth),
+        Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(color: Colors.black87.withOpacity(0.5)),
+          child: Center(child: CircularProgressIndicator(color: themeColor)),
+        ),
+      ],
+    );
+  }
+
+  //get responsive with for the form
   double getWiidth(double wiidth) {
-    return wiidth <= 600
+    return wiidth <= 655
         ? wiidth / 1.5
         : wiidth <= 900
         ? wiidth / 2.5
@@ -387,49 +600,12 @@ class _SignupPageWebState extends State<SignupPageWeb> {
   }
 
   Widget _inputBox(String hintText, TextEditingController textcontroller) {
-     
-    
     return Padding(
-
-      
       padding: const EdgeInsets.only(top: 6, bottom: 6),
       child: SizedBox(
         height: 38,
         child: TextFormField(
           keyboardType: TextInputType.emailAddress,
-          validator: (value) {
-            if (hintText == 'Email') {
-              return textcontroller.text.trim().isEmpty
-                  ? 'Please Enter the email to proceeed'
-                  : !textcontroller.text.contains('@') ||
-                      !textcontroller.text.contains('.') ||
-                      !textcontroller.text.trim().contains(' ')
-                  ? 'Invalid Email'
-                  : '';
-                  
-            }
-            
-            else if (hintText == 'Full name') {
-              return textcontroller.text.trim().length > 25
-                  ? 'Full name can be max. 25 charchters.'
-                  : '';
-            }
-            else if (hintText == 'Username') {
-              return textcontroller.text.trim().length < 5 ||
-                      textcontroller.text.trim().length > 15
-                  ? 'Username should be between 5 to 15 charcters.'
-                  : textcontroller.text.trim().contains(' ')
-                  ? 'Sorry! No spaces allowed in Username'
-                  : '';
-            }
-            else if (hintText == 'Password') {
-              return textcontroller.text.trim().length < 8 ||
-                      textcontroller.text.trim().length > 18
-                  ? 'Password can be between 8 to 18 charcters'
-                  : '';
-            }
-            return null;
-          },
           controller: textcontroller,
           style: txtStyle(14, Colors.white60),
           cursorColor: Colors.white,
@@ -464,7 +640,7 @@ class _SignupPageWebState extends State<SignupPageWeb> {
     return Column(
       children: [
         Text(
-          'People who use our service may have uploaded your contact information to Instagram. Learn More',
+          'People who use our service may have uploaded your contact information to Gramify. Learn More',
           textAlign: TextAlign.center,
           softWrap: true,
           overflow: TextOverflow.fade,
