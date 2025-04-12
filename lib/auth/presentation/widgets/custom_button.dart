@@ -21,8 +21,13 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTapEvent,
+      borderRadius: BorderRadius.circular(buttonRadius),
+      splashColor: themeColor,
       child: Container(
-        height: MediaQuery.of(context).size.height / 18,
+        height:
+            MediaQuery.of(context).size.height > 680
+                ? MediaQuery.of(context).size.height / 18
+                : 50,
         decoration: BoxDecoration(
           color:
               isFilled && isFacebookButton
@@ -56,6 +61,34 @@ class CustomButton extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class CustomButtonWithLoader extends StatelessWidget {
+  const CustomButtonWithLoader({
+    super.key,
+    required this.buttonRadius,
+    required this.isFilled,
+  });
+  final double buttonRadius;
+  final bool isFilled;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Container(
+        height: MediaQuery.of(context).size.height / 18,
+        decoration: BoxDecoration(
+          color: Colors.black54,
+          border:
+              isFilled
+                  ? Border.all(width: 1, color: themeColor.withOpacity(0.2))
+                  : Border.all(width: 1, color: themeColor),
+          borderRadius: BorderRadius.circular(buttonRadius),
+        ),
+        child: Center(child: CircularProgressIndicator()),
       ),
     );
   }

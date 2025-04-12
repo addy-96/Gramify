@@ -116,7 +116,9 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.replace('/login');
+                    },
                     child: Text(
                       'Already have an account?',
                       style: txtStyle(

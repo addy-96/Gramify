@@ -13,7 +13,12 @@ final class AuthSignUpSuccess extends AuthState {
   AuthSignUpSuccess({required this.userID, required this.username});
 }
 
-final class AuthLogInSuccess extends AuthState {}
+final class AuthLogInSuccess extends AuthState {
+  final String userID;
+  final String username;
+
+  AuthLogInSuccess({required this.userID, required this.username});
+}
 
 final class AuthFailure extends AuthState {
   final String errorMessage;

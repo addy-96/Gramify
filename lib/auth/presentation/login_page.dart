@@ -1,93 +1,149 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gramify/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/auth/presentation/widgets/custom_button.dart';
-import 'package:gramify/auth/presentation/widgets/input_box.dart';
+import 'package:gramify/auth/presentation/widgets/input_box_login_web.dart';
 import 'package:gramify/auth/presentation/widgets/input_box_mobile.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
+import 'package:gramify/core/common/shared_fun/csnack.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 
-class LoginPageMobile extends StatelessWidget {
+class LoginPageMobile extends StatefulWidget {
   const LoginPageMobile({super.key});
+
+  @override
+  State<LoginPageMobile> createState() => _LoginPageMobileState();
+}
+
+class _LoginPageMobileState extends State<LoginPageMobile> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void onLogIn() async {
+    if (_emailController.text.trim().isEmpty ||
+        _passwordController.text.trim().isEmpty) {
+      return _emailController.text.trim().isEmpty
+          ? csnack(context, 'Enter email to proceed', themeColor)
+          : (!_emailController.text.contains('@') ||
+              !_emailController.text.contains('.'))
+          ? csnack(context, 'Invalid email!', themeColor)
+          : csnack(context, 'Enter password to proceed', themeColor);
+    }
+
+    context.read<AuthBloc>().add(
+      LogInRequested(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     var heeight = MediaQuery.of(context).size.height;
     var wiidth = MediaQuery.of(context).size.width;
-
     log('height : $heeight');
     log('width : $wiidth');
-    return Scaffold(
-      body: SafeArea(
-        child: SizedBox(
-          height: heeight,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween, // Pushes elements apart
-              children: [
-                Column(
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthFailure) {
+          return csnack(context, state.errorMessage, Colors.red);
+        }
+
+        if (state is AuthLogInSuccess) {
+          context.replace('/home/:${state.userID}/:Aditya');
+        }
+      },
+      builder: (context, state) {
+        if (state is AuthloadingState) {
+          return Scaffold(body: Center(child: CircularProgressIndicator()));
+        }
+        return Scaffold(
+          body: SafeArea(
+            child: SizedBox(
+              height: heeight,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween, // Pushes elements apart
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        onLanguageSelector(context); // yet to implement
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'English (India)',
-                            style: txtStyle(15, lightBlackforText),
+                    Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            onLanguageSelector(context); // yet to implement
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'English (India)',
+                                style: txtStyle(15, lightBlackforText),
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_down_outlined,
+                                color: lightBlackforText,
+                              ),
+                            ],
                           ),
-                          Icon(
-                            Icons.keyboard_arrow_down_outlined,
-                            color: lightBlackforText,
+                        ),
+                        Gap(heeight / 10),
+                        Image.asset(
+                          'assets/images/logo_black.png',
+                          color: themeColor,
+                          width: wiidth / 3,
+                          height: heeight / 10,
+                        ),
+                        Gap(heeight / 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Column(
+                            children: [
+                              InputBoxMobile(
+                                hintText: 'Email',
+                                textController: _emailController,
+                                isPasswordfield: false,
+                              ),
+                              InputBoxMobile(
+                                hintText: 'Password',
+                                textController: _passwordController,
+                                isPasswordfield: true,
+                              ),
+                              Gap(heeight / 25),
+                              CustomButton(
+                                buttonRadius: 18,
+                                isFilled: true,
+                                buttonText: 'Log in',
+                                isFacebookButton: false,
+                                onTapEvent: () => onLogIn(), //yet to implemnt
+                              ),
+                              forgotPasswordButton(),
+                              Gap(30),
+                              CustomButton(
+                                isFacebookButton: false,
+                                buttonRadius: 18,
+                                isFilled: false,
+                                buttonText: 'Create new account',
+                                onTapEvent: () {
+                                  context.replace('/signup');
+                                }, //yet to implement
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    Gap(heeight / 10),
-                    Image.asset(
-                      'assets/images/logo_black.png',
-                      color: themeColor,
-                      width: wiidth / 3,
-                      height: heeight / 10,
-                    ),
-                    Gap(heeight / 8),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Column(
-                        children: [
-                          InputBoxMobile(hintText: 'Email'),
-                          InputBoxMobile(hintText: 'Password'),
-                          Gap(heeight / 25),
-                          CustomButton(
-                            buttonRadius: 18,
-                            isFilled: true,
-                            buttonText: 'Log in',
-                            isFacebookButton: false,
-                            onTapEvent: () {}, //yet to implemnt
-                          ),
-                          forgotPasswordButton(),
-                          Gap(30),
-                          CustomButton(
-                            isFacebookButton: false,
-                            buttonRadius: 18,
-                            isFilled: false,
-                            buttonText: 'Create new account',
-                            onTapEvent: () {}, //yet to implement
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -125,21 +181,53 @@ class LoginPageMobile extends StatelessWidget {
 
   Widget forgotPasswordButton() => TextButton(
     onPressed: () {
-      log('tapped line 121');
+      log('yet to implement');
     },
     child: Text('Forgot Password?', style: txtStyle(18, Colors.black87)),
   );
 }
 
-class LoginPageWeb extends StatelessWidget {
+class LoginPageWeb extends StatefulWidget {
   const LoginPageWeb({super.key});
+
+  @override
+  State<LoginPageWeb> createState() => _LoginPageWebState();
+}
+
+class _LoginPageWebState extends State<LoginPageWeb> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool userTryingLOgin = false;
+
+  void onLogIn() async {
+    if (_emailController.text.trim().isEmpty ||
+        _passwordController.text.trim().isEmpty) {
+      return _emailController.text.trim().isEmpty
+          ? csnack(context, 'Enter email to proceed', themeColor)
+          : (!_emailController.text.contains('@') ||
+              !_emailController.text.contains('.'))
+          ? csnack(context, 'Invalid email!', themeColor)
+          : csnack(context, 'Enter password to proceed', themeColor);
+    }
+
+    context.read<AuthBloc>().add(
+      LogInRequested(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final heeight = MediaQuery.of(context).size.height;
     final wiidth = MediaQuery.of(context).size.width;
-    log('height:  ${heeight.toString()}');
-    log('width:  ${wiidth.toString()}');
+
+    return defaultLoginScreen(heeight, wiidth);
+  }
+
+  Widget defaultLoginScreen(double heeight, double wiidth) {
     return Scaffold(
       body: Container(
         height: double.infinity,
@@ -158,7 +246,6 @@ class LoginPageWeb extends StatelessWidget {
               scrollDirection: Axis.vertical,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-
                 children: [
                   Gap(heeight / 12),
                   Row(
@@ -178,68 +265,117 @@ class LoginPageWeb extends StatelessWidget {
                       Flexible(
                         child: Column(
                           children: [
-                            Container(
-                              height: heeight / 2,
-                              width: getWidth(wiidth),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(2),
-                                border: Border.all(
-                                  color: Colors.white70,
-                                  width: 0.5,
+                            SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: Container(
+                                height: heeight > 760 ? heeight / 1.7 : 550,
+                                width: getWidth(wiidth),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(2),
+                                  border: Border.all(
+                                    color: Colors.white70,
+                                    width: 0.5,
+                                  ),
                                 ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 10,
-                                  right: 10,
-                                  top: 8,
-                                  bottom: 8,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Flexible(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset(
-                                          height: heeight / 10,
-                                          width: wiidth / 7,
-                                          'assets/images/logo_black.png',
-                                          color: Colors.white,
-                                          fit: BoxFit.contain,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                        left: 22,
-                                        right: 22,
-                                        top: 10,
-                                        bottom: 10,
-                                      ),
-                                      child: Column(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 10,
+                                    right: 10,
+                                    top: 8,
+                                    bottom: 8,
+                                  ),
+                                  child: BlocConsumer<AuthBloc, AuthState>(
+                                    listener: (context, state) {
+                                      if (state is AuthFailure) {
+                                        userTryingLOgin = false;
+                                        return csnack(
+                                          context,
+                                          state.errorMessage,
+                                          Colors.red,
+                                        );
+                                      }
+
+                                      if (state is AuthLogInSuccess) {
+                                        context.go(
+                                          '/home/:${state.userID}/:Aditya',
+                                        );
+                                      }
+                                    },
+                                    builder: (context, state) {
+                                      if (state is AuthloadingState) {
+                                        userTryingLOgin = true;
+                                      }
+                                      log('height:  ${heeight.toString()}');
+                                      log('width:  ${wiidth.toString()}');
+                                      return Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
-                                          InputBox(hintText: 'Email'),
-                                          Gap(20),
-                                          InputBox(hintText: 'Password'),
-                                          Gap(30),
-                                          CustomButton(
-                                            isFacebookButton: false,
-                                            buttonRadius: 12,
-                                            isFilled: true,
-                                            buttonText: 'Log in',
-                                            onTapEvent: () {},
+                                          Flexible(
+                                            child: Image.asset(
+                                              height: 200,
+                                              width: 300,
+                                              'assets/images/logo_black.png',
+                                              color: themeColor,
+                                              fit: BoxFit.contain,
+                                            ),
                                           ),
-                                          Gap(20),
-                                          _orDivider(),
-                                          Gap(20),
-                                          _facebookLogin(),
-                                          Gap(20),
-                                          _forgotPasswordButtton(),
+                                          Container(
+                                            padding: EdgeInsets.only(
+                                              left: 22,
+                                              right: 22,
+                                              top: 10,
+                                              bottom: 10,
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                InputBoxLoginWeb(
+                                                  enableOrDisable:
+                                                      !userTryingLOgin,
+                                                  hintText: 'Email',
+                                                  textController:
+                                                      _emailController,
+                                                  isPasswordfield: false,
+                                                ),
+                                                Gap(20),
+                                                InputBoxLoginWeb(
+                                                  enableOrDisable:
+                                                      !userTryingLOgin,
+                                                  hintText: 'Password',
+                                                  textController:
+                                                      _passwordController,
+                                                  isPasswordfield: true,
+                                                ),
+                                                Gap(30),
+                                                userTryingLOgin
+                                                    ? CustomButtonWithLoader(
+                                                      buttonRadius: 12,
+                                                      isFilled: true,
+                                                    )
+                                                    : CustomButton(
+                                                      isFacebookButton: false,
+                                                      buttonRadius: 12,
+                                                      isFilled: true,
+                                                      buttonText: 'Log in',
+                                                      onTapEvent: onLogIn,
+                                                    ),
+                                                Gap(20),
+                                                _orDivider(),
+                                                Gap(20),
+                                                _facebookLogin(
+                                                  isDisabled: userTryingLOgin,
+                                                ),
+                                                Gap(20),
+                                                _forgotPasswordButtton(
+                                                  isDisabled: userTryingLOgin,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ],
-                                      ),
-                                    ),
-                                  ],
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
@@ -262,15 +398,32 @@ class LoginPageWeb extends StatelessWidget {
                                       'Don\'t have an account?',
                                       style: txtStyle(18, Colors.white70),
                                     ),
-                                    TextButton(
-                                      onPressed: () {},
-                                      child: Text(
-                                        'Sign up',
-                                        style: txtStyle(
-                                          18,
-                                          themeColor,
-                                        ).copyWith(fontWeight: FontWeight.w700),
-                                      ),
+                                    BlocBuilder<AuthBloc, AuthState>(
+                                      builder: (context, state) {
+                                        return TextButton(
+                                          onPressed:
+                                              userTryingLOgin
+                                                  ? null
+                                                  : () {
+                                                    log('tapping');
+                                                    context.go(
+                                                      '/signup',
+                                                      extra: null,
+                                                    );
+                                                  },
+                                          child: Text(
+                                            'Sign up',
+                                            style: txtStyle(
+                                              18,
+                                              userTryingLOgin
+                                                  ? themeColor.withOpacity(0.2)
+                                                  : themeColor,
+                                            ).copyWith(
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
@@ -303,10 +456,14 @@ class LoginPageWeb extends StatelessWidget {
         : 450;
   }
 
-  Widget _forgotPasswordButtton() {
+  //yet to implement facebook
+  Widget _forgotPasswordButtton({required bool isDisabled}) {
     return TextButton(
-      onPressed: () {},
-      child: Text('Forgot Password?', style: txtStyle(22, Colors.white)),
+      onPressed: isDisabled ? null : () {},
+      child: Text(
+        'Forgot Password?',
+        style: txtStyle(22, isDisabled ? Colors.white38 : Colors.white),
+      ),
     );
   }
 
@@ -322,26 +479,35 @@ class LoginPageWeb extends StatelessWidget {
       ],
     );
   }
-}
 
-Widget _facebookLogin() {
-  return TextButton(
-    onPressed: () {},
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.facebook_outlined, color: Colors.blueAccent, size: 30),
-        Gap(5),
-        Text(
-          'Log in with facebook',
-          softWrap: true,
-          overflow: TextOverflow.ellipsis,
-          style: txtStyle(
-            18,
-            Colors.blueAccent,
-          ).copyWith(fontWeight: FontWeight.bold),
-        ),
-      ],
-    ),
-  );
+  Widget _facebookLogin({required bool isDisabled}) {
+    return TextButton(
+      onPressed: isDisabled ? null : () {},
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.facebook_outlined,
+            color:
+                isDisabled
+                    ? Colors.blueAccent.withOpacity(0.2)
+                    : Colors.blueAccent,
+            size: 30,
+          ),
+          Gap(5),
+          Text(
+            'Log in with facebook',
+            softWrap: true,
+            overflow: TextOverflow.ellipsis,
+            style: txtStyle(
+              18,
+              isDisabled
+                  ? Colors.blueAccent.withOpacity(0.2)
+                  : Colors.blueAccent,
+            ).copyWith(fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
 }

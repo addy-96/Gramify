@@ -7,7 +7,7 @@ void csnack(BuildContext context, String message, Color? color) {
     ..clearSnackBars()
     ..showSnackBar(
       SnackBar(
-        duration: Duration(seconds: 1),
+        duration: Duration(seconds: 2),
         content: Text(message, style: txtStyle(18, Colors.white)),
         backgroundColor: color ?? themeColor,
       ),

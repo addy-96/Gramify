@@ -25,6 +25,8 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     required String email,
     required String password,
   }) async {
+    log('received creds');
+    log(email);
     try {
       final res = await supabase.client.auth.signInWithPassword(
         password: password,
