@@ -27,7 +27,6 @@ class _InputBoxMobileState extends State<InputBoxMobile> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(4),
-
       child: TextField(
         onChanged: (value) {
           setState(() {});
@@ -35,6 +34,7 @@ class _InputBoxMobileState extends State<InputBoxMobile> {
         maxLength: widget.isPasswordfield ? passwordMAXLength : emailMAXLength,
         obscureText: widget.isPasswordfield && passwordVisible,
         controller: widget.textController,
+        cursorColor: themeColor,
         decoration: InputDecoration(
           counterText: '',
           suffixIcon:
@@ -48,21 +48,28 @@ class _InputBoxMobileState extends State<InputBoxMobile> {
                     },
                     icon:
                         passwordVisible
-                            ? Icon(CupertinoIcons.eye)
-                            : Icon(CupertinoIcons.eye_slash),
+                            ? Icon(CupertinoIcons.eye, color: themeColor)
+                            : Icon(
+                              CupertinoIcons.eye_slash,
+                              color: Colors.white70,
+                            ),
                   )
                   : null,
           labelText: widget.hintText,
-          labelStyle: txtStyle(15, lightBlackforText),
+          labelStyle: txtStyle(
+            15,
+            whiteForText,
+          ).copyWith(fontWeight: FontWeight.bold),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black, width: 2),
-            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: themeColor, width: 2),
+            borderRadius: BorderRadius.circular(8),
           ),
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black38, width: 0.2),
-            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Colors.white60, width: 0.2),
+            borderRadius: BorderRadius.circular(8),
           ),
         ),
+        style: txtStyle(18, whiteForText),
       ),
     );
   }

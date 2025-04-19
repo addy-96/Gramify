@@ -38,7 +38,7 @@ class CustomButton extends StatelessWidget {
           border:
               isFilled
                   ? Border.all(width: 1, color: Colors.black)
-                  : Border.all(width: 1, color: themeColor),
+                  : Border.all(width: 2, color: themeColor),
           borderRadius: BorderRadius.circular(buttonRadius),
         ),
         child: Center(

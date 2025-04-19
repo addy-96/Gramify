@@ -9,11 +9,15 @@ class LoginResPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < 600 && !kIsWeb) {
-          return LoginPageMobile();
-        } else {
+        if (kIsWeb) {
           return LoginPageWeb();
+        } else if (defaultTargetPlatform == TargetPlatform.android ||
+            defaultTargetPlatform == TargetPlatform.iOS ||
+            constraints.maxWidth <= 700) {
+          return LoginPageMobile();
         }
+
+        throw Exception('Unsupported platform');
       },
     );
   }

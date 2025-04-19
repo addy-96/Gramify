@@ -8,7 +8,6 @@ import 'package:gramify/auth/presentation/widgets/custom_button.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_fun/csnack.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
-import 'package:gramify/test.dart';
 
 class SignupPageMobile extends StatefulWidget {
   const SignupPageMobile({super.key});
@@ -63,13 +62,13 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                       'What\'s your email address?',
                       style: txtStyle(
                         25,
-                        Colors.black,
+                        whiteForText,
                       ).copyWith(fontWeight: FontWeight.w600),
                     ),
                     Text(
                       'Enter the email address at which you can be contacted. No one will see this on your profile.',
                       textAlign: TextAlign.center,
-                      style: txtStyle(15, Colors.black87),
+                      style: txtStyle(15, whiteForText),
                     ),
                     Gap(10),
                     Padding(
@@ -78,17 +77,31 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                         children: [
                           TextField(
                             controller: _emailController,
+                            cursorColor: themeColor,
                             decoration: InputDecoration(
-                              labelText: 'Email',
-                              labelStyle: txtStyle(18, Colors.black),
+                              hintText: 'Email',
+                              hintStyle: txtStyle(
+                                18,
+                                whiteForText,
+                              ).copyWith(fontWeight: FontWeight.bold),
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  width: 0.1,
-                                  color: Colors.black38,
+                                  width: 1,
+                                  color: themeColor,
                                 ),
+
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: themeColor,
+                                ),
+
                                 borderRadius: BorderRadius.circular(14),
                               ),
                             ),
+                            style: txtStyle(18, whiteForText),
                           ),
                           Gap(30),
                           SizedBox(
@@ -217,7 +230,7 @@ class _SignUpDetailsPageMobileState extends State<SignUpDetailsPageMobile> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSignUpSuccess) {
-          context.go('/home/:${state.userID}/:Aditya');
+          context.go('/wrapper/:${state.userID}');
         }
 
         if (state is AuthFailure) {
@@ -231,7 +244,14 @@ class _SignUpDetailsPageMobileState extends State<SignUpDetailsPageMobile> {
         }
 
         return Scaffold(
-          appBar: AppBar(),
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(kToolbarHeight),
+            child: AppBar(
+              foregroundColor: themeColor,
+              backgroundColor: Colors.transparent, // Important!
+              elevation: 0, // Optional: removes shadow
+            ),
+          ),
           body: SafeArea(
             child: SingleChildScrollView(
               child: Column(
@@ -253,8 +273,8 @@ class _SignUpDetailsPageMobileState extends State<SignUpDetailsPageMobile> {
                             widget.userEmail,
                             style: txtStyle(
                               22,
-                              Colors.black,
-                            ).copyWith(fontWeight: FontWeight.bold),
+                              themeColor,
+                            ).copyWith(fontWeight: FontWeight.w400),
                           ),
                         ),
                         Gap(15),
@@ -262,16 +282,16 @@ class _SignUpDetailsPageMobileState extends State<SignUpDetailsPageMobile> {
                           'Enter your details',
                           style: txtStyle(
                             25,
-                            Colors.black,
+                            whiteForText,
                           ).copyWith(fontWeight: FontWeight.w400),
                         ),
                         Text(
                           'No worries, this information can be changed later.',
                           textAlign: TextAlign.center,
-                          style: txtStyle(15, Colors.black87),
+                          style: txtStyle(15, whiteForText),
                         ),
                         Gap(10),
-                        _inputField('FUll Name', _fullNameColtroller),
+                        _inputField('Full Name', _fullNameColtroller),
                         Gap(15),
                         _inputField('Username', _usernameController),
                         Gap(15),
@@ -304,11 +324,17 @@ class _SignUpDetailsPageMobileState extends State<SignUpDetailsPageMobile> {
   Widget _inputField(String labelText, TextEditingController textController) {
     return TextField(
       controller: textController,
+      cursorColor: themeColor,
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: txtStyle(18, Colors.black),
+
+        labelStyle: txtStyle(18, whiteForText),
         border: OutlineInputBorder(
           borderSide: BorderSide(width: 0.1, color: Colors.black38),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(width: 3, color: themeColor),
           borderRadius: BorderRadius.circular(14),
         ),
       ),
@@ -424,7 +450,7 @@ class _SignupPageWebState extends State<SignupPageWeb> {
         }
 
         if (state is AuthSignUpSuccess) {
-          context.go('/home/${state.userID}/Aditya');
+          context.go('/wrapper/${state.userID}');
         }
       },
       builder: (context, state) {
@@ -446,14 +472,9 @@ class _SignupPageWebState extends State<SignupPageWeb> {
   //gneral form // default
   Widget formSection(double heiight, double wiidth) {
     return Scaffold(
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [webBackGrad1, webBackGrad2]),
-        ),
-        child: SingleChildScrollView(
-          controller: _scrollController,
+      body: SingleChildScrollView(
+        controller: _scrollController,
+        child: Center(
           child: Column(
             children: [
               Gap(heiight / 40),
@@ -537,9 +558,7 @@ class _SignupPageWebState extends State<SignupPageWeb> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => Test()),
-                          );
+                          context.go('/login');
                         },
                         child: Text(
                           'Log in.',

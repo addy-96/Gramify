@@ -1,9 +1,10 @@
 import 'package:go_router/go_router.dart';
+import 'package:gramify/auth/presentation/forogot_pass_page.dart';
 import 'package:gramify/auth/presentation/login_res_page.dart';
 import 'package:gramify/auth/presentation/signup_res_page.dart';
 import 'package:gramify/core/routes/app_routes_const.dart';
-import 'package:gramify/home/presentation/home_page.dart';
 import 'package:gramify/main.dart';
+import 'package:gramify/wrapper.dart';
 
 class MyAppRoutes {
   static final GoRouter router = GoRouter(
@@ -24,13 +25,16 @@ class MyAppRoutes {
         builder: (context, state) => const SignupResPage(),
       ),
       GoRoute(
-        name: MyAppRoutesConstant.homeRouteName,
-        path: '/home/:userId/:username',
+        name: MyAppRoutesConstant.wrapperRouteName,
+        path: '/wrapper/:userId',
         builder:
-            (context, state) => HomePage(
-              userID: state.pathParameters['userId']!,
-              username: state.pathParameters['username']!,
-            ),
+            (context, state) =>
+                WrapperRes(userID: state.pathParameters['userId']!),
+      ),
+      GoRoute(
+        name: MyAppRoutesConstant.forgotPassRouteName,
+        path: '/forgot_password',
+        builder: (context, state) => ForogotPassResPage(),
       ),
     ],
   );

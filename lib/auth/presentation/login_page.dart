@@ -25,12 +25,12 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
   void onLogIn() async {
     if (_emailController.text.trim().isEmpty ||
         _passwordController.text.trim().isEmpty) {
-      return _emailController.text.trim().isEmpty
-          ? csnack(context, 'Enter email to proceed', themeColor)
-          : (!_emailController.text.contains('@') ||
-              !_emailController.text.contains('.'))
-          ? csnack(context, 'Invalid email!', themeColor)
-          : csnack(context, 'Enter password to proceed', themeColor);
+      return csnack(context, 'Enter email to proceed', themeColor);
+    }
+
+    if (!_emailController.text.trim().contains('@') ||
+        !_emailController.text.trim().contains('.')) {
+      return csnack(context, 'Invalid Email', themeColor);
     }
 
     context.read<AuthBloc>().add(
@@ -54,7 +54,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
         }
 
         if (state is AuthLogInSuccess) {
-          context.replace('/home/:${state.userID}/:Aditya');
+          context.replace('/wrapper/:${state.userID}');
         }
       },
       builder: (context, state) {
@@ -82,7 +82,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                             children: [
                               Text(
                                 'English (India)',
-                                style: txtStyle(15, lightBlackforText),
+                                style: txtStyle(15, whiteForText),
                               ),
                               Icon(
                                 Icons.keyboard_arrow_down_outlined,
@@ -95,7 +95,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                         Image.asset(
                           'assets/images/logo_black.png',
                           color: themeColor,
-                          width: wiidth / 3,
+                          width: wiidth / 2,
                           height: heeight / 10,
                         ),
                         Gap(heeight / 8),
@@ -114,23 +114,29 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                                 isPasswordfield: true,
                               ),
                               Gap(heeight / 25),
-                              CustomButton(
-                                buttonRadius: 18,
-                                isFilled: true,
-                                buttonText: 'Log in',
-                                isFacebookButton: false,
-                                onTapEvent: () => onLogIn(), //yet to implemnt
+                              SizedBox(
+                                height: MediaQuery.of(context).size.height / 12,
+                                child: CustomButton(
+                                  buttonRadius: 8,
+                                  isFilled: true,
+                                  buttonText: 'Log in',
+                                  isFacebookButton: false,
+                                  onTapEvent: () => onLogIn(), //yet to implemnt
+                                ),
                               ),
                               forgotPasswordButton(),
                               Gap(30),
-                              CustomButton(
-                                isFacebookButton: false,
-                                buttonRadius: 18,
-                                isFilled: false,
-                                buttonText: 'Create new account',
-                                onTapEvent: () {
-                                  context.replace('/signup');
-                                }, //yet to implement
+                              SizedBox(
+                                height: MediaQuery.of(context).size.height / 14,
+                                child: CustomButton(
+                                  isFacebookButton: false,
+                                  buttonRadius: 8,
+                                  isFilled: false,
+                                  buttonText: 'Create new account',
+                                  onTapEvent: () {
+                                    context.replace('/signup');
+                                  }, //yet to implement
+                                ),
                               ),
                             ],
                           ),
@@ -181,9 +187,9 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
 
   Widget forgotPasswordButton() => TextButton(
     onPressed: () {
-      log('yet to implement');
+      context.push('/forgot_password');
     },
-    child: Text('Forgot Password?', style: txtStyle(18, Colors.black87)),
+    child: Text('Forgot Password?', style: txtStyle(18, whiteForText)),
   );
 }
 
@@ -229,214 +235,201 @@ class _LoginPageWebState extends State<LoginPageWeb> {
 
   Widget defaultLoginScreen(double heeight, double wiidth) {
     return Scaffold(
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [webBackGrad1, webBackGrad2],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Center(
+      body: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Gap(heeight / 12),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      wiidth > 1500
-                          ? Image.asset(
-                            height: heeight / 1.4,
-                            width: wiidth / 3,
-                            'assets/images/web_login_asset.png',
-                            fit: BoxFit.contain,
+            scrollDirection: Axis.vertical,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Gap(heeight / 12),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    wiidth > 1500
+                        ? Image.asset(
+                          height: heeight / 1.4,
+                          width: wiidth / 3,
+                          'assets/images/web_login_asset.png',
+                          fit: BoxFit.contain,
 
-                            alignment: Alignment.center,
-                          )
-                          : Container(),
-                      Flexible(
-                        child: Column(
-                          children: [
-                            SingleChildScrollView(
-                              scrollDirection: Axis.vertical,
-                              child: Container(
-                                height: heeight > 760 ? heeight / 1.7 : 550,
-                                width: getWidth(wiidth),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(2),
-                                  border: Border.all(
-                                    color: Colors.white70,
-                                    width: 0.5,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 10,
-                                    right: 10,
-                                    top: 8,
-                                    bottom: 8,
-                                  ),
-                                  child: BlocConsumer<AuthBloc, AuthState>(
-                                    listener: (context, state) {
-                                      if (state is AuthFailure) {
-                                        userTryingLOgin = false;
-                                        return csnack(
-                                          context,
-                                          state.errorMessage,
-                                          Colors.red,
-                                        );
-                                      }
-
-                                      if (state is AuthLogInSuccess) {
-                                        context.go(
-                                          '/home/:${state.userID}/:Aditya',
-                                        );
-                                      }
-                                    },
-                                    builder: (context, state) {
-                                      if (state is AuthloadingState) {
-                                        userTryingLOgin = true;
-                                      }
-                                      log('height:  ${heeight.toString()}');
-                                      log('width:  ${wiidth.toString()}');
-                                      return Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Flexible(
-                                            child: Image.asset(
-                                              height: 200,
-                                              width: 300,
-                                              'assets/images/logo_black.png',
-                                              color: themeColor,
-                                              fit: BoxFit.contain,
-                                            ),
-                                          ),
-                                          Container(
-                                            padding: EdgeInsets.only(
-                                              left: 22,
-                                              right: 22,
-                                              top: 10,
-                                              bottom: 10,
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                InputBoxLoginWeb(
-                                                  enableOrDisable:
-                                                      !userTryingLOgin,
-                                                  hintText: 'Email',
-                                                  textController:
-                                                      _emailController,
-                                                  isPasswordfield: false,
-                                                ),
-                                                Gap(20),
-                                                InputBoxLoginWeb(
-                                                  enableOrDisable:
-                                                      !userTryingLOgin,
-                                                  hintText: 'Password',
-                                                  textController:
-                                                      _passwordController,
-                                                  isPasswordfield: true,
-                                                ),
-                                                Gap(30),
-                                                userTryingLOgin
-                                                    ? CustomButtonWithLoader(
-                                                      buttonRadius: 12,
-                                                      isFilled: true,
-                                                    )
-                                                    : CustomButton(
-                                                      isFacebookButton: false,
-                                                      buttonRadius: 12,
-                                                      isFilled: true,
-                                                      buttonText: 'Log in',
-                                                      onTapEvent: onLogIn,
-                                                    ),
-                                                Gap(20),
-                                                _orDivider(),
-                                                Gap(20),
-                                                _facebookLogin(
-                                                  isDisabled: userTryingLOgin,
-                                                ),
-                                                Gap(20),
-                                                _forgotPasswordButtton(
-                                                  isDisabled: userTryingLOgin,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Gap(heeight / 100),
-                            Container(
-                              height: heeight / 12,
+                          alignment: Alignment.center,
+                        )
+                        : Container(),
+                    Flexible(
+                      child: Column(
+                        children: [
+                          SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: Container(
+                              height: heeight > 760 ? heeight / 1.7 : 550,
                               width: getWidth(wiidth),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(2),
                                 border: Border.all(
                                   color: Colors.white70,
-                                  width: 1,
+                                  width: 0.5,
                                 ),
                               ),
-                              child: Center(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Don\'t have an account?',
-                                      style: txtStyle(18, Colors.white70),
-                                    ),
-                                    BlocBuilder<AuthBloc, AuthState>(
-                                      builder: (context, state) {
-                                        return TextButton(
-                                          onPressed:
-                                              userTryingLOgin
-                                                  ? null
-                                                  : () {
-                                                    log('tapping');
-                                                    context.go(
-                                                      '/signup',
-                                                      extra: null,
-                                                    );
-                                                  },
-                                          child: Text(
-                                            'Sign up',
-                                            style: txtStyle(
-                                              18,
-                                              userTryingLOgin
-                                                  ? themeColor.withOpacity(0.2)
-                                                  : themeColor,
-                                            ).copyWith(
-                                              fontWeight: FontWeight.w700,
-                                            ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 10,
+                                  right: 10,
+                                  top: 8,
+                                  bottom: 8,
+                                ),
+                                child: BlocConsumer<AuthBloc, AuthState>(
+                                  listener: (context, state) {
+                                    if (state is AuthFailure) {
+                                      userTryingLOgin = false;
+                                      return csnack(
+                                        context,
+                                        state.errorMessage,
+                                        Colors.red,
+                                      );
+                                    }
+
+                                    if (state is AuthLogInSuccess) {
+                                      context.go('/wrapper/:${state.userID}');
+                                    }
+                                  },
+                                  builder: (context, state) {
+                                    if (state is AuthloadingState) {
+                                      userTryingLOgin = true;
+                                    }
+                                    log('height:  ${heeight.toString()}');
+                                    log('width:  ${wiidth.toString()}');
+                                    return Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Flexible(
+                                          child: Image.asset(
+                                            height: 200,
+                                            width: 300,
+                                            'assets/images/logo_black.png',
+                                            color: themeColor,
+                                            fit: BoxFit.contain,
                                           ),
-                                        );
-                                      },
-                                    ),
-                                  ],
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(
+                                            left: 22,
+                                            right: 22,
+                                            top: 10,
+                                            bottom: 10,
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              InputBoxLoginWeb(
+                                                enableOrDisable:
+                                                    !userTryingLOgin,
+                                                hintText: 'Email',
+                                                textController:
+                                                    _emailController,
+                                                isPasswordfield: false,
+                                              ),
+                                              Gap(20),
+                                              InputBoxLoginWeb(
+                                                enableOrDisable:
+                                                    !userTryingLOgin,
+                                                hintText: 'Password',
+                                                textController:
+                                                    _passwordController,
+                                                isPasswordfield: true,
+                                              ),
+                                              Gap(30),
+                                              userTryingLOgin
+                                                  ? CustomButtonWithLoader(
+                                                    buttonRadius: 12,
+                                                    isFilled: true,
+                                                  )
+                                                  : CustomButton(
+                                                    isFacebookButton: false,
+                                                    buttonRadius: 12,
+                                                    isFilled: true,
+                                                    buttonText: 'Log in',
+                                                    onTapEvent: onLogIn,
+                                                  ),
+                                              Gap(20),
+                                              _orDivider(),
+                                              Gap(20),
+                                              _facebookLogin(
+                                                isDisabled: userTryingLOgin,
+                                              ),
+                                              Gap(20),
+                                              _forgotPasswordButtton(
+                                                isDisabled: userTryingLOgin,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          Gap(heeight / 100),
+                          Container(
+                            height: heeight / 12,
+                            width: getWidth(wiidth),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(2),
+                              border: Border.all(
+                                color: Colors.white70,
+                                width: 1,
+                              ),
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Don\'t have an account?',
+                                    style: txtStyle(18, Colors.white70),
+                                  ),
+                                  BlocBuilder<AuthBloc, AuthState>(
+                                    builder: (context, state) {
+                                      return TextButton(
+                                        onPressed:
+                                            userTryingLOgin
+                                                ? null
+                                                : () {
+                                                  log('tapping');
+                                                  context.go(
+                                                    '/signup',
+                                                    extra: null,
+                                                  );
+                                                },
+                                        child: Text(
+                                          'Sign up',
+                                          style: txtStyle(
+                                            18,
+                                            userTryingLOgin
+                                                ? themeColor.withOpacity(0.2)
+                                                : themeColor,
+                                          ).copyWith(
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  Gap(40),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+                Gap(40),
+              ],
             ),
           ),
         ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gramify/auth/presentation/signup_page.dart';
@@ -9,11 +11,14 @@ class SignupResPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < 600 && !kIsWeb) {
-          return SignupPageMobile();
-        } else {
+        if (kIsWeb) {
           return SignupPageWeb();
+        } else if (defaultTargetPlatform == TargetPlatform.android ||
+            defaultTargetPlatform == TargetPlatform.iOS ||
+            constraints.maxWidth <= 700) {
+          return SignupPageMobile();
         }
+        throw Exception('Unsupported platform');
       },
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_attri/inputfield_constrants.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 
@@ -37,6 +38,7 @@ class _InputBoxLoginWebState extends State<InputBoxLoginWeb> {
       enabled: widget.enableOrDisable,
       style: TextStyle(color: Colors.white),
       obscureText: isPassowordhidden,
+      cursorColor: themeColor,
       decoration: InputDecoration(
         counterText: '',
         suffixIcon:
