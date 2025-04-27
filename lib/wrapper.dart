@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gramify/add_post/add_post.dart';
 import 'package:gramify/app_bloc/wrapper_bloc/wrapper_bloc.dart';
 import 'package:gramify/app_bloc/wrapper_bloc/wrapper_event.dart';
 import 'package:gramify/app_bloc/wrapper_bloc/wrapper_state.dart';
-import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/home/presentation/home_page.dart';
 import 'package:gramify/test.dart';
 
@@ -45,13 +45,14 @@ class _WrapperMobileState extends State<WrapperMobile> {
   Widget build(BuildContext context) {
     log('wrapper called');
     return Scaffold(
+      extendBody: true,
       body: BlocBuilder<WrapperBloc, WrapperState>(
         builder: (context, state) {
           if (state is HomePageSelected) {
             return HomePageRes(loggedUserID: widget.userId);
           }
           if (state is ExplorePageSelected) {
-            return Test(receivedText: 'Explore');
+            return AddPostPage();
           }
           if (state is NotifiactionPageSelected) {
             return Test(receivedText: 'Notification');
@@ -59,15 +60,16 @@ class _WrapperMobileState extends State<WrapperMobile> {
           if (state is ProfilePageSlected) {
             return Test(receivedText: 'Profile');
           }
-          return Test(receivedText: 'HomePage');
+          return HomePageRes(loggedUserID: widget.userId);
         },
       ),
+
       bottomNavigationBar: CustomNavBarMobile(
-        borderRadius: 22,
+        borderRadius: 15,
         horizontalPadding: 40,
-        verticalPadding: 30,
+        verticalPadding: 20,
         navitemsLength: 4,
-        iconColor: Colors.black,
+        iconColor: Colors.black87,
         iconSize: 30,
         initialIndex: 0,
       ),
@@ -106,59 +108,65 @@ class _CustomNavBarMobileState extends State<CustomNavBarMobile> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: widget.verticalPadding,
-        bottom: widget.verticalPadding,
-        left: widget.horizontalPadding,
-        right: widget.horizontalPadding,
-      ),
-      child: Container(
-        height: MediaQuery.of(context).size.height / 11,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: themeColor,
-          borderRadius: BorderRadius.circular(widget.borderRadius),
+    return Container(
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: widget.verticalPadding,
+          bottom: widget.verticalPadding,
+          left: widget.horizontalPadding,
+          right: widget.horizontalPadding,
         ),
-        child: Padding(
-          padding: EdgeInsets.only(left: 18, right: 18, top: 12, bottom: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              for (var i = 0; i < widget.navitemsLength; i++)
-                InkWell(
-                  onTap: () {
-                    selectedIndex = i;
-                    context.read<WrapperBloc>().add(
-                      PageChageRequested(selectedIndex: i),
-                    );
-                    setState(() {});
-                  },
-                  child: Container(
-                    child: Icon(
-                      i == 0
-                          ? (i == selectedIndex
-                              ? Ionicons.home_sharp
-                              : Ionicons.home_outline)
-                          : i == 1
-                          ? (i == selectedIndex
-                              ? Ionicons.compass_sharp
-                              : Ionicons.compass_outline)
-                          : i == 2
-                          ? (i == selectedIndex
-                              ? Ionicons.heart_sharp
-                              : Ionicons.heart_outline)
-                          : i == 3
-                          ? (i == selectedIndex
-                              ? Ionicons.person_sharp
-                              : Ionicons.person_outline)
-                          : null,
-                      color: widget.iconColor,
-                      size: widget.iconSize,
+        child: Container(
+          height: MediaQuery.of(context).size.height / 11,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF4E9F3D), Color(0xFF3AAFA9)],
+            ),
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 18, right: 18, top: 12, bottom: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                for (var i = 0; i < widget.navitemsLength; i++)
+                  InkWell(
+                    onTap: () {
+                      selectedIndex = i;
+                      context.read<WrapperBloc>().add(
+                        PageChageRequested(selectedIndex: i),
+                      );
+                      setState(() {});
+                    },
+                    child: Container(
+                      child: Icon(
+                        i == 0
+                            ? (i == selectedIndex
+                                ? Ionicons.home_sharp
+                                : Ionicons.home_outline)
+                            : i == 1
+                            ? (i == selectedIndex
+                                ? Ionicons.add_circle
+                                : Ionicons.add_circle_outline)
+                            : i == 2
+                            ? (i == selectedIndex
+                                ? Ionicons.compass
+                                : Ionicons.compass_outline)
+                            : i == 3
+                            ? (i == selectedIndex
+                                ? Ionicons.person_sharp
+                                : Ionicons.person_outline)
+                            : null,
+                        color: widget.iconColor,
+                        size: widget.iconSize,
+                      ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

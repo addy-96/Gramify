@@ -5,8 +5,10 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gramify/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/auth/presentation/widgets/custom_button.dart';
+import 'package:gramify/auth/presentation/widgets/signUp_input_box_web.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_fun/csnack.dart';
+import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 
 class SignupPageMobile extends StatefulWidget {
@@ -77,7 +79,7 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                         children: [
                           TextField(
                             controller: _emailController,
-                            cursorColor: themeColor,
+                            cursorColor: Colors.white,
                             decoration: InputDecoration(
                               hintText: 'Email',
                               hintStyle: txtStyle(
@@ -87,7 +89,7 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   width: 1,
-                                  color: themeColor,
+                                  color: Colors.white60,
                                 ),
 
                                 borderRadius: BorderRadius.circular(14),
@@ -95,7 +97,7 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   width: 2,
-                                  color: themeColor,
+                                  color: Colors.white,
                                 ),
 
                                 borderRadius: BorderRadius.circular(14),
@@ -132,12 +134,13 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                     onPressed: () {
                       context.replace('/login');
                     },
-                    child: Text(
-                      'Already have an account?',
-                      style: txtStyle(
-                        18,
-                        themeColor,
-                      ).copyWith(fontWeight: FontWeight.w400),
+                    child: ShaderText(
+                      textWidget: Text(
+                        'Already have an account?',
+                        style: txtStyleNoColor(
+                          18,
+                        ).copyWith(fontWeight: FontWeight.w600),
+                      ),
                     ),
                   ),
                 ],
@@ -269,12 +272,13 @@ class _SignUpDetailsPageMobileState extends State<SignUpDetailsPageMobile> {
                               },
                             );
                           },
-                          child: Text(
-                            widget.userEmail,
-                            style: txtStyle(
-                              22,
-                              themeColor,
-                            ).copyWith(fontWeight: FontWeight.w400),
+                          child: ShaderText(
+                            textWidget: Text(
+                              widget.userEmail,
+                              style: txtStyleNoColor(
+                                22,
+                              ).copyWith(fontWeight: FontWeight.w400),
+                            ),
                           ),
                         ),
                         Gap(15),
@@ -324,17 +328,17 @@ class _SignUpDetailsPageMobileState extends State<SignUpDetailsPageMobile> {
   Widget _inputField(String labelText, TextEditingController textController) {
     return TextField(
       controller: textController,
-      cursorColor: themeColor,
+      cursorColor: Colors.white,
       decoration: InputDecoration(
         labelText: labelText,
 
         labelStyle: txtStyle(18, whiteForText),
         border: OutlineInputBorder(
-          borderSide: BorderSide(width: 0.1, color: Colors.black38),
+          borderSide: BorderSide(width: 0.1, color: Colors.white60),
           borderRadius: BorderRadius.circular(14),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 3, color: themeColor),
+          borderSide: BorderSide(width: 3, color: Colors.white),
           borderRadius: BorderRadius.circular(14),
         ),
       ),
@@ -441,8 +445,8 @@ class _SignupPageWebState extends State<SignupPageWeb> {
   Widget build(BuildContext context) {
     final heiight = MediaQuery.of(context).size.height;
     final wiidth = MediaQuery.of(context).size.width;
-    log('height : $heiight');
-    log('width : $wiidth');
+    /*    log('height : $heiight');
+    log('width : $wiidth');*/
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
@@ -490,10 +494,12 @@ class _SignupPageWebState extends State<SignupPageWeb> {
                     key: _formkey,
                     child: Column(
                       children: [
-                        Image.asset(
-                          'assets/images/logo_black.png',
-                          color: themeColor,
-                          width: getWiidth(wiidth) / 1.8,
+                        ShaderIamge(
+                          imageWidget: Image.asset(
+                            'assets/images/logo_black.png',
+                            color: themeColor,
+                            width: getWiidth(wiidth) / 1.8,
+                          ),
                         ),
                         Gap(heiight / 50),
                         Text(
@@ -517,10 +523,23 @@ class _SignupPageWebState extends State<SignupPageWeb> {
                         ),
                         Gap(heiight / 70),
                         _orDivider(),
-                        _inputBox('Email', _emailController),
-                        _inputBox('Full Name', _fullNameController),
-                        _inputBox('Username', _usernameController),
-                        _inputBox('Password', _passwordController),
+                        SignupInputBoxWeb(
+                          hintText: 'Email',
+                          textcontroller: _emailController,
+                        ),
+                        SignupInputBoxWeb(
+                          hintText: 'Full Name',
+                          textcontroller: _fullNameController,
+                        ),
+                        SignupInputBoxWeb(
+                          hintText: 'Username',
+                          textcontroller: _usernameController,
+                        ),
+                        SignupInputBoxWeb(
+                          hintText: 'Password',
+                          textcontroller: _passwordController,
+                          isPasswordField: true,
+                        ),
                         Gap(5),
                         _policyText(),
                         Gap(20),
@@ -560,12 +579,13 @@ class _SignupPageWebState extends State<SignupPageWeb> {
                         onPressed: () {
                           context.go('/login');
                         },
-                        child: Text(
-                          'Log in.',
-                          style: txtStyle(
-                            15,
-                            themeColor,
-                          ).copyWith(fontWeight: FontWeight.bold),
+                        child: ShaderText(
+                          textWidget: Text(
+                            'Log in.',
+                            style: txtStyleNoColor(
+                              15,
+                            ).copyWith(fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ],
@@ -617,43 +637,6 @@ class _SignupPageWebState extends State<SignupPageWeb> {
         ),
         Expanded(child: Divider(color: Colors.grey, thickness: 1)),
       ],
-    );
-  }
-
-  Widget _inputBox(String hintText, TextEditingController textcontroller) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 6, bottom: 6),
-      child: SizedBox(
-        height: 38,
-        child: TextFormField(
-          keyboardType: TextInputType.emailAddress,
-          controller: textcontroller,
-          style: txtStyle(14, Colors.white60),
-          cursorColor: Colors.white,
-          decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              gapPadding: 8,
-              borderSide: BorderSide(color: Color(0xFFa8a892), width: 0.5),
-            ),
-            focusedBorder: OutlineInputBorder(
-              gapPadding: 8,
-              borderSide: BorderSide(color: Color(0xFFa8a892), width: 0.5),
-            ),
-            border: OutlineInputBorder(
-              gapPadding: 8,
-              borderSide: BorderSide(color: Color(0xFFa8a892), width: 0.5),
-            ),
-            contentPadding: EdgeInsets.only(
-              left: 6,
-              right: 6,
-              top: 8,
-              bottom: 8,
-            ),
-            label: Text(hintText),
-            labelStyle: txtStyle(13, Color(0xFFa8a892)),
-          ),
-        ),
-      ),
     );
   }
 

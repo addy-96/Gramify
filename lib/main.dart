@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => WrapperBloc()),
       ],
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         routerConfig: MyAppRoutes.router,
         title: 'Gramify',
         theme: ThemeData(

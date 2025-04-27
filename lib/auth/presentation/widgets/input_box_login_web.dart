@@ -37,8 +37,8 @@ class _InputBoxLoginWebState extends State<InputBoxLoginWeb> {
       controller: widget.textController,
       enabled: widget.enableOrDisable,
       style: TextStyle(color: Colors.white),
-      obscureText: isPassowordhidden,
-      cursorColor: themeColor,
+      obscureText: widget.isPasswordfield && isPassowordhidden,
+      cursorColor: Colors.white,
       decoration: InputDecoration(
         counterText: '',
         suffixIcon:
@@ -64,7 +64,7 @@ class _InputBoxLoginWebState extends State<InputBoxLoginWeb> {
           borderSide: BorderSide(width: 1, color: Colors.white),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 1, color: Colors.white),
+          borderSide: BorderSide(width: 3, color: Colors.white),
         ),
         disabledBorder: OutlineInputBorder(
           borderSide: BorderSide(width: 1, color: Colors.white),

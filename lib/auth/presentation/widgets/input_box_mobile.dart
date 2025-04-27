@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_attri/inputfield_constrants.dart';
+import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 
 class InputBoxMobile extends StatefulWidget {
@@ -21,7 +22,7 @@ class InputBoxMobile extends StatefulWidget {
 }
 
 class _InputBoxMobileState extends State<InputBoxMobile> {
-  bool passwordVisible = false;
+  bool isPasswordHidden = true;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +33,9 @@ class _InputBoxMobileState extends State<InputBoxMobile> {
           setState(() {});
         },
         maxLength: widget.isPasswordfield ? passwordMAXLength : emailMAXLength,
-        obscureText: widget.isPasswordfield && passwordVisible,
+        obscureText: widget.isPasswordfield && isPasswordHidden,
         controller: widget.textController,
-        cursorColor: themeColor,
+        cursorColor: Colors.white,
         decoration: InputDecoration(
           counterText: '',
           suffixIcon:
@@ -43,12 +44,17 @@ class _InputBoxMobileState extends State<InputBoxMobile> {
                   ? IconButton(
                     onPressed: () {
                       setState(() {
-                        passwordVisible = !passwordVisible;
+                        isPasswordHidden = !isPasswordHidden;
                       });
                     },
                     icon:
-                        passwordVisible
-                            ? Icon(CupertinoIcons.eye, color: themeColor)
+                        isPasswordHidden
+                            ? ShaderIcon(
+                              iconWidget: Icon(
+                                CupertinoIcons.eye,
+                                color: themeColor,
+                              ),
+                            )
                             : Icon(
                               CupertinoIcons.eye_slash,
                               color: Colors.white70,
@@ -61,7 +67,7 @@ class _InputBoxMobileState extends State<InputBoxMobile> {
             whiteForText,
           ).copyWith(fontWeight: FontWeight.bold),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: themeColor, width: 2),
+            borderSide: BorderSide(color: Colors.white, width: 2),
             borderRadius: BorderRadius.circular(8),
           ),
           border: OutlineInputBorder(

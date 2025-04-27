@@ -9,6 +9,7 @@ import 'package:gramify/auth/presentation/widgets/input_box_login_web.dart';
 import 'package:gramify/auth/presentation/widgets/input_box_mobile.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_fun/csnack.dart';
+import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 
 class LoginPageMobile extends StatefulWidget {
@@ -92,11 +93,13 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                           ),
                         ),
                         Gap(heeight / 10),
-                        Image.asset(
-                          'assets/images/logo_black.png',
-                          color: themeColor,
-                          width: wiidth / 2,
-                          height: heeight / 10,
+                        ShaderIamge(
+                          imageWidget: Image.asset(
+                            'assets/images/logo_black.png',
+                            color: themeColor,
+                            width: wiidth / 2,
+                            height: heeight / 10,
+                          ),
                         ),
                         Gap(heeight / 8),
                         Padding(
@@ -131,7 +134,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                                 child: CustomButton(
                                   isFacebookButton: false,
                                   buttonRadius: 8,
-                                  isFilled: false,
+                                  isFilled: true,
                                   buttonText: 'Create new account',
                                   onTapEvent: () {
                                     context.replace('/signup');
@@ -249,13 +252,17 @@ class _LoginPageWebState extends State<LoginPageWeb> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     wiidth > 1500
-                        ? Image.asset(
-                          height: heeight / 1.4,
-                          width: wiidth / 3,
-                          'assets/images/web_login_asset.png',
-                          fit: BoxFit.contain,
+                        ? Stack(
+                          children: [
+                            Image.asset(
+                              height: heeight / 1.4,
+                              width: wiidth / 3,
+                              'assets/images/web_login_asset.png',
+                              fit: BoxFit.contain,
 
-                          alignment: Alignment.center,
+                              alignment: Alignment.center,
+                            ),
+                          ],
                         )
                         : Container(),
                     Flexible(
@@ -306,12 +313,14 @@ class _LoginPageWebState extends State<LoginPageWeb> {
                                           MainAxisAlignment.start,
                                       children: [
                                         Flexible(
-                                          child: Image.asset(
-                                            height: 200,
-                                            width: 300,
-                                            'assets/images/logo_black.png',
-                                            color: themeColor,
-                                            fit: BoxFit.contain,
+                                          child: ShaderIamge(
+                                            imageWidget: Image.asset(
+                                              height: 200,
+                                              width: 300,
+                                              'assets/images/logo_black.png',
+                                              color: themeColor,
+                                              fit: BoxFit.contain,
+                                            ),
                                           ),
                                         ),
                                         Container(
@@ -405,15 +414,12 @@ class _LoginPageWebState extends State<LoginPageWeb> {
                                                     extra: null,
                                                   );
                                                 },
-                                        child: Text(
-                                          'Sign up',
-                                          style: txtStyle(
-                                            18,
-                                            userTryingLOgin
-                                                ? themeColor.withOpacity(0.2)
-                                                : themeColor,
-                                          ).copyWith(
-                                            fontWeight: FontWeight.w700,
+                                        child: ShaderText(
+                                          textWidget: Text(
+                                            'Sign up',
+                                            style: txtStyleNoColor(18).copyWith(
+                                              fontWeight: FontWeight.w700,
+                                            ),
                                           ),
                                         ),
                                       );

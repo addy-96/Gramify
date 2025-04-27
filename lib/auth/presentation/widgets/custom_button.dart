@@ -29,12 +29,17 @@ class CustomButton extends StatelessWidget {
                 ? MediaQuery.of(context).size.height / 18
                 : 50,
         decoration: BoxDecoration(
-          color:
-              isFilled && isFacebookButton
-                  ? facebookBlue
-                  : isFilled
-                  ? themeColor
-                  : Colors.transparent,
+          gradient:
+              isFilled && !isFacebookButton
+                  ? LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [thmegrad1, thmegrad2],
+                  )
+                  : null,
+
+          color: isFilled && isFacebookButton ? facebookBlue : null,
+
           border:
               isFilled
                   ? Border.all(width: 1, color: Colors.black)
