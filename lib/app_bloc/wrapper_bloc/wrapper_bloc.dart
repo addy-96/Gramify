@@ -4,15 +4,26 @@ import 'package:gramify/app_bloc/wrapper_bloc/wrapper_state.dart';
 
 class WrapperBloc extends Bloc<WrapperEvent, WrapperState> {
   WrapperBloc() : super(WrapperInitialState()) {
-    on<PageChageRequested>((event, emit) {
+    on<PageChageRequestedMobile>((event, emit) {
       if (event.selectedIndex == 0) {
-        emit(HomePageSelected());
+        emit(HomePageSelectedMobile());
       } else if (event.selectedIndex == 1) {
-        emit(ExplorePageSelected());
+        emit(UploadPageSelectedMobile());
       } else if (event.selectedIndex == 2) {
-        emit(NotifiactionPageSelected());
+        emit(ExplorePageSelectedMobile());
       } else if (event.selectedIndex == 3) {
-        emit(ProfilePageSlected());
+        emit(ProfilePageSlectedMobile());
+      }
+    });
+    on<PageChageRequestedWeb>((event, emit) {
+      if (event.selectedIndex == 0) {
+        emit(HomePageSelectedWeb());
+      } else if (event.selectedIndex == 1) {
+        emit(NotificationPageSelectedWeb());
+      } else if (event.selectedIndex == 2) {
+        emit(ExplorePageSelectedWeb());
+      } else if (event.selectedIndex == 3) {
+        emit(UploadPageSelectedWeb());
       }
     });
   }

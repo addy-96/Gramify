@@ -102,6 +102,14 @@ class HomePageMobile extends StatelessWidget {
                         ],
                       ),
                     ),
+                    ShaderNormal(
+                      childWidget: VerticalDivider(
+                        thickness: 2,
+                        endIndent: 10,
+                        indent: 10,
+                        width: 20,
+                      ),
+                    ),
                     for (var i = 0; i <= 10; i++)
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -153,6 +161,95 @@ class HomePageWeb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Row(
+      children: [
+        Gap(100),
+        Column(
+          children: [
+            SizedBox(
+              height: 100,
+              width: 500,
+              child: Padding(
+                padding: EdgeInsets.all(4),
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Stack(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              border: Border.all(width: 4, color: Colors.white),
+                            ),
+                            width: 95,
+                          ),
+                          Positioned(
+                            right: 0,
+                            bottom: 8,
+                            child: ShaderIcon(
+                              iconWidget: Icon(Ionicons.add_circle, size: 35),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ShaderNormal(
+                      childWidget: VerticalDivider(
+                        thickness: 2,
+                        endIndent: 10,
+                        indent: 10,
+                        width: 20,
+                      ),
+                    ),
+                    for (var i = 0; i <= 10; i++)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [thmegrad1, thmegrad2],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          padding: const EdgeInsets.all(3),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(46),
+                            ),
+                            width: 85,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(46),
+                              child: Image.asset(
+                                'assets/images/test_picture.jpg',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+
+            Gap(40),
+            Expanded(
+              child: SizedBox(
+                width: 400,
+                child: SingleChildScrollView(
+                  child: Column(children: [Post(), Post(), Post(), Post()]),
+                ),
+              ),
+            ),
+          ],
+        ),
+        Gap(40),
+      ],
+    );
   }
 }

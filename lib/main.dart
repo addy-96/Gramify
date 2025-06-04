@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gramify/add_post/presentation/bloc/add_post_bloc.dart';
+import 'package:gramify/add_post/presentation/bloc/cubit/selectedPicture_cubit.dart';
 import 'package:gramify/app_bloc/wrapper_bloc/wrapper_bloc.dart';
 import 'package:gramify/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/auth/presentation/login_res_page.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/routes/app_routes_config.dart';
 import 'package:gramify/dependencies.dart';
+import 'package:gramify/explore/presentation/bloc/explore_tab_bloc/explore_tab_bloc.dart';
 import 'package:gramify/test.dart';
 import 'package:gramify/wrapper.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -32,11 +35,22 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create:
               (context) => AuthBloc(
+                selectimageUsecase: servicelocator(),
                 loginUsecase: servicelocator(),
                 signupUsecase: servicelocator(),
+                logoutUsecase: servicelocator(),
+                uploadProfilepictureUsecase: servicelocator(),
               ),
         ),
         BlocProvider(create: (context) => WrapperBloc()),
+        BlocProvider(
+          create:
+              (context) => AddPostBloc(
+                addPostRepositories: servicelocator(), //implement use case
+              ),
+        ),
+        BlocProvider(create: (context) => SelectedpictureCubit()),
+        BlocProvider(create: (context) => ExploreTabBloc()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
@@ -97,7 +111,6 @@ class AppStart extends StatelessWidget {
               final session =
                   sAuth.Supabase.instance.client.auth.currentSession;
 
-              // 🛑 Wait until Supabase restores the session
               if (authSnapshot.connectionState == ConnectionState.waiting &&
                   session == null) {
                 return const Center(child: CircularProgressIndicator());

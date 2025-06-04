@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gramify/core/common/shared_attri/colors.dart';
-import 'package:gramify/core/common/shared_attri/inputfield_constrants.dart';
+import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 
 class InputBoxLoginWeb extends StatefulWidget {

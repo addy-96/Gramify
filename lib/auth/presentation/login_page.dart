@@ -118,9 +118,9 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                               ),
                               Gap(heeight / 25),
                               SizedBox(
-                                height: MediaQuery.of(context).size.height / 12,
+                                height: MediaQuery.of(context).size.height / 15,
                                 child: CustomButton(
-                                  buttonRadius: 8,
+                                  buttonRadius: 10,
                                   isFilled: true,
                                   buttonText: 'Log in',
                                   isFacebookButton: false,
@@ -130,10 +130,10 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                               forgotPasswordButton(),
                               Gap(30),
                               SizedBox(
-                                height: MediaQuery.of(context).size.height / 14,
+                                height: MediaQuery.of(context).size.height / 15,
                                 child: CustomButton(
                                   isFacebookButton: false,
-                                  buttonRadius: 8,
+                                  buttonRadius: 10,
                                   isFilled: true,
                                   buttonText: 'Create new account',
                                   onTapEvent: () {

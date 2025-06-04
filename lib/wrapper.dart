@@ -1,15 +1,18 @@
 import 'dart:developer';
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gramify/add_post/add_post.dart';
+import 'package:gap/gap.dart';
+import 'package:gramify/add_post/presentation/add_photo_mobile_page.dart';
 import 'package:gramify/app_bloc/wrapper_bloc/wrapper_bloc.dart';
 import 'package:gramify/app_bloc/wrapper_bloc/wrapper_event.dart';
 import 'package:gramify/app_bloc/wrapper_bloc/wrapper_state.dart';
+import 'package:gramify/core/common/shared_attri/colors.dart';
+import 'package:gramify/core/common/shared_fun/shaders.dart';
+import 'package:gramify/core/common/shared_fun/txtstyl.dart';
+import 'package:gramify/explore/presentation/explore_page.dart';
 import 'package:gramify/home/presentation/home_page.dart';
 import 'package:gramify/test.dart';
-
 import 'package:ionicons/ionicons.dart';
 
 class WrapperRes extends StatelessWidget {
@@ -20,11 +23,14 @@ class WrapperRes extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (Platform.isAndroid) {
+        if (kIsWeb) {
+          return WrapperWeb(userId: userID);
+        } else if (defaultTargetPlatform == TargetPlatform.android ||
+            defaultTargetPlatform == TargetPlatform.iOS ||
+            constraints.maxWidth <= 700) {
           return WrapperMobile(userId: userID);
-        } else {
-          return WrapperWeb();
         }
+        throw Exception('Unsupported platform');
       },
     );
   }
@@ -39,26 +45,26 @@ class WrapperMobile extends StatefulWidget {
 }
 
 class _WrapperMobileState extends State<WrapperMobile> {
-  var currentNavbarIndex = 0;
-
   @override
   Widget build(BuildContext context) {
-    log('wrapper called');
     return Scaffold(
       extendBody: true,
       body: BlocBuilder<WrapperBloc, WrapperState>(
         builder: (context, state) {
-          if (state is HomePageSelected) {
+          if (state is HomePageSelectedMobile) {
             return HomePageRes(loggedUserID: widget.userId);
           }
-          if (state is ExplorePageSelected) {
-            return AddPostPage();
+          if (state is UploadPageSelectedMobile) {
+            return AddPhotoMobilePage();
           }
-          if (state is NotifiactionPageSelected) {
-            return Test(receivedText: 'Notification');
+          if (state is ExplorePageSelectedMobile) {
+            return ExplorePage();
           }
-          if (state is ProfilePageSlected) {
+          if (state is ProfilePageSlectedMobile) {
             return Test(receivedText: 'Profile');
+          }
+          if (state is WrapperInitialState) {
+            return HomePageRes(loggedUserID: widget.userId);
           }
           return HomePageRes(loggedUserID: widget.userId);
         },
@@ -108,7 +114,7 @@ class _CustomNavBarMobileState extends State<CustomNavBarMobile> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       child: Padding(
         padding: EdgeInsets.only(
           top: widget.verticalPadding,
@@ -137,32 +143,31 @@ class _CustomNavBarMobileState extends State<CustomNavBarMobile> {
                     onTap: () {
                       selectedIndex = i;
                       context.read<WrapperBloc>().add(
-                        PageChageRequested(selectedIndex: i),
+                        PageChageRequestedMobile(selectedIndex: i),
                       );
                       setState(() {});
                     },
-                    child: Container(
-                      child: Icon(
-                        i == 0
-                            ? (i == selectedIndex
-                                ? Ionicons.home_sharp
-                                : Ionicons.home_outline)
-                            : i == 1
-                            ? (i == selectedIndex
-                                ? Ionicons.add_circle
-                                : Ionicons.add_circle_outline)
-                            : i == 2
-                            ? (i == selectedIndex
-                                ? Ionicons.compass
-                                : Ionicons.compass_outline)
-                            : i == 3
-                            ? (i == selectedIndex
-                                ? Ionicons.person_sharp
-                                : Ionicons.person_outline)
-                            : null,
-                        color: widget.iconColor,
-                        size: widget.iconSize,
-                      ),
+
+                    child: Icon(
+                      i == 0
+                          ? (i == selectedIndex
+                              ? Ionicons.home_sharp
+                              : Ionicons.home_outline)
+                          : i == 1
+                          ? (i == selectedIndex
+                              ? Ionicons.add_circle
+                              : Ionicons.add_circle_outline)
+                          : i == 2
+                          ? (i == selectedIndex
+                              ? Ionicons.compass
+                              : Ionicons.compass_outline)
+                          : i == 3
+                          ? (i == selectedIndex
+                              ? Ionicons.person_sharp
+                              : Ionicons.person_outline)
+                          : null,
+                      color: widget.iconColor,
+                      size: widget.iconSize,
                     ),
                   ),
               ],
@@ -174,63 +179,179 @@ class _CustomNavBarMobileState extends State<CustomNavBarMobile> {
   }
 }
 
-class WrapperWeb extends StatelessWidget {
-  const WrapperWeb({super.key});
+class WrapperWeb extends StatefulWidget {
+  const WrapperWeb({super.key, required this.userId});
+  final String userId;
+  @override
+  State<WrapperWeb> createState() => _WrapperWebState();
+}
+
+class _WrapperWebState extends State<WrapperWeb> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<WrapperBloc>().add(PageChageRequestedWeb(selectedIndex: 0));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    final heeight = MediaQuery.of(context).size.height;
+    final wiidth = MediaQuery.of(context).size.width;
+
+    log(heeight.toString());
+    log(wiidth.toString());
+    if (MediaQuery.of(context).size.width < 800) {
+      return Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.square(50),
+          child: Container(
+            height: 50,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [thmegrad1, thmegrad2],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: Row(
+                children: [Icon(Ionicons.menu, color: Colors.black54)],
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Scaffold(
+        body: Row(
+          children: [
+            Container(
+              height: heeight,
+              width: wiidth > 1120 ? 225 : wiidth / 5,
+              decoration: BoxDecoration(
+                border: Border(
+                  right: BorderSide(
+                    width: 0.5,
+                    color: whiteForText.withOpacity(0.2),
+                  ),
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 200,
+                    width: double.infinity,
+                    child: Image.asset(
+                      'assets/images/test_picture.jpg',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Gap(30),
+                  TabsForWeb(
+                    icondata: Ionicons.home_outline,
+                    title: 'Home',
+                    index: 0,
+                  ),
+                  TabsForWeb(
+                    icondata: Ionicons.heart_outline,
+                    title: 'Notification',
+                    index: 1,
+                  ),
+                  TabsForWeb(
+                    icondata: Ionicons.compass_outline,
+                    title: 'Explore',
+                    index: 2,
+                  ),
+                  TabsForWeb(
+                    icondata: Ionicons.add_circle_outline,
+                    title: 'Create',
+                    index: 3,
+                  ),
+                ],
+              ),
+            ),
+            BlocBuilder<WrapperBloc, WrapperState>(
+              builder: (context, state) {
+                if (state is HomePageSelectedWeb) {
+                  return HomePageRes(loggedUserID: widget.userId);
+                }
+                if (state is NotificationPageSelectedWeb) {
+                  return Center(child: Text('Notification'));
+                }
+                if (state is ExplorePageSelectedWeb) {
+                  return Center(child: Text('Explore'));
+                }
+                if (state is UploadPageSelectedWeb) {
+                  return Center(child: Text('Upload'));
+                }
+                return Center(child: Text('Home'));
+              },
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
 
+class TabsForWeb extends StatelessWidget {
+  const TabsForWeb({
+    super.key,
+    required this.icondata,
+    required this.title,
+    required this.index,
+  });
 
-/*           borderRadius: 18,
-          initialIndex: currentNavbarIndex,
-          onPageChanged: (value) {
-            setState(() {
-              currentNavbarIndex = value;
-            });
-          },
-          selectedIconColor: Colors.black,
-          unselectedIconColor: Colors.black,
-          hapticFeedback: true,
-          horizontalPadding: 30,
-          items: [
-            FloatingNavBarItem(
-              title: 'Home',
-              page: HomePageMobile(loggedUserId: widget.userId),
-              useImageIcon: false,
-              iconData:
-                  currentNavbarIndex == 0
-                      ? iconListSelected[0]
-                      : iconListUnselected[0],
-            ),
-            FloatingNavBarItem(
-              title: 'Explore',
-              page: Test(receivedText: 'Explore'),
-              useImageIcon: false,
+  final IconData icondata;
+  final String title;
+  final int index;
 
-              iconData:
-                  currentNavbarIndex == 1
-                      ? iconListSelected[1]
-                      : iconListUnselected[1],
-            ),
-            FloatingNavBarItem(
-              title: 'Notification',
-              page: Test(receivedText: 'Notifiaction'),
-              useImageIcon: false,
-              iconData:
-                  currentNavbarIndex == 2
-                      ? iconListSelected[2]
-                      : iconListUnselected[2],
-            ),
-            FloatingNavBarItem(
-              title: 'Profile',
-              page: Test(receivedText: 'Profile'),
-              useImageIcon: false,
-              iconData:
-                  currentNavbarIndex == 3
-                      ? iconListSelected[3]
-                      : iconListUnselected[3],
-            ),
-          ], */
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        context.read<WrapperBloc>().add(
+          PageChageRequestedWeb(selectedIndex: index),
+        );
+      },
+      leading: BlocBuilder<WrapperBloc, WrapperState>(
+        builder: (context, state) {
+          if ((state is HomePageSelectedWeb && index == 0) ||
+              (state is NotificationPageSelectedWeb && index == 1) ||
+              (state is ExplorePageSelectedWeb && index == 2) ||
+              (state is UploadPageSelectedWeb && index == 3)) {
+            return ShaderIcon(
+              iconWidget: Icon(icondata, size: 25, color: whiteForText),
+            );
+          }
+          return Icon(icondata, size: 18, color: whiteForText);
+        },
+      ),
+      title: BlocBuilder<WrapperBloc, WrapperState>(
+        builder: (context, state) {
+          if ((state is HomePageSelectedWeb && index == 0) ||
+              (state is NotificationPageSelectedWeb && index == 1) ||
+              (state is ExplorePageSelectedWeb && index == 2) ||
+              (state is UploadPageSelectedWeb && index == 3)) {
+            return ShaderText(
+              textWidget: Text(
+                title,
+                style: txtStyleNoColor(22),
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+              ),
+            );
+          }
+          return Text(
+            title,
+            style: txtStyle(15, whiteForText),
+            softWrap: true,
+            overflow: TextOverflow.ellipsis,
+          );
+        },
+      ),
+    );
+  }
+}

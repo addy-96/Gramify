@@ -1,6 +1,11 @@
 sealed class WrapperEvent {}
 
-final class PageChageRequested extends WrapperEvent {
+final class PageChageRequestedMobile extends WrapperEvent {
   final int selectedIndex;
-  PageChageRequested({required this.selectedIndex});
+  PageChageRequestedMobile({required this.selectedIndex});
+}
+
+final class PageChageRequestedWeb extends WrapperEvent {
+  final int selectedIndex;
+  PageChageRequestedWeb({required this.selectedIndex});
 }

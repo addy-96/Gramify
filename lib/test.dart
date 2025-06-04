@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gramify/app_bloc/wrapper_bloc/wrapper_bloc.dart';
+import 'package:gramify/app_bloc/wrapper_bloc/wrapper_event.dart';
 import 'package:gramify/auth/presentation/bloc/auth_bloc.dart';
-import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Test extends StatelessWidget {
   const Test({super.key, required this.receivedText});
@@ -12,18 +13,31 @@ class Test extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            ShaderText(textWidget: Text(receivedText)),
-            if (receivedText == 'Profile')
-              IconButton(
-                onPressed: () async {
-                  await Supabase.instance.client.auth.signOut();
+      body: SafeArea(
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(receivedText),
+              BlocListener<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is AuthLogedOut) {
+                    context.go('/');
+                  }
                 },
-                icon: Icon(Ionicons.log_out_outline),
+                child: IconButton(
+                  onPressed: () async {
+                    context.read<AuthBloc>().add(LogOutRequested());
+                    context.read<WrapperBloc>().add(
+                      PageChageRequestedMobile(selectedIndex: 0),
+                    );
+                    context.go('/');
+                  },
+                  icon: Icon(Ionicons.log_out, size: 40),
+                ),
               ),
-          ],
+            ],
+          ),
         ),
       ),
     );

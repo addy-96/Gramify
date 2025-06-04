@@ -24,3 +24,22 @@ final class AuthFailure extends AuthState {
   final String errorMessage;
   AuthFailure({required this.errorMessage});
 }
+
+final class AuthLogedOut extends AuthState {}
+
+final class ProfileImageSelectedState extends AuthState {
+  final File? selectedImage;
+  ProfileImageSelectedState({required this.selectedImage});
+}
+
+final class ProfileSelectionErrorState extends AuthState {
+  final String errorMessage;
+  ProfileSelectionErrorState({required this.errorMessage});
+}
+
+final class ProfileImageUploadFialure extends AuthState {
+  final String errorMessage;
+  ProfileImageUploadFialure({required this.errorMessage});
+}
+
+final class ProfileImageUploadSuccess extends AuthState {}

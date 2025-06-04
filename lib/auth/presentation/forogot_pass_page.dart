@@ -49,7 +49,7 @@ class _ForogotPassMobileState extends State<ForogotPassMobile> {
             children: [
               Text(
                 'Enter your email address.',
-                style: txtStyle(22, Colors.black),
+                style: txtStyle(22, Colors.white70),
               ),
               Gap(10),
               InputBoxMobile(

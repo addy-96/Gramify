@@ -11,8 +11,9 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 8, left: 2, right: 2),
-      child: SizedBox(
+      padding: const EdgeInsets.only(top: 8, bottom: 12, left: 2, right: 2),
+      child: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
