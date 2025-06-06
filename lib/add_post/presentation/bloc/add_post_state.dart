@@ -35,3 +35,11 @@ final class AssetsRetrievedState extends AddPostState {
     required this.selectedPicture,
   });
 }
+
+final class PostUploadSuccessState extends AddPostState {}
+
+final class PostUploadFailureState extends AddPostState {
+  final errorMessage;
+
+  PostUploadFailureState({required this.errorMessage});
+}

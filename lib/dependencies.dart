@@ -12,8 +12,16 @@ import 'package:gramify/auth/domain/usecase/logout_usecase.dart';
 import 'package:gramify/auth/domain/usecase/selectimage_usecase.dart';
 import 'package:gramify/auth/domain/usecase/signup_usecase.dart';
 import 'package:gramify/auth/domain/usecase/upload_profilepicture_usecase.dart';
+import 'package:gramify/explore/data/datasources/explore_remote_datasource.dart';
+import 'package:gramify/explore/data/repositories/explore_repository_impl.dart';
+import 'package:gramify/explore/domain/repository/explore_repository.dart';
+import 'package:gramify/profile/data/datasources/profile_remote_datasource.dart';
+import 'package:gramify/profile/data/repositories/profile_repository_impl.dart';
+import 'package:gramify/profile/domain/repositories/profile_repository.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 final GetIt servicelocator = GetIt.instance;
 
@@ -21,18 +29,26 @@ Future initDpendencies() async {
   await _authDepInit();
   await _wrapperInit();
   await _addPostInit();
+  await _profileBloc();
+  await _exploreInit();
 }
 
-_authDepInit() {
+_authDepInit() async {
   servicelocator.registerFactory(() => Supabase.instance);
   servicelocator.registerFactory(() => ImagePicker());
+
+  final sharedPref = await SharedPreferences.getInstance();
+  servicelocator.registerSingleton<SharedPreferences>(sharedPref);
 
   servicelocator.registerFactory<LocalDatasource>(
     () => LocalDatasourceImpl(imagePicker: servicelocator()),
   );
 
   servicelocator.registerFactory<AuthRemoteDatasource>(
-    () => AuthRemoteDatasourceImpl(supabase: servicelocator()),
+    () => AuthRemoteDatasourceImpl(
+      supabase: servicelocator(),
+      sharedPref: servicelocator<SharedPreferences>(),
+    ),
   );
 
   servicelocator.registerFactory<AuthRepository>(
@@ -68,11 +84,35 @@ _wrapperInit() {
 }
 
 _addPostInit() {
+  servicelocator.registerFactory(() => Uuid());
+
   servicelocator.registerFactory<AddPostDataSource>(
-    () => AddPostDataSourceImpl(supabase: servicelocator()),
+    () => AddPostDataSourceImpl(
+      supabase: servicelocator(),
+      uuid: servicelocator(),
+    ),
   );
 
   servicelocator.registerFactory<AddPostRepositories>(
     () => AddPostRepositoryImpl(addPostDatasource: servicelocator()),
+  );
+}
+
+_profileBloc() {
+  servicelocator.registerFactory<ProfileRemoteDatasource>(
+    () => ProfileRemoteDatasourceImpl(supabase: servicelocator()),
+  );
+
+  servicelocator.registerFactory<ProfileRepository>(
+    () => ProfileRepositoryImpl(profileRemoteDatasource: servicelocator()),
+  );
+}
+
+_exploreInit() {
+  servicelocator.registerFactory<ExploreRemoteDatasource>(
+    () => ExploreRemoteDatasourceImpl(supabase: servicelocator()),
+  );
+  servicelocator.registerFactory<ExploreRepository>(
+    () => ExploreRepositoryImpl(exploreRemoteDatasource: servicelocator()),
   );
 }

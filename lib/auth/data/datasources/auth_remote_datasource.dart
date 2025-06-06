@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/errors/server_exception.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthRemoteDatasource {
@@ -33,10 +34,10 @@ abstract interface class AuthRemoteDatasource {
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
-  AuthRemoteDatasourceImpl({required this.supabase});
+  AuthRemoteDatasourceImpl({required this.supabase, required this.sharedPref});
 
   final Supabase supabase;
-
+  final SharedPreferences sharedPref;
   @override
   Future<String> logUserIn({
     required String email,
@@ -51,6 +52,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
         throw ServerException(message: 'Authentication Failed!');
       }
       log('${res.user!.id} Signed Up');
+      await sharedPref.setString(userIdSharedKey, res.user!.id);
       return res.user!.id;
     } on ServerException catch (err) {
       throw ServerException(message: err.toString());
@@ -61,6 +63,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   Future<void> logUserOut() async {
     try {
       await supabase.client.auth.signOut();
+      await sharedPref.remove(userIdSharedKey);
       log('user logged out!');
     } catch (err) {
       log(err.toString());
@@ -93,7 +96,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
         fullname: fullname,
         profileImageUrl: profileImageUrl,
       );
-
+      await sharedPref.setString(userIdSharedKey, res.user!.id);
       return res.user!.id;
     } on ServerException catch (err) {
       throw ServerException(message: err.message);

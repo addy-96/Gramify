@@ -12,7 +12,7 @@ import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 import 'package:gramify/explore/presentation/explore_page.dart';
 import 'package:gramify/home/presentation/home_page.dart';
-import 'package:gramify/test.dart';
+import 'package:gramify/profile/presentation/profile_page.dart';
 import 'package:ionicons/ionicons.dart';
 
 class WrapperRes extends StatelessWidget {
@@ -46,6 +46,12 @@ class WrapperMobile extends StatefulWidget {
 
 class _WrapperMobileState extends State<WrapperMobile> {
   @override
+  void initState() {
+    super.initState();
+    context.read<WrapperBloc>().add(PageChageRequestedMobile(selectedIndex: 0));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
@@ -61,7 +67,7 @@ class _WrapperMobileState extends State<WrapperMobile> {
             return ExplorePage();
           }
           if (state is ProfilePageSlectedMobile) {
-            return Test(receivedText: 'Profile');
+            return ProfilePage(userId: null);
           }
           if (state is WrapperInitialState) {
             return HomePageRes(loggedUserID: widget.userId);

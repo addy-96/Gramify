@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 abstract interface class AddPostDataSource {
   Future<List<AssetPathEntity>?> loadAlbums(RequestType requestType);
@@ -18,7 +19,8 @@ abstract interface class AddPostDataSource {
 
 class AddPostDataSourceImpl implements AddPostDataSource {
   final Supabase supabase;
-  AddPostDataSourceImpl({required this.supabase});
+  final Uuid uuid;
+  AddPostDataSourceImpl({required this.supabase, required this.uuid});
 
   @override
   Future<List<AssetPathEntity>?> loadAlbums(RequestType requestType) async {
@@ -58,23 +60,23 @@ class AddPostDataSourceImpl implements AddPostDataSource {
     try {
       final userId = Supabase.instance.client.auth.currentUser!.id;
       final ref = supabase.client.from(userPostTable);
+      final createdPostId = uuid.v4();
+      await ref.insert({
+        'post_id': createdPostId,
+        'posted_by': userId,
+        'text_content': postCaption,
+        'likes_count': 0,
+        'image_url': '.',
+      }).select();
 
-      final response =
-          await ref.insert({
-            'posted_by': userId,
-            'text_content': postCaption,
-            'likes_count': 0,
-          }).select();
-
-      final insertedPost = response.first;
-      final postId = insertedPost['post_id'];
       final postbucketRef = supabase.client.storage.from(postPictureBucket);
-      await postbucketRef.upload(postId, selectedImageFile);
-      final postIMageUrl = postbucketRef.getPublicUrl(postId);
-      await ref.update({'image_url': postIMageUrl});
+      await postbucketRef.upload(createdPostId.toString(), selectedImageFile);
+      final postImageUrl = postbucketRef.getPublicUrl(createdPostId);
+      await ref
+          .update({'image_url': postImageUrl})
+          .eq('post_id', createdPostId);
     } catch (err) {
       log(err.toString());
-      return null;
     }
   }
 }

@@ -16,6 +16,9 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
 
     //
     on<GetAllAssetsRequested>(_onGetAllAssetsRequested);
+
+    //
+    on<UploadPostRequested>(_onUploadPostRequested);
   }
 
   _onCheckAssetPermission(
@@ -77,32 +80,23 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
     }
   }
 
-  /*
-  _onGetAllAssetsRequested(
-    GetAllAssetsRequeted event,
+  _onUploadPostRequested(
+    UploadPostRequested event,
     Emitter<AddPostState> emit,
   ) async {
-    emit(AddPostPageLoadingState());
-
     try {
-      final res = await addPostRepositories.loadAssets(event.selectedAlbum);
+      emit(AddPostPageLoadingState());
+      final res = await addPostRepositories.uploadPost(
+        postImage: event.postImage,
+        postCaption: event.postCaption,
+      );
 
       res.fold(
-        (l) => emit(
-          AddPostErrorState(
-            errorMessaage: 'GetAllAssetsRequested (cath)) : ${l.message}',
-          ),
-        ),
-        (r) =>
-            emit(AssetOfAlbumRetrieved(assetCount: r!.length, picturesList: r)),
+        (l) => emit(PostUploadFailureState(errorMessage: l.message)),
+        (r) => emit(PostUploadSuccessState()),
       );
     } catch (err) {
-      emit(
-        AddPostErrorState(
-          errorMessaage: 'GetAllAssetsRequested (cath)) : ${err.toString()}',
-        ),
-      );
+      emit(PostUploadFailureState(errorMessage: err.toString()));
     }
   }
-*/
 }

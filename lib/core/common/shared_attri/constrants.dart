@@ -7,5 +7,8 @@ const fullnameMAXLength = 25;
 final userTable = 'users_table';
 final userPostTable = 'users_posts';
 
-final userProfilePictureBucket = 'user.profile.pictures';
-final postPictureBucket = 'users.post.pictures';
+final userProfilePictureBucket = 'user-profile-pictures';
+final postPictureBucket = 'users-post-pictures';
+
+//sharedPreference Constant
+final userIdSharedKey = 'loggedUserId';

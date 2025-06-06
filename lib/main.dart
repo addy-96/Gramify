@@ -8,7 +8,9 @@ import 'package:gramify/auth/presentation/login_res_page.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/routes/app_routes_config.dart';
 import 'package:gramify/dependencies.dart';
+import 'package:gramify/explore/presentation/bloc/explore_bloc/explore_bloc.dart';
 import 'package:gramify/explore/presentation/bloc/explore_tab_bloc/explore_tab_bloc.dart';
+import 'package:gramify/profile/presentation/bloc/profile_bloc.dart';
 import 'package:gramify/test.dart';
 import 'package:gramify/wrapper.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -51,6 +53,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(create: (context) => SelectedpictureCubit()),
         BlocProvider(create: (context) => ExploreTabBloc()),
+        BlocProvider(
+          create: (context) => ProfileBloc(profileRepository: servicelocator()),
+        ),
+        BlocProvider(
+          create: (context) => ExploreBloc(exploreRepository: servicelocator()),
+        ),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:gramify/app_bloc/wrapper_bloc/wrapper_bloc.dart';
 import 'package:gramify/app_bloc/wrapper_bloc/wrapper_event.dart';
 import 'package:gramify/auth/presentation/bloc/auth_bloc.dart';
+
 import 'package:ionicons/ionicons.dart';
 
 class Test extends StatelessWidget {
@@ -18,6 +19,7 @@ class Test extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              IconButton(onPressed: () async {}, icon: Icon(Icons.check_box)),
               Text(receivedText),
               BlocListener<AuthBloc, AuthState>(
                 listener: (context, state) {
