@@ -1,5 +1,6 @@
 {
     "[dart]": {
         "editor.formatOnSave": true
-    }
+    },
+    "cmake.sourceDirectory": "/mnt/D288C28688C26895/Flutter Projects/gramify/linux"
 }

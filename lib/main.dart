@@ -1,16 +1,21 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gramify/add_post/presentation/bloc/add_post_bloc.dart';
-import 'package:gramify/add_post/presentation/bloc/cubit/selectedPicture_cubit.dart';
-import 'package:gramify/app_bloc/wrapper_bloc/wrapper_bloc.dart';
-import 'package:gramify/auth/presentation/bloc/auth_bloc.dart';
-import 'package:gramify/auth/presentation/login_res_page.dart';
+import 'package:gramify/core/dependencies.dart';
+import 'package:gramify/features/add_post/presentation/bloc/add_post_bloc.dart';
+import 'package:gramify/features/add_post/presentation/bloc/cubit/selectedPicture_cubit.dart';
+import 'package:gramify/features/messaging/presentation/bloc/message_bloc.dart';
+import 'package:gramify/features/messaging/presentation/bloc/ui/messaging_ui_bloc.dart';
+import 'package:gramify/main_presentaiton/app_bloc/wrapper_bloc/wrapper_bloc.dart';
+import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:gramify/features/auth/presentation/login_res_page.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/routes/app_routes_config.dart';
-import 'package:gramify/dependencies.dart';
-import 'package:gramify/explore/presentation/bloc/explore_bloc/explore_bloc.dart';
-import 'package:gramify/explore/presentation/bloc/explore_tab_bloc/explore_tab_bloc.dart';
-import 'package:gramify/profile/presentation/bloc/profile_bloc.dart';
+import 'package:gramify/features/explore/presentation/bloc/explore_bloc/explore_bloc.dart';
+import 'package:gramify/features/explore/presentation/bloc/explore_tab_bloc/explore_tab_bloc.dart';
+import 'package:gramify/features/home/presentation/bloc/homepage_bloc.dart';
+import 'package:gramify/core/ignore.dart';
+import 'package:gramify/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:gramify/test.dart';
 import 'package:gramify/wrapper.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -18,15 +23,14 @@ import 'package:supabase_flutter/supabase_flutter.dart' as sAuth;
 
 void main() async {
   await sAuth.Supabase.initialize(
-    anonKey:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRobWp6c3hicW9teGlkY3FoY3VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc3NDA3NDIsImV4cCI6MjA1MzMxNjc0Mn0.bD_zzbPdJdfhAHTmBRrsW1Ulem_1G35tZQb8T_qPmAI",
-    url: "https://dhmjzsxbqomxidcqhcud.supabase.co",
+    anonKey: SUPABSE_ANNON_KEY,
+    url: SUPABASE_URL,
   );
-
   await initDpendencies();
   runApp(const MyApp());
 }
 
+//
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -59,12 +63,25 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ExploreBloc(exploreRepository: servicelocator()),
         ),
+
+        BlocProvider(
+          create: (context) => HomepageBloc(homeRepositorie: servicelocator()),
+        ),
+
+        BlocProvider(create: (context) => MessagingUiBloc()),
+        BlocProvider(
+          create: (context) => MessageBloc(messageRepository: servicelocator()),
+        ),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         routerConfig: MyAppRoutes.router,
         title: 'Gramify',
         theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            surfaceTintColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
+          ),
           colorScheme: ColorScheme.fromSeed(
             seedColor: themeColor,
             brightness: Brightness.dark,
@@ -76,6 +93,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+//
 class Gramify extends StatefulWidget {
   const Gramify({super.key});
 
@@ -84,21 +102,38 @@ class Gramify extends StatefulWidget {
 }
 
 class _GramifyState extends State<Gramify> {
+  late final AppLifecycleListener _lifeCycleListener;
+  @override
+  void initState() {
+    super.initState();
+    log('Start');
+    _lifeCycleListener = AppLifecycleListener(
+      onRestart: () => log('App restareted'),
+      onPause: () => log('App restareted'),
+      onResume: () => log('App restareted'),
+      onInactive: () => log('App restareted'),
+      onStateChange: (value) {
+        log('App state changed to ${value.name}');
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(colors: [backGrad1, backGrad2]),
           ),
-          child: AppStart(),
+          child: const AppStart(),
         ),
       ),
     );
   }
 }
 
+//
 class AppStart extends StatelessWidget {
   const AppStart({super.key});
 
@@ -129,7 +164,7 @@ class AppStart extends StatelessWidget {
                 final userId = session.user.id;
                 return WrapperRes(userID: userId);
               } else {
-                return LoginResPage();
+                return const LoginResPage();
               }
             },
           );
@@ -139,7 +174,6 @@ class AppStart extends StatelessWidget {
         } else if (netSnapshot.hasError) {
           return Test(receivedText: '${netSnapshot.error} is the error');
         }
-
         return const Test(receivedText: 'Unknown connection state');
       },
     );

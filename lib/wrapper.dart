@@ -3,16 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:gramify/add_post/presentation/add_photo_mobile_page.dart';
-import 'package:gramify/app_bloc/wrapper_bloc/wrapper_bloc.dart';
-import 'package:gramify/app_bloc/wrapper_bloc/wrapper_event.dart';
-import 'package:gramify/app_bloc/wrapper_bloc/wrapper_state.dart';
+import 'package:gramify/features/add_post/presentation/mobile/select_post_picture.dart';
+import 'package:gramify/main_presentaiton/app_bloc/wrapper_bloc/wrapper_bloc.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
-import 'package:gramify/explore/presentation/explore_page.dart';
-import 'package:gramify/home/presentation/home_page.dart';
-import 'package:gramify/profile/presentation/profile_page.dart';
+import 'package:gramify/features/explore/presentation/mobile/explore_page_mobile.dart';
+import 'package:gramify/features/home/presentation/home_res_page.dart';
+import 'package:gramify/features/profile/presentation/mobile/profile_page.dart';
 import 'package:ionicons/ionicons.dart';
 
 class WrapperRes extends StatelessWidget {
@@ -35,6 +33,8 @@ class WrapperRes extends StatelessWidget {
     );
   }
 }
+
+//
 
 class WrapperMobile extends StatefulWidget {
   const WrapperMobile({super.key, required this.userId});
@@ -61,13 +61,13 @@ class _WrapperMobileState extends State<WrapperMobile> {
             return HomePageRes(loggedUserID: widget.userId);
           }
           if (state is UploadPageSelectedMobile) {
-            return AddPhotoMobilePage();
+            return const SelectPostPicture();
           }
           if (state is ExplorePageSelectedMobile) {
-            return ExplorePage();
+            return const ExplorePageMobile();
           }
           if (state is ProfilePageSlectedMobile) {
-            return ProfilePage(userId: null);
+            return const ProfilePageMobile(userId: null);
           }
           if (state is WrapperInitialState) {
             return HomePageRes(loggedUserID: widget.userId);
@@ -76,7 +76,7 @@ class _WrapperMobileState extends State<WrapperMobile> {
         },
       ),
 
-      bottomNavigationBar: CustomNavBarMobile(
+      bottomNavigationBar: const CustomNavBarMobile(
         borderRadius: 15,
         horizontalPadding: 40,
         verticalPadding: 20,
@@ -132,7 +132,7 @@ class _CustomNavBarMobileState extends State<CustomNavBarMobile> {
           height: MediaQuery.of(context).size.height / 11,
           width: double.infinity,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [Color(0xFF4E9F3D), Color(0xFF3AAFA9)],
@@ -140,7 +140,12 @@ class _CustomNavBarMobileState extends State<CustomNavBarMobile> {
             borderRadius: BorderRadius.circular(widget.borderRadius),
           ),
           child: Padding(
-            padding: EdgeInsets.only(left: 18, right: 18, top: 12, bottom: 12),
+            padding: const EdgeInsets.only(
+              left: 18,
+              right: 18,
+              top: 12,
+              bottom: 12,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -185,6 +190,7 @@ class _CustomNavBarMobileState extends State<CustomNavBarMobile> {
   }
 }
 
+//
 class WrapperWeb extends StatefulWidget {
   const WrapperWeb({super.key, required this.userId});
   final String userId;
@@ -209,18 +215,18 @@ class _WrapperWebState extends State<WrapperWeb> {
     if (MediaQuery.of(context).size.width < 800) {
       return Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.square(50),
+          preferredSize: const Size.square(50),
           child: Container(
             height: 50,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [thmegrad1, thmegrad2],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8),
+            child: const Padding(
+              padding: EdgeInsets.only(left: 8),
               child: Row(
                 children: [Icon(Ionicons.menu, color: Colors.black54)],
               ),
@@ -254,23 +260,23 @@ class _WrapperWebState extends State<WrapperWeb> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  Gap(30),
-                  TabsForWeb(
+                  const Gap(30),
+                  const TabsForWeb(
                     icondata: Ionicons.home_outline,
                     title: 'Home',
                     index: 0,
                   ),
-                  TabsForWeb(
+                  const TabsForWeb(
                     icondata: Ionicons.heart_outline,
                     title: 'Notification',
                     index: 1,
                   ),
-                  TabsForWeb(
+                  const TabsForWeb(
                     icondata: Ionicons.compass_outline,
                     title: 'Explore',
                     index: 2,
                   ),
-                  TabsForWeb(
+                  const TabsForWeb(
                     icondata: Ionicons.add_circle_outline,
                     title: 'Create',
                     index: 3,
@@ -284,15 +290,15 @@ class _WrapperWebState extends State<WrapperWeb> {
                   return HomePageRes(loggedUserID: widget.userId);
                 }
                 if (state is NotificationPageSelectedWeb) {
-                  return Center(child: Text('Notification'));
+                  return const Center(child: Text('Notification'));
                 }
                 if (state is ExplorePageSelectedWeb) {
-                  return Center(child: Text('Explore'));
+                  return const Center(child: Text('Explore'));
                 }
                 if (state is UploadPageSelectedWeb) {
-                  return Center(child: Text('Upload'));
+                  return const Center(child: Text('Upload'));
                 }
-                return Center(child: Text('Home'));
+                return const Center(child: Text('Home'));
               },
             ),
           ],

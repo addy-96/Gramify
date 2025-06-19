@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
-import 'package:gramify/auth/presentation/forogot_pass_page.dart';
-import 'package:gramify/auth/presentation/login_res_page.dart';
-import 'package:gramify/auth/presentation/signup_res_page.dart';
+import 'package:gramify/features/auth/presentation/mobile/forogot_pass_page.dart';
+import 'package:gramify/features/auth/presentation/login_res_page.dart';
+import 'package:gramify/features/auth/presentation/signup_res_page.dart';
 import 'package:gramify/core/routes/app_routes_const.dart';
 import 'package:gramify/main.dart';
 import 'package:gramify/wrapper.dart';
@@ -34,7 +34,7 @@ class MyAppRoutes {
       GoRoute(
         name: MyAppRoutesConstant.forgotPassRouteName,
         path: '/forgot_password',
-        builder: (context, state) => ForogotPassResPage(),
+        builder: (context, state) => const ForogotPassResPage(),
       ),
     ],
   );

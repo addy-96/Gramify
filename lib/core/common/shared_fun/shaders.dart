@@ -9,7 +9,7 @@ class ShaderNormal extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShaderMask(
       shaderCallback:
-          (bounds) => LinearGradient(
+          (bounds) => const LinearGradient(
             colors: [thmegrad1, thmegrad2],
           ).createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
       blendMode: BlendMode.srcIn,
@@ -27,7 +27,7 @@ class ShaderText extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShaderMask(
       shaderCallback:
-          (bounds) => LinearGradient(
+          (bounds) => const LinearGradient(
             colors: [thmegrad1, thmegrad2],
           ).createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
       child: textWidget,
@@ -44,7 +44,7 @@ class ShaderIamge extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShaderMask(
       shaderCallback:
-          (bounds) => LinearGradient(
+          (bounds) => const LinearGradient(
             colors: [thmegrad1, thmegrad2],
 
             begin: Alignment.topCenter,
@@ -65,7 +65,7 @@ class ShaderIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShaderMask(
       shaderCallback:
-          (bounds) => LinearGradient(
+          (bounds) => const LinearGradient(
             colors: [Color(0xFF4E9F3D), Color(0xFF3AAFA9)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
