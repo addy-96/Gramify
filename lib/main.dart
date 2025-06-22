@@ -175,7 +175,7 @@ class AppStart extends StatelessWidget {
             );
           } else if (netSnapshot.hasData &&
               netSnapshot.data == InternetStatus.disconnected) {
-            return const Test(receivedText: 'No Internet');
+            return const Test(receivedText: 'No internet');
           } else if (netSnapshot.hasError) {
             return Test(receivedText: '${netSnapshot.error} is the error');
           }
