@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:fpdart/fpdart.dart';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/common/shared_fun/get_logged_userId.dart';
 import 'package:gramify/core/errors/server_exception.dart';
@@ -9,15 +7,17 @@ import 'package:gramify/features/messaging/domain/model/search_user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class MessageDatasorce {
-  // one function to get all user chats
-  Future<List<SearchUserModel>?> searchUserToChat({
-    required String searchQuery,
-  });
-  Future<List<MessageModel>?> setChatRoom({required String userIdToChat});
+  Future<List<SearchUserModel>?> loadUserPrevChats();
+
+  Future<List<SearchUserModel>> searchUserToChat({required String searchQuery});
+
+  Future<String> setChatRoom({required String userIdToChat});
+
   Future<String?> getChatId({
     required String loggedUserId,
     required String receipintUserID,
   });
+
   Future<void> addToUsersChats({
     required String chatId,
     required String loggedUserId,
@@ -25,12 +25,12 @@ abstract interface class MessageDatasorce {
   });
 
   Future<void> sendMessage({
-    required String chatID,
     required String reciepntuserID,
     required String message,
   });
 
-  Future<List<MessageModel>?> loadChats({required String chatId});
+  Stream<List<MessageModel>> loadChatsStream({required String chatId});
+
   Future<String> createChatRoom({
     required String loggedUSerId,
     required String userIdToChat,
@@ -41,31 +41,27 @@ class MessageDataSourceImpl implements MessageDatasorce {
   MessageDataSourceImpl({required this.supabase});
   final Supabase supabase;
 
-  //
   @override
-  Future<List<MessageModel>?> setChatRoom({
-    required String userIdToChat,
-  }) async {
+  Future<String> setChatRoom({required String userIdToChat}) async {
     try {
       final loggedUserId = await getLoggedUserId();
 
-      //check if chatroom exist
       final checkChatId = await getChatId(
         loggedUserId: loggedUserId,
         receipintUserID: userIdToChat,
-      ); // if exist load messages
+      );
+
       if (checkChatId != null) {
-        log('not nuull');
-        final getchats = await loadChats(chatId: checkChatId);
-        return getchats;
+        return checkChatId;
       } else {
-        final res = await createChatRoom(
+        final chatId = createChatRoom(
           loggedUSerId: loggedUserId,
           userIdToChat: userIdToChat,
         );
+        return chatId;
       }
-      return [];
     } catch (err) {
+      log('Error in messagedatasource.swtchatroom : ${err.toString()}');
       throw ServerException(message: err.toString());
     }
   }
@@ -75,36 +71,20 @@ class MessageDataSourceImpl implements MessageDatasorce {
     required String loggedUserId,
     required String receipintUserID,
   }) async {
+    log('logged user');
     try {
-      final getCreatedChats = await supabase.client
-          .from(userTable)
-          .select('created_chats')
-          .eq('user_id', loggedUserId);
-
-      final List<dynamic> createdChats =
-          getCreatedChats.first['created_chats'] ?? [];
-
-      final List<dynamic> getRecievedChats = await supabase.client
-          .from(userTable)
-          .select('received_chats')
-          .eq('user_id', receipintUserID);
-
-      final List<dynamic> receivedChats =
-          getRecievedChats.first['received_chats'] ?? [];
-
-      if ((createdChats == null || createdChats.isEmpty) ||
-          (receivedChats == null || receivedChats.isEmpty)) {
+      final res = await supabase.client
+          .from(chatsTable)
+          .select('chat_id')
+          .or(
+            'and(participant_1.eq.$loggedUserId,participant_2.eq.$receipintUserID),and(participant_1.eq.$receipintUserID,participant_2.eq.$loggedUserId)',
+          );
+      if (res.isEmpty) {
         return null;
       }
-      final Set<dynamic> set1 = createdChats.toSet();
-      final Set<dynamic> set2 = receivedChats.toSet();
-      final commonChat = set1.concat(set2);
-
-      if (commonChat == {} || commonChat.isEmpty) {
-        return null;
-      }
-      return commonChat.first as String;
+      return res.first['chat_id'];
     } catch (err) {
+      log('Error in messagedatasource.getchatid : ${err.toString()}');
       throw ServerException(message: err.toString());
     }
   }
@@ -116,70 +96,73 @@ class MessageDataSourceImpl implements MessageDatasorce {
     required String receipintUserID,
   }) async {
     try {
-      //logged user data modify
       final loggedUsrDat = await supabase.client
           .from(userTable)
-          .select('created_chats')
+          .select('chats')
           .eq('user_id', loggedUserId);
 
-      final List<dynamic> listOfCreatedChats =
-          loggedUsrDat.first['created_chats'] ?? [];
+      final List<dynamic> listOfLoggedChats = loggedUsrDat.first['chats'] ?? [];
 
-      if (!listOfCreatedChats.contains(chatId)) {
-        listOfCreatedChats.add(chatId);
+      if (!listOfLoggedChats.contains(chatId)) {
+        listOfLoggedChats.add(chatId);
       }
 
       await supabase.client
           .from(userTable)
-          .update({'created_chats': listOfCreatedChats})
+          .update({'chats': listOfLoggedChats})
           .eq('user_id', loggedUserId);
 
       //other user data modify
       final recepintUsrDat = await supabase.client
           .from(userTable)
-          .select('received_chats')
+          .select('chats')
           .eq('user_id', receipintUserID);
 
-      final List<dynamic> listOfRecievedChats =
-          recepintUsrDat.first['received_chats'] ?? [];
+      final List<dynamic> listOfRecieverChats =
+          recepintUsrDat.first['chats'] ?? [];
 
-      if (!listOfRecievedChats.contains(chatId)) {
-        listOfRecievedChats.add(chatId);
+      if (!listOfRecieverChats.contains(chatId)) {
+        listOfRecieverChats.add(chatId);
       }
 
       await supabase.client
           .from(userTable)
-          .update({'received_chats': listOfRecievedChats})
+          .update({'chats': listOfRecieverChats})
           .eq('user_id', receipintUserID);
     } catch (err) {
+      log('Error in messagedatasource.addtouserchat : ${err.toString()}');
       throw ServerException(message: err.toString());
     }
   }
 
   @override
-  Future<List<SearchUserModel>?> searchUserToChat({
+  Future<List<SearchUserModel>> searchUserToChat({
     required String searchQuery,
   }) async {
     try {
-      if (searchQuery == null || searchQuery.isEmpty) {
-        return [];
-      }
       final loggedUserId = await getLoggedUserId();
 
       final List<SearchUserModel> listOfSearchedUser = [];
+
       final getFollowerList = await supabase.client
           .from(userTable)
-          .select('list-of-followers')
+          .select('list-of-followers, list-of-following')
           .eq('user_id', loggedUserId);
 
       final List<dynamic> listOfFollowers =
           getFollowerList.first['list-of-followers'] ?? [];
+      final List<dynamic> listOfFollowing =
+          getFollowerList.first['list-of-following'] ?? [];
 
-      for (var userid in listOfFollowers) {
+      Set<dynamic> listOfAllUSer = {...listOfFollowers, ...listOfFollowing};
+
+      for (var userid in listOfAllUSer) {
         final res2 = await supabase.client
             .from(userTable)
             .select('username, profile_image_url, user_id')
             .eq('user_id', userid);
+
+        final username = res2.first['username'] as String;
 
         var chatID = await getChatId(
           loggedUserId: loggedUserId,
@@ -191,13 +174,12 @@ class MessageDataSourceImpl implements MessageDatasorce {
           userIdToChat: res2.first['user_id'],
         );
 
-        final username = res2.first['username'] as String;
         if (username.startsWith(searchQuery)) {
           final user = SearchUserModel(
-            profileImageUrl: res2.first['profile_image_url'] ?? null,
+            profileImageUrl: res2.first['profile_image_url'],
             userId: res2.first['user_id'],
             username: res2.first['username'],
-            chatId: chatID,
+            chatID: chatID,
           );
 
           listOfSearchedUser.add(user);
@@ -205,51 +187,57 @@ class MessageDataSourceImpl implements MessageDatasorce {
       }
       return listOfSearchedUser;
     } catch (err) {
+      log('Error in messagedatasource.searchusertochat : ${err.toString()}');
+
       throw ServerException(message: err.toString());
     }
   }
 
   @override
   Future<void> sendMessage({
-    required String chatID,
     required String reciepntuserID,
     required String message,
   }) async {
     try {
       final loggedUserId = await getLoggedUserId();
-      final res = await supabase.client.from(messageTable).insert({
-        'chat_id': chatID,
+      final getChatID = await getChatId(
+        loggedUserId: loggedUserId,
+        receipintUserID: reciepntuserID,
+      );
+      await supabase.client.from(messageTable).insert({
+        'chat_id': getChatID,
         'sender_id': loggedUserId,
         'receiver_id': reciepntuserID,
         'message': message,
       });
     } catch (err) {
+      log('Error in messagedatasource.searchusertochat : ${err.toString()}');
+
       throw ServerException(message: err.toString());
     }
   }
 
   @override
-  Future<List<MessageModel>?> loadChats({required String chatId}) async {
-    try {
-      List<MessageModel> messageList = [];
-      final getMessagesRequest = await supabase.client
-          .from(messageTable)
-          .select('sender_id, receiver_id, message, created_at')
-          .eq('chat_id', chatId)
-          .order('created_at', ascending: true);
-      for (var message in getMessagesRequest) {
-        final msg = MessageModel(
-          senderId: message['sender_id'],
-          receiverId: message['receiver_id'],
-          message: message['message'],
-          messageTime: DateTime.now(),
-        );
-        messageList.add(msg);
-      }
-      return messageList;
-    } catch (err) {
-      throw ServerException(message: err.toString());
-    }
+  Stream<List<MessageModel>> loadChatsStream({required String chatId}) {
+    log('calllllllllllllllllllled');
+    return supabase.client
+        .from(messageTable)
+        .stream(
+          primaryKey: ['chat_id'],
+        ) // Replace 'id' with your actual primary key column
+        .eq('chat_id', chatId)
+        .order('created_at', ascending: true)
+        .map((data) {
+          return data.map((message) {
+            log(message['message']);
+            return MessageModel(
+              senderId: message['sender_id'],
+              receiverId: message['receiver_id'],
+              message: message['message'],
+              messageTime: DateTime.parse(message['created_at']),
+            );
+          }).toList();
+        });
   }
 
   @override
@@ -258,22 +246,39 @@ class MessageDataSourceImpl implements MessageDatasorce {
     required String userIdToChat,
   }) async {
     try {
-      final createChatroom =
+      final addchatIdRequest =
           await supabase.client.from(chatsTable).insert({
-            'participants_id': [loggedUSerId, userIdToChat],
+            'participant_1': loggedUSerId,
+            'participant_2': userIdToChat,
           }).select();
 
-      final chatId = createChatroom.first['chat_id'];
-
       await addToUsersChats(
-        chatId: chatId,
+        chatId: addchatIdRequest.first['chat_id'],
         loggedUserId: loggedUSerId,
         receipintUserID: userIdToChat,
       );
-      return chatId;
+      return addchatIdRequest.first['chat_id'];
     } catch (err) {
+      log('Error in messagedatasource.createchatroom : ${err.toString()}');
       throw ServerException(message: err.toString());
     }
+  }
+
+  @override
+  Future<List<SearchUserModel>?> loadUserPrevChats() async {
+    final loggedUSerID = await getLoggedUserId();
+    try {
+      final listOfChatId = await supabase.client
+          .from(userTable)
+          .select('chats')
+          .eq('user_id', loggedUSerID);
+
+      if (listOfChatId.isEmpty) {
+        return [];
+      }
+      for (var item in listOfChatId) {}
+    } catch (err) {}
+    return null;
   }
 }
 
@@ -335,4 +340,45 @@ class MessageDataSourceImpl implements MessageDatasorce {
             username: res2.first['username'],
           );
           listOfSearchedUser.add(user);
-        } */
+        } 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+         @override
+  Future<List<MessageModel>?> loadChats({required String chatId}) async {
+    try {
+      List<MessageModel> messageList = [];
+      final getMessagesRequest = await supabase.client
+          .from(messageTable)
+          .select('sender_id, receiver_id, message, created_at')
+          .eq('chat_id', chatId)
+          .order('created_at', ascending: true);
+      for (var message in getMessagesRequest) {
+        final msg = MessageModel(
+          senderId: message['sender_id'],
+          receiverId: message['receiver_id'],
+          message: message['message'],
+          messageTime: DateTime.now(), // to add the actual time
+        );
+        messageList.add(msg);
+      }
+      return messageList;
+    } catch (err) {
+      throw ServerException(message: err.toString());
+    }
+  }
+        */

@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/features/auth/presentation/widgets/custom_button.dart';
 import 'package:gramify/features/auth/presentation/widgets/signUp_input_box_web.dart';
-import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_fun/csnack.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
@@ -155,7 +154,6 @@ class _SignupPageWebState extends State<SignupPageWeb> {
                         ShaderIamge(
                           imageWidget: Image.asset(
                             'assets/images/logo_black.png',
-                            color: themeColor,
                             width: getWiidth(wiidth) / 1.8,
                           ),
                         ),
@@ -173,7 +171,7 @@ class _SignupPageWebState extends State<SignupPageWeb> {
                           height: 40,
                           child: CustomButton(
                             isFacebookButton: true,
-                            buttonRadius: 8,
+                            buttonRadius: 14,
                             isFilled: true,
                             buttonText: 'Log in with Facebook',
                             onTapEvent: () {}, //yet to implement
@@ -204,7 +202,7 @@ class _SignupPageWebState extends State<SignupPageWeb> {
                         SizedBox(
                           height: 40,
                           child: CustomButton(
-                            buttonRadius: 8,
+                            buttonRadius: 14,
                             isFilled: true,
                             buttonText: 'Sign up.',
                             isFacebookButton: false,
@@ -266,9 +264,7 @@ class _SignupPageWebState extends State<SignupPageWeb> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(color: Colors.black87.withOpacity(0.5)),
-          child: const Center(
-            child: CircularProgressIndicator(color: themeColor),
-          ),
+          child: const Center(child: CircularProgressIndicator()),
         ),
       ],
     );

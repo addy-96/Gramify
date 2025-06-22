@@ -12,13 +12,19 @@ final class ChattingScreenRequested extends MessageEvent {
 }
 
 final class SendMessageRequested extends MessageEvent {
-  final String chatId;
   final String receipintId;
   final String message;
+  final String chatId;
 
   SendMessageRequested({
-    required this.chatId,
     required this.receipintId,
     required this.message,
+    required this.chatId,
   });
+}
+
+final class LoadMessagesRequested extends MessageEvent {
+  final String chatID;
+
+  LoadMessagesRequested({required this.chatID});
 }

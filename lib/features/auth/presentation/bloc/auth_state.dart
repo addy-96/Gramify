@@ -43,3 +43,13 @@ final class ProfileImageUploadFialure extends AuthState {
 }
 
 final class ProfileImageUploadSuccess extends AuthState {}
+
+final class CheckedUsernameState extends AuthState {
+  final bool isAvailable;
+  CheckedUsernameState({required this.isAvailable});
+}
+
+final class CheckedUsernameFailureState extends AuthState {
+  final String errorMessage;
+  CheckedUsernameFailureState({required this.errorMessage});
+}

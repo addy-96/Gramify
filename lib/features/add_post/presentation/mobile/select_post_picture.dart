@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gramify/features/add_post/presentation/bloc/add_post_bloc.dart';
 import 'package:gramify/features/add_post/presentation/mobile/post_creator_page.dart';
-import 'package:gramify/features/add_post/presentation/mobile/widgets/album_grid_view.dart';
-import 'package:gramify/features/add_post/presentation/mobile/widgets/grant_permission_button.dart';
-import 'package:gramify/features/add_post/presentation/mobile/widgets/menu_container.dart';
-import 'package:gramify/features/add_post/presentation/mobile/widgets/picture_container.dart';
+import 'package:gramify/features/add_post/presentation/widgets/album_grid_view.dart';
+import 'package:gramify/features/add_post/presentation/widgets/grant_permission_button.dart';
+import 'package:gramify/features/add_post/presentation/widgets/menu_container.dart';
+import 'package:gramify/features/add_post/presentation/widgets/picture_container.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 
 class SelectPostPicture extends StatefulWidget {
@@ -29,17 +29,15 @@ class _SelectPostPictureState extends State<SelectPostPicture> {
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-          icon: const ShaderIcon(
-            iconWidget: Icon(Icons.arrow_back_ios_new_outlined),
-          ),
+          icon: const Icon(Icons.arrow_back_ios_new_outlined),
+
           onPressed: () => context.pop(),
         ),
-        title: const ShaderText(textWidget: Text('Create Post')),
+        title: Text('Create Post'),
         actions: [
           IconButton(
-            icon: const ShaderIcon(
-              iconWidget: Icon(Icons.arrow_forward_ios_outlined),
-            ),
+            icon: const Icon(Icons.arrow_forward_ios_outlined),
+
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(

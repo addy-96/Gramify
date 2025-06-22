@@ -8,17 +8,14 @@ abstract interface class MessageRepository {
     required String searchQuery,
   });
 
-  Future<Either<Failure, List<MessageModel>?>> setChatRoom({
-    required String userId,
-  });
+  Future<Either<Failure, String>> setChatRoom({required String userId});
 
   Future<Either<Failure, void>> sendMessage({
-    required String chatID,
     required String receipintID,
     required String message,
   });
 
-  Future<Either<Failure, List<MessageModel>?>> loadMessage({
+  Future<Either<Failure, Stream<List<MessageModel>>>> loadMessage({
     required String chatId,
   });
 }

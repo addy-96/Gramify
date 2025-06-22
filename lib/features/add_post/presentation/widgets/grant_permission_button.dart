@@ -18,7 +18,7 @@ Widget grantPermissionButton(BuildContext context) => Center(
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
-          gradient: LinearGradient(colors: [thmegrad1, thmegrad2]),
+          gradient: const LinearGradient(colors: [thmegrad1, thmegrad2]),
         ),
         child: Padding(
           padding: const EdgeInsets.all(2),

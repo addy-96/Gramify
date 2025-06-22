@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -5,11 +6,11 @@ import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_fun/csnack.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
-import 'package:gramify/features/messaging/domain/model/message_model.dart';
 import 'package:gramify/features/messaging/presentation/bloc/message_bloc.dart';
 import 'package:gramify/features/messaging/presentation/bloc/message_event.dart';
 import 'package:gramify/features/messaging/presentation/bloc/message_state.dart';
 import 'package:gramify/features/messaging/presentation/mobile/chats_page.dart';
+import 'package:gramify/features/messaging/presentation/widgets/message_bubble.dart';
 import 'package:ionicons/ionicons.dart';
 
 class ChattingPage extends StatefulWidget {
@@ -20,10 +21,11 @@ class ChattingPage extends StatefulWidget {
     required this.username,
     required this.chatId,
   });
-  final String chatId;
+
   final String userid;
   final String? imageUrl;
   final String username;
+  final String chatId;
 
   @override
   State<ChattingPage> createState() => _ChattingPageState();
@@ -31,11 +33,21 @@ class ChattingPage extends StatefulWidget {
 
 class _ChattingPageState extends State<ChattingPage> {
   final TextEditingController messageController = TextEditingController();
+  final ScrollController chatScrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<MessageBloc>().add(
+      ChattingScreenRequested(userId: widget.userid),
+    );
+  }
 
   @override
   void dispose() {
     super.dispose();
     messageController.dispose();
+    chatScrollController.dispose();
   }
 
   @override
@@ -105,6 +117,7 @@ class _ChattingPageState extends State<ChattingPage> {
               child: BlocConsumer<MessageBloc, MessageState>(
                 builder: (context, state) {
                   if (state is MessageLoadingState) {
+                    log('MessageLoadingState');
                     return Center(
                       child: Text(
                         'Loading Chats...',
@@ -113,6 +126,8 @@ class _ChattingPageState extends State<ChattingPage> {
                     );
                   }
                   if (state is LoadUserChatsFailureState) {
+                    log('LoadUserChatsFailureState');
+
                     return Center(
                       child: Text(
                         'Sorry! ${state.errorMessage}',
@@ -124,29 +139,42 @@ class _ChattingPageState extends State<ChattingPage> {
                     messageController.clear();
                   }
                   if (state is LoadUserChatsState) {
-                    if (state.messages == null || state.messages!.isEmpty) {
-                      return Center(
-                        child: Text(
-                          'Say Hi to ${widget.username}',
-                          style: txtStyle(22, Colors.grey.shade800),
-                        ),
-                      );
-                    }
-
-                    return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      itemCount: state.messages!.length,
-                      itemBuilder: (context, index) {
-                        return Text(
-                          state.messages![index].message,
-                          style: txtStyle(22, whiteForText),
-                        );
+                    return StreamBuilder(
+                      stream: state.messages,
+                      builder: (context, snapshot) {
+                        log('streamed');
+                        if (snapshot.hasData) {
+                          if (snapshot.data!.isEmpty) {
+                            return Center(
+                              child: Text('Say Hi to ${widget.username}'),
+                            );
+                          }
+                          return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              return MessageBubble(
+                                isRight:
+                                    state.loggedUserId ==
+                                    snapshot.data![index].senderId,
+                                message: snapshot.data![index].message,
+                              );
+                            },
+                          );
+                        }
+                        return Container();
                       },
                     );
                   }
                   return const SizedBox.shrink();
                 },
-                listener: (context, state) {},
+                listener: (context, state) {
+                  if (state is RoomSetState) {
+                    context.read<MessageBloc>().add(
+                      LoadMessagesRequested(chatID: state.chatID),
+                    );
+                  }
+                },
               ),
             ),
             Container(
@@ -207,11 +235,12 @@ class _ChattingPageState extends State<ChattingPage> {
                           }
                           context.read<MessageBloc>().add(
                             SendMessageRequested(
-                              chatId: widget.chatId,
                               receipintId: widget.userid,
                               message: messageController.text.trim(),
+                              chatId: widget.chatId,
                             ),
                           );
+
                           messageController.clear();
                         },
                         icon: const ShaderIcon(iconWidget: Icon(Ionicons.send)),

@@ -37,3 +37,8 @@ final class UploadProfilePictureRequested extends AuthEvent {
     required this.username,
   });
 }
+
+final class CheckUsernameRequested extends AuthEvent {
+  final String enteredString;
+  CheckUsernameRequested({required this.enteredString});
+}

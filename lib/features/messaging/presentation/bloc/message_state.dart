@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:gramify/features/messaging/domain/model/message_model.dart';
 import 'package:gramify/features/messaging/domain/model/search_user_model.dart';
 
@@ -14,14 +13,21 @@ final class SearchedUserState extends MessageState {
   SearchedUserState({required this.searchedUserList});
 }
 
+final class RoomSetState extends MessageState {
+  final String chatID;
+
+  RoomSetState({required this.chatID});
+}
+
 final class SearchUserFailureState extends MessageState {
   final String errorMessage;
   SearchUserFailureState({required this.errorMessage});
 }
 
 final class LoadUserChatsState extends MessageState {
-  final List<MessageModel>? messages;
-  LoadUserChatsState({required this.messages});
+  final Stream<List<MessageModel>> messages;
+  final String loggedUserId;
+  LoadUserChatsState({required this.messages, required this.loggedUserId});
 }
 
 final class LoadUserChatsFailureState extends MessageState {

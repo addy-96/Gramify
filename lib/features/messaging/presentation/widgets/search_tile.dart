@@ -3,12 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
-import 'package:gramify/features/messaging/presentation/bloc/message_bloc.dart';
-import 'package:gramify/features/messaging/presentation/bloc/message_event.dart';
 import 'package:gramify/features/messaging/presentation/bloc/ui/messaging_ui_bloc.dart';
 import 'package:gramify/features/messaging/presentation/bloc/ui/messaging_ui_event.dart';
 import 'package:gramify/features/messaging/presentation/mobile/chatting_page.dart';
-import 'package:gramify/features/messaging/presentation/widgets/chat_tile.dart';
 import 'package:ionicons/ionicons.dart';
 
 class SearchTile extends StatelessWidget {
@@ -30,9 +27,6 @@ class SearchTile extends StatelessWidget {
       onTap: () {
         context.read<MessagingUiBloc>().add(
           SearchBoxToggledUIevent(action: false),
-        );
-        context.read<MessageBloc>().add(
-          ChattingScreenRequested(userId: userid),
         );
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(

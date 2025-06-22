@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/features/auth/presentation/mobile/signup_details_page.dart';
 import 'package:gramify/features/auth/presentation/widgets/custom_button.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
@@ -44,6 +45,7 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
   @override
   Widget build(BuildContext context) {
     final heeight = MediaQuery.of(context).size.height;
+    final weeight = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
         child: Flex(
@@ -52,20 +54,25 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
             Flexible(
               flex: /* (heeight / 3).toInt() */ 3,
               child: Padding(
-                padding: const EdgeInsets.only(top: 8, left: 12, right: 12),
+                padding: EdgeInsets.only(
+                  top: heeight / 20,
+                  left: 15,
+                  right: 15,
+                ),
                 child: Column(
                   children: [
                     Text(
+                      textAlign: TextAlign.center,
                       'What\'s your email address?',
                       style: txtStyle(
-                        25,
+                        title26,
                         whiteForText,
                       ).copyWith(fontWeight: FontWeight.w600),
                     ),
                     Text(
                       'Enter the email address at which you can be contacted. No one will see this on your profile.',
                       textAlign: TextAlign.center,
-                      style: txtStyle(15, whiteForText),
+                      style: txtStyle(bodyText14, whiteForText),
                     ),
                     const Gap(10),
                     Padding(
@@ -74,20 +81,17 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                         children: [
                           TextField(
                             controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
                             cursorColor: Colors.white,
                             decoration: InputDecoration(
                               hintText: 'Email',
-                              hintStyle: txtStyle(
-                                18,
-                                whiteForText,
-                              ).copyWith(fontWeight: FontWeight.bold),
+                              hintStyle: txtStyle(bodyText16, whiteForText),
                               border: OutlineInputBorder(
                                 borderSide: const BorderSide(
                                   width: 1,
                                   color: Colors.white60,
                                 ),
-
-                                borderRadius: BorderRadius.circular(14),
+                                borderRadius: BorderRadius.circular(50),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(
@@ -95,16 +99,16 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                                   color: Colors.white,
                                 ),
 
-                                borderRadius: BorderRadius.circular(14),
+                                borderRadius: BorderRadius.circular(50),
                               ),
                             ),
-                            style: txtStyle(18, whiteForText),
+                            style: txtStyle(bodyText16, whiteForText),
                           ),
                           const Gap(30),
                           SizedBox(
                             height: heeight / 15,
                             child: CustomButton(
-                              buttonRadius: 15,
+                              buttonRadius: 50,
                               isFilled: true,
                               buttonText: 'Submit',
                               isFacebookButton: false,
@@ -133,8 +137,8 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                       textWidget: Text(
                         'Already have an account?',
                         style: txtStyleNoColor(
-                          18,
-                        ).copyWith(fontWeight: FontWeight.w600),
+                          subTitle18,
+                        ).copyWith(fontWeight: FontWeight.normal),
                       ),
                     ),
                   ),

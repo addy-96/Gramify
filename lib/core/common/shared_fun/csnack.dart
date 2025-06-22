@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gramify/core/common/shared_attri/colors.dart';
+import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 
@@ -7,23 +9,24 @@ void csnack(BuildContext context, String message) {
     ..clearSnackBars()
     ..showSnackBar(
       SnackBar(
-        duration: const Duration(seconds: 4),
+        shape: ContinuousRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        duration: const Duration(seconds: 3),
         content: ShaderText(
           textWidget: Text(
             message,
             style: txtStyle(
-              18,
-              Colors.white,
-            ).copyWith(fontWeight: FontWeight.w500),
+              bodyText16,
+              whiteForText,
+            ).copyWith(fontWeight: FontWeight.normal),
           ),
         ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: const Color.fromARGB(255, 44, 44, 45),
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
-        elevation: 50,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-
-        dismissDirection: DismissDirection.horizontal,
+        elevation: 30,
+        dismissDirection: DismissDirection.up,
       ),
     );
 }

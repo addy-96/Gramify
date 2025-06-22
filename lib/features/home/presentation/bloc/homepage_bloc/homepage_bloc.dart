@@ -1,13 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gramify/features/home/domain/repositories/home_repositories.dart';
-import 'package:gramify/features/home/presentation/bloc/homepage_event.dart';
-import 'package:gramify/features/home/presentation/bloc/homepage_state.dart';
+import 'package:gramify/features/home/presentation/bloc/homepage_bloc/homepage_event.dart';
+import 'package:gramify/features/home/presentation/bloc/homepage_bloc/homepage_state.dart';
 
 class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
   final HomeRepositories homeRepositorie;
   HomepageBloc({required this.homeRepositorie})
     : super(HomePageInititalState()) {
     on<FeedsRequested>(_onFeedsRequested);
+
+    //
+    on<UpdateFeedPostLikeStatus>(_onUpdateFeedPostLikeStatus);
   }
 
   void _onFeedsRequested(
@@ -15,6 +18,9 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
     Emitter<HomepageState> emit,
   ) async {
     try {
+      if (state is FeedsFetchedState) {
+        return;
+      }
       emit(HomePageLoadingState());
       final res = await homeRepositorie.loadUserFeeds();
       res.fold(
@@ -31,6 +37,24 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
           errorMessage: 'error in returiving feeds : ${err.toString()}',
         ),
       );
+    }
+  }
+
+  void _onUpdateFeedPostLikeStatus(
+    UpdateFeedPostLikeStatus event,
+    Emitter<HomepageState> emit,
+  ) {
+    if (state is FeedsFetchedState) {
+      final currentState = state as FeedsFetchedState;
+      final updatedFeeds =
+          currentState.feedList.map((post) {
+            if (post.postId == event.postId) {
+              return post.copyWith(isLiked: event.isLiked);
+            }
+            return post;
+          }).toList();
+
+      emit(FeedsFetchedState(feedList: updatedFeeds));
     }
   }
 }

@@ -32,6 +32,8 @@ abstract interface class AuthRemoteDatasource {
     required File profileImage,
     required String username,
   });
+
+  Future<bool> checkUsername({required String enteredUsername});
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
@@ -146,6 +148,26 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       throw ServerException(message: err.message);
     } catch (err) {
       throw Failure(message: err.toString());
+    }
+  }
+
+  @override
+  Future<bool> checkUsername({required String enteredUsername}) async {
+    //true if doesnot exist except return false
+    try {
+      final res = await supabase.client
+          .from(userTable)
+          .select('username')
+          .eq('username', enteredUsername);
+      if (res.isEmpty) {
+        return true;
+      } else if (res.first['username'] == enteredUsername) {
+        return false;
+      }
+      return true;
+    } catch (err) {
+      log('error in auth remnotdatatsourec. checkUserna: ${err.toString()}');
+      throw ServerException(message: err.toString());
     }
   }
 }

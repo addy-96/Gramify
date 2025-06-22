@@ -54,17 +54,26 @@ class _SignupInputBoxWebState extends State<SignupInputBoxWeb> {
                       ),
                     )
                     : null,
-            enabledBorder: const OutlineInputBorder(
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(9),
               gapPadding: 8,
-              borderSide: BorderSide(color: Color(0xFFa8a892), width: 0.5),
+              borderSide: const BorderSide(
+                color: Color(0xFFa8a892),
+                width: 0.5,
+              ),
             ),
-            focusedBorder: const OutlineInputBorder(
+            focusedBorder: OutlineInputBorder(
               gapPadding: 8,
-              borderSide: BorderSide(color: Colors.white60, width: 2),
+              borderRadius: BorderRadius.circular(9),
+              borderSide: const BorderSide(color: Colors.white60, width: 2),
             ),
-            border: const OutlineInputBorder(
+            border: OutlineInputBorder(
               gapPadding: 8,
-              borderSide: BorderSide(color: Color(0xFFa8a892), width: 0.5),
+              borderRadius: BorderRadius.circular(9),
+              borderSide: const BorderSide(
+                color: Color(0xFFa8a892),
+                width: 0.5,
+              ),
             ),
             contentPadding: const EdgeInsets.only(
               left: 6,

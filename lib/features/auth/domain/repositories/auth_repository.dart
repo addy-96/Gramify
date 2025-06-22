@@ -22,4 +22,6 @@ abstract interface class AuthRepository {
   );
 
   Future<Either<Failure, File?>> selectImageFromLocalStorage();
+
+  Future<Either<Failure, bool>> cehckUsername({required String enteredString});
 }

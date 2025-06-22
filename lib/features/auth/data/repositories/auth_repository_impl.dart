@@ -86,4 +86,18 @@ class AuthRepositoryImpl implements AuthRepository {
       return left(Failure(message: err.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, bool>> cehckUsername({
+    required String enteredString,
+  }) async {
+    try {
+      final res = await authRemoteDatasource.checkUsername(
+        enteredUsername: enteredString,
+      );
+      return right(res);
+    } catch (err) {
+      return left(Failure(message: err.toString()));
+    }
+  }
 }

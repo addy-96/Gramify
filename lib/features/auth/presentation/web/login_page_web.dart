@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/features/auth/presentation/widgets/custom_button.dart';
 import 'package:gramify/features/auth/presentation/widgets/input_box_login_web.dart';
-import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_fun/csnack.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
@@ -129,7 +128,6 @@ class _LoginPageWebState extends State<LoginPageWeb> {
                                               height: 200,
                                               width: 300,
                                               'assets/images/logo_black.png',
-                                              color: themeColor,
                                               fit: BoxFit.contain,
                                             ),
                                           ),
@@ -168,7 +166,7 @@ class _LoginPageWebState extends State<LoginPageWeb> {
                                                   )
                                                   : CustomButton(
                                                     isFacebookButton: false,
-                                                    buttonRadius: 12,
+                                                    buttonRadius: 14,
                                                     isFilled: true,
                                                     buttonText: 'Log in',
                                                     onTapEvent: onLogIn,

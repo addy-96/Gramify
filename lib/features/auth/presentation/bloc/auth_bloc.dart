@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gramify/features/auth/domain/usecase/check_username_usecase.dart';
 import 'package:gramify/features/auth/domain/usecase/login_usecase.dart';
 import 'package:gramify/features/auth/domain/usecase/logout_usecase.dart';
 import 'package:gramify/features/auth/domain/usecase/selectimage_usecase.dart';
@@ -14,6 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LogoutUsecase logoutUsecase;
   final SelectimageUsecase selectimageUsecase;
   final UploadProfilepictureUsecase uploadProfilepictureUsecase;
+  final CheckUsernameUsecase checkUsernameUsecase;
 
   AuthBloc({
     required this.loginUsecase,
@@ -21,6 +23,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.logoutUsecase,
     required this.selectimageUsecase,
     required this.uploadProfilepictureUsecase,
+    required this.checkUsernameUsecase,
   }) : super(AuthInitialState()) {
     //
     on<LogInRequested>(_onLogInRequested);
@@ -36,6 +39,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     //
     on<UploadProfilePictureRequested>(_onUploadProfilePictureRequested);
+
+    //
+    on<CheckUsernameRequested>(_onCheckUsernameRequested);
   }
 
   _onLogInRequested(LogInRequested event, Emitter<AuthState> emit) async {
@@ -111,6 +117,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     res.fold(
       (l) => emit(ProfileImageUploadFialure(errorMessage: l.message)),
       (r) => emit(ProfileImageUploadSuccess()),
+    );
+  }
+
+  _onCheckUsernameRequested(
+    CheckUsernameRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    final res = await checkUsernameUsecase.call(
+      CheckUsernameParams(eneteredUsername: event.enteredString),
+    );
+
+    res.fold(
+      (l) => emit(CheckedUsernameFailureState(errorMessage: l.message)),
+      (r) => emit(CheckedUsernameState(isAvailable: r)),
     );
   }
 }

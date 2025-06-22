@@ -50,10 +50,7 @@ class _InputBoxMobileState extends State<InputBoxMobile> {
                     icon:
                         isPasswordHidden
                             ? const ShaderIcon(
-                              iconWidget: Icon(
-                                CupertinoIcons.eye,
-                                color: themeColor,
-                              ),
+                              iconWidget: Icon(CupertinoIcons.eye),
                             )
                             : const Icon(
                               CupertinoIcons.eye_slash,
@@ -63,19 +60,19 @@ class _InputBoxMobileState extends State<InputBoxMobile> {
                   : null,
           labelText: widget.hintText,
           labelStyle: txtStyle(
-            15,
+            bodyText14,
             whiteForText,
-          ).copyWith(fontWeight: FontWeight.bold),
+          ).copyWith(fontWeight: FontWeight.normal),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.white, width: 2),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(50),
           ),
           border: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.white60, width: 0.2),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(100),
           ),
         ),
-        style: txtStyle(18, whiteForText),
+        style: txtStyle(bodyText14, whiteForText),
       ),
     );
   }

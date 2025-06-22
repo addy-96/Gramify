@@ -155,7 +155,7 @@ class _ChatsPageState extends State<ChatsPage> {
                             itemCount: state.searchedUserList!.length,
                             itemBuilder:
                                 (context, index) => SearchTile(
-                                  chatID: state.searchedUserList![index].chatId,
+                                  chatID: state.searchedUserList![index].chatID,
                                   imageUrl:
                                       state
                                           .searchedUserList![index]
@@ -212,38 +212,9 @@ Widget defaultBody() => Column(
 
         child: ListView.builder(
           itemCount: 15,
-          itemBuilder: (context, index) => ChatTile(),
+          itemBuilder: (context, index) => const ChatTile(),
         ),
       ),
     ),
   ],
 );
-
-
-
-
-/*   child: BlocConsumer<MessageBloc, MessageState>(
-                      listener: (context, state) {
-                        if (state is SearchUserFailureState) {
-                          csnack(context, state.errorMessage);
-                        }
-                      },
-                      builder: (context, state) {
-                        if (state is SearchedUserState) {
-                          return ListView.builder(
-                            itemCount: state.searchedUserList.length,
-                            itemBuilder:
-                                (context, index) => Text(
-                                  state.searchedUserList[index].username,
-                                ),
-                          );
-                        }
-                        if (state is MessageLoadingState) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                        return const SizedBox.shrink();
-                      },
-                    ),  */
-                    // Adjust opacity as needed

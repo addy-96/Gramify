@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/features/add_post/presentation/bloc/add_post_bloc.dart';
 import 'package:gramify/features/add_post/presentation/bloc/cubit/selectedPicture_cubit.dart';
 import 'package:gramify/features/add_post/presentation/mobile/camera_page_for_post.dart';
@@ -47,21 +48,18 @@ class _MenuContainerState extends State<MenuContainer> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 DropdownButton<AssetPathEntity>(
-                  icon: const ShaderIcon(
-                    iconWidget: Icon(Ionicons.chevron_down_outline, size: 20),
-                  ),
+                  icon: const Icon(Ionicons.chevron_down_outline, size: 20),
+
                   value: selectedalbum,
                   items:
                       albumlist.map((item) {
                         return DropdownMenuItem(
                           value: item,
-                          child: ShaderText(
-                            textWidget: Text(
-                              item.name,
-                              style: txtStyleNoColor(18),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                          child: Text(
+                            item.name,
+                            style: txtStyleNoColor(18),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         );
                       }).toList(),
@@ -89,7 +87,10 @@ class _MenuContainerState extends State<MenuContainer> {
                         );
                       },
                       child: ShaderText(
-                        textWidget: Text('Story', style: txtStyleNoColor(22)),
+                        textWidget: Text(
+                          'Story',
+                          style: txtStyleNoColor(subTitle20),
+                        ),
                       ),
                     ),
                     const Gap(20),
@@ -102,9 +103,7 @@ class _MenuContainerState extends State<MenuContainer> {
                           ),
                         );
                       },
-                      child: const ShaderIcon(
-                        iconWidget: Icon(Ionicons.camera_outline, size: 30),
-                      ),
+                      child: const Icon(Ionicons.camera_outline, size: 30),
                     ),
                   ],
                 ),

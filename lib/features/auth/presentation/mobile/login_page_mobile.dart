@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/features/auth/presentation/widgets/custom_button.dart';
 import 'package:gramify/features/auth/presentation/widgets/forgot_pass_button.dart';
@@ -33,7 +32,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
 
     if (!_emailController.text.trim().contains('@') ||
         !_emailController.text.trim().contains('.')) {
-      return csnack(context, 'Invalid Email');
+      return csnack(context, 'Invalid Email !');
     }
 
     context.read<AuthBloc>().add(
@@ -48,10 +47,10 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
   Widget build(BuildContext context) {
     var heeight = MediaQuery.of(context).size.height;
     var wiidth = MediaQuery.of(context).size.width;
+    var thm = Theme.of(context);
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
-          log('hakakabakaka');
           return csnack(context, state.errorMessage);
         }
 
@@ -86,7 +85,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                             children: [
                               Text(
                                 'English (India)',
-                                style: txtStyle(15, whiteForText),
+                                style: txtStyle(bodyText14, whiteForText),
                               ),
                               const Icon(
                                 Icons.keyboard_arrow_down_outlined,
@@ -99,14 +98,15 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                         ShaderIamge(
                           imageWidget: Image.asset(
                             'assets/images/logo_black.png',
-                            color: themeColor,
                             width: wiidth / 2,
                             height: heeight / 10,
                           ),
                         ),
                         Gap(heeight / 8),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: wiidth / 16,
+                          ),
                           child: Column(
                             children: [
                               InputBoxMobile(
@@ -123,7 +123,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                               SizedBox(
                                 height: MediaQuery.of(context).size.height / 15,
                                 child: CustomButton(
-                                  buttonRadius: 10,
+                                  buttonRadius: 50,
                                   isFilled: true,
                                   buttonText: 'Log in',
                                   isFacebookButton: false,
@@ -136,7 +136,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                                 height: MediaQuery.of(context).size.height / 15,
                                 child: CustomButton(
                                   isFacebookButton: false,
-                                  buttonRadius: 10,
+                                  buttonRadius: 50,
                                   isFilled: true,
                                   buttonText: 'Create new account',
                                   onTapEvent: () {

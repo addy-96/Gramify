@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:gramify/features/add_post/data/datasources/add_post_datasource.dart';
 import 'package:gramify/features/add_post/data/repositories/add_post_repository_impl.dart';
 import 'package:gramify/features/add_post/domain/repositories/add_post_repositories.dart';
+import 'package:gramify/features/auth/domain/usecase/check_username_usecase.dart';
 import 'package:gramify/features/messaging/data/datasorces/message_datasorce.dart';
 import 'package:gramify/features/messaging/data/repositories/message_repositories_impl.dart';
 import 'package:gramify/features/messaging/domain/repositories/message_repository.dart';
@@ -84,6 +85,10 @@ _authDepInit() async {
 
   servicelocator.registerFactory(
     () => SelectimageUsecase(authRepository: servicelocator()),
+  );
+
+  servicelocator.registerFactory(
+    () => CheckUsernameUsecase(authRepository: servicelocator()),
   );
 }
 
