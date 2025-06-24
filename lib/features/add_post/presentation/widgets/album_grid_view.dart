@@ -64,7 +64,7 @@ class AlbumGridView extends StatelessWidget {
         itemCount: itemCount,
         itemBuilder: itemBuilder,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
+          crossAxisCount: 5,
         ),
       ),
     );

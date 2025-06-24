@@ -49,7 +49,11 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
       final updatedFeeds =
           currentState.feedList.map((post) {
             if (post.postId == event.postId) {
-              return post.copyWith(isLiked: event.isLiked);
+              return post.copyWith(
+                isLiked: event.isLiked,
+                likesCount:
+                    event.isLiked ? post.likesCount + 1 : post.likesCount - 1,
+              );
             }
             return post;
           }).toList();

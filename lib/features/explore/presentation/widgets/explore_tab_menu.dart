@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
+import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 import 'package:gramify/features/explore/presentation/bloc/explore_tab_bloc/explore_tab_bloc.dart';
@@ -42,13 +43,13 @@ class ExploreTabMenu extends StatelessWidget {
                           textWidget: Text(
                             tabName,
                             textAlign: TextAlign.center,
-                            style: txtStyleNoColor(18),
+                            style: txtStyleNoColor(bodyText16),
                           ),
                         )
                         : Text(
                           tabName,
                           textAlign: TextAlign.center,
-                          style: txtStyle(18, whiteForText),
+                          style: txtStyle(bodyText16, whiteForText),
                         ),
               ),
             ),

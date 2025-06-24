@@ -5,6 +5,8 @@ final class SearchUserRequested extends MessageEvent {
   SearchUserRequested({required this.inputString});
 }
 
+final class ChatsScreenRequested extends MessageEvent {}
+
 final class ChattingScreenRequested extends MessageEvent {
   final String userId;
 

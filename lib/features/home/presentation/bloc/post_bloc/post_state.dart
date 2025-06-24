@@ -17,3 +17,5 @@ final class CommentsFetchedState extends PostState {
   final List<CommentModel> commentList;
   CommentsFetchedState({required this.commentList});
 }
+
+final class CommentedState extends PostState {}

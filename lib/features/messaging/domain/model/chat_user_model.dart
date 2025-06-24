@@ -1,13 +1,17 @@
 class ChatUserModel {
-  final String user_id;
-  final String fullname;
-  final String? imageUrl;
-  final String chat_id;
+  final String receepintUserId;
+  final String receepintFullname;
+  final String? receipintProfile;
+  final String chatId;
+  final String lastMessage;
+  final DateTime createdAt;
 
   ChatUserModel({
-    required this.user_id,
-    required this.fullname,
-    required this.imageUrl,
-    required this.chat_id,
+    required this.createdAt,
+    required this.lastMessage,
+    required this.chatId,
+    required this.receepintFullname,
+    required this.receepintUserId,
+    required this.receipintProfile,
   });
 }

@@ -13,4 +13,8 @@ abstract interface class ProfileRepository {
   Future<Either<Failure, void>> followRequested({
     required String followedUserId,
   });
+
+  Future<Either<Failure, void>> unfollowRequested({
+    required String followedUserID,
+  });
 }

@@ -2,60 +2,102 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
-import 'package:gramify/core/common/shared_fun/get_logged_userId.dart';
+import 'package:gramify/core/common/shared_fun/calculate_upload_time.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:gramify/features/messaging/domain/model/chat_user_model.dart';
+import 'package:gramify/features/messaging/presentation/mobile/chatting_page.dart';
+import 'package:ionicons/ionicons.dart';
 
 class ChatTile extends StatelessWidget {
-  const ChatTile({super.key});
+  const ChatTile({super.key, required this.chatUserModel});
+  final ChatUserModel chatUserModel;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () async {
-        final supabase = Supabase.instance;
-        log('tapped');
-        try {
-          var loggedUSerID = await getLoggedUserId();
-          final getListOfChatId = await supabase.client
-              .from(userTable)
-              .select('chats')
-              .eq('user_id', loggedUSerID);
-
-          List<dynamic> listofFinalchats = [];
-          final listOfUserChats = getListOfChatId.first['chats'];
-          for (var chatId in listOfUserChats) {
-            final getParticipants = await supabase.client
-                .from(chatsTable)
-                .select()
-                .eq('chat_id', chatId);
-
-            final par1 = getParticipants.first['participant_1'];
-            final par2 = getParticipants.first['participant_2'];
-            log('par1 : $par1');
-            log('par2 : $par2');
-            final endParticipantsId = par1 == loggedUSerID ? par2 : par1;
-            listofFinalchats.add(endParticipantsId);
-          }
-          for (var item in listofFinalchats) {
-            log(item.toString());
-          }
-        } catch (err) {}
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder:
+                (context) => ChattingPage(
+                  userid: chatUserModel.receepintUserId,
+                  username: chatUserModel.receepintFullname,
+                  chatId: chatUserModel.chatId,
+                ),
+          ),
+        );
       },
       focusColor: Colors.transparent,
       splashColor: Colors.transparent,
       enableFeedback: true,
       style: ListTileStyle.list,
-      leading: const CircleAvatar(),
-      title: Text('Username', style: txtStyle(20, whiteForText)),
+      leading: CircleAvatar(
+        backgroundColor: Colors.transparent,
+        backgroundImage:
+            chatUserModel.receipintProfile != null
+                ? NetworkImage(chatUserModel.receipintProfile!)
+                : null,
+        child:
+            chatUserModel.receipintProfile == null
+                ? const Icon(Ionicons.person_outline)
+                : null,
+      ),
+      title: Text(
+        chatUserModel.receepintFullname,
+        style: txtStyle(bodyText16, Colors.white),
+      ),
       trailing: Text(
-        '7:30 PM',
+        calulateChatLatTime(chatUserModel.createdAt),
         style: txtStyle(15, whiteForText.withOpacity(0.4)),
       ),
       subtitle: Text(
-        'Wht u doin?',
+        chatUserModel.lastMessage,
         style: txtStyle(15, Colors.grey.withOpacity(0.4)),
       ),
     );
   }
 }
+
+/*          final loggedUserId = await getLoggedUserId();
+          final getUserChats =
+              await supabase.client
+                  .from(userTable)
+                  .select('chats')
+                  .eq('user_id', loggedUserId)
+                  .single();
+
+          final List<dynamic> userChatsList = getUserChats['chats'];
+          final List<String> talkedUSerChats = [];
+          log('before : $userChatsList');
+          for (var chatId in userChatsList) {
+            final res =
+                await supabase.client
+                    .from(messageTable)
+                    .select()
+                    .eq('chat_id', chatId)
+                    .maybeSingle();
+            if (res != null) {
+              talkedUSerChats.add(chatId);
+            }
+          }
+          for (var chatID in talkedUSerChats) {
+            final getParticipants =
+                await supabase.client
+                    .from(chatsTable)
+                    .select('participant_1, participant_2')
+                    .eq('chat_id', chatID)
+                    .single();
+
+            final String otherParticipant;
+            if (getParticipants['participant_1'] == loggedUserId) {
+              otherParticipant = getParticipants['participant_2'];
+            } else {
+              otherParticipant = getParticipants['participant_1'];
+            }
+            final getotherParticpantData =
+                await supabase.client
+                    .from(userTable)
+                    .select()
+                    .eq('user_id', otherParticipant)
+                    .single();
+          } */

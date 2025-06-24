@@ -1,8 +1,10 @@
 import 'package:gramify/features/profile/domain/models/user_profile_model.dart';
 
 class OtherUserProfileModel extends UserProfileModel {
-  final bool? isFollowing;
+  bool isFollowing;
+  final String userID;
   OtherUserProfileModel({
+    required this.userID,
     required super.username,
     required super.fullname,
     required super.profileImageUrl,

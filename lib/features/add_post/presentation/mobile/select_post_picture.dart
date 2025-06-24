@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gramify/core/common/shared_attri/constrants.dart';
+import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 import 'package:gramify/features/add_post/presentation/bloc/add_post_bloc.dart';
 import 'package:gramify/features/add_post/presentation/mobile/post_creator_page.dart';
 import 'package:gramify/features/add_post/presentation/widgets/album_grid_view.dart';
@@ -33,11 +35,10 @@ class _SelectPostPictureState extends State<SelectPostPicture> {
 
           onPressed: () => context.pop(),
         ),
-        title: Text('Create Post'),
+        title: Text('Create Post', style: txtStyle(subTitle18, Colors.white)),
         actions: [
           IconButton(
             icon: const Icon(Icons.arrow_forward_ios_outlined),
-
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(

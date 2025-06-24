@@ -42,7 +42,21 @@ class ProfileRepositoryImpl implements ProfileRepository {
       final res = await profileRemoteDatasource.followRequested(
         userID: followedUserId,
       );
-      return right(null);
+      return right(res);
+    } catch (err) {
+      return left(Failure(message: err.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> unfollowRequested({
+    required String followedUserID,
+  }) async {
+    try {
+      final res = await profileRemoteDatasource.unfollowRequested(
+        userID: followedUserID,
+      );
+      return right(res);
     } catch (err) {
       return left(Failure(message: err.toString()));
     }

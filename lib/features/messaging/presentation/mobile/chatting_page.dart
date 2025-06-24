@@ -125,7 +125,7 @@ class _ChattingPageState extends State<ChattingPage> {
                       ),
                     );
                   }
-                  if (state is LoadUserChatsFailureState) {
+                  if (state is LoadUserMessageFailureState) {
                     log('LoadUserChatsFailureState');
 
                     return Center(
@@ -138,7 +138,7 @@ class _ChattingPageState extends State<ChattingPage> {
                   if (state is MessageSentState) {
                     messageController.clear();
                   }
-                  if (state is LoadUserChatsState) {
+                  if (state is LoadUserMessageState) {
                     return StreamBuilder(
                       stream: state.messages,
                       builder: (context, snapshot) {

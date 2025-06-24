@@ -77,12 +77,12 @@ class _WrapperMobileState extends State<WrapperMobile> {
       ),
 
       bottomNavigationBar: const CustomNavBarMobile(
-        borderRadius: 15,
-        horizontalPadding: 40,
+        borderRadius: 14,
+        horizontalPadding: 60,
         verticalPadding: 20,
         navitemsLength: 4,
         iconColor: Colors.black87,
-        iconSize: 30,
+        iconSize: 25,
         initialIndex: 0,
       ),
     );
@@ -129,7 +129,7 @@ class _CustomNavBarMobileState extends State<CustomNavBarMobile> {
           right: widget.horizontalPadding,
         ),
         child: Container(
-          height: MediaQuery.of(context).size.height / 11,
+          height: MediaQuery.of(context).size.height / 13,
           width: double.infinity,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
@@ -144,7 +144,7 @@ class _CustomNavBarMobileState extends State<CustomNavBarMobile> {
               left: 18,
               right: 18,
               top: 12,
-              bottom: 12,
+              bottom: 15,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

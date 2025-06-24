@@ -1,0 +1,66 @@
+String calculatePostUploadTime(DateTime uploadTime) {
+  final DateTime now = DateTime.now();
+
+  final difference = now.difference(uploadTime);
+  if (difference.inSeconds < 60) {
+    return '${difference.inSeconds} seconds ago.';
+  } else if (difference.inMinutes < 60) {
+    return '${difference.inMinutes} hour ago.';
+  } else if (difference.inHours < 24) {
+    return '${difference.inHours} hour ago.';
+  } else {
+    final daysDiffernece = difference.inDays;
+    if (daysDiffernece < 29) {
+      return '$daysDiffernece days ago.';
+    } else if (daysDiffernece >= 29) {
+      return '${uploadTime.day} ${uploadTime.month} ${uploadTime.year}';
+    } else {
+      return uploadTime.year.toString();
+    }
+  }
+}
+
+String claulateCommentTime(DateTime commentTime) {
+  final DateTime now = DateTime.now();
+  final difference = now.difference(commentTime);
+  if (difference.inSeconds < 60) {
+    return '${difference.inSeconds}s';
+  } else if (difference.inMinutes < 60) {
+    return '${difference.inMinutes}m';
+  } else if (difference.inHours < 24) {
+    return '${difference.inHours}h';
+  } else {
+    final daysDiffernece = difference.inDays;
+    return '${daysDiffernece}d';
+  }
+}
+
+String calulateChatLatTime(DateTime lastTime) {
+  final List<String> months = [
+    'Jan.',
+    'Feb.',
+    'Mar.',
+    'Apr.',
+    'May',
+    'Jun.',
+    'Jul.',
+    'Aug.',
+    'Sep.',
+    'Oct.',
+    'Nov.',
+    'Dec.',
+  ];
+  final now = DateTime.now();
+  final difference = now.difference(lastTime);
+
+  if (difference.inSeconds < 60 ||
+      difference.inMinutes < 60 ||
+      difference.inHours < 24) {
+    if (difference.inHours < 12) {
+      return '${lastTime.hour} : ${lastTime.minute} AM';
+    } else if (difference.inHours >= 12 && difference.inMinutes < 24) {
+      return '${difference.inHours} : ${difference.inMinutes} PM';
+    }
+  }
+  return '${lastTime.day} ${months[lastTime.month + 1]} ${lastTime.year}';
+}

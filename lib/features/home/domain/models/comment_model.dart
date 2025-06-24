@@ -16,4 +16,24 @@ class CommentModel {
     required this.commenterUsername,
     required this.commentProfileImageUrl,
   });
+
+  CommentModel copyWith({
+    String? postId,
+    String? commentId,
+    String? comment,
+    DateTime? commentTime,
+    String? commenterUserId,
+    String? commenterUsername,
+    String? commentProfileImageUrl,
+  }) {
+    return CommentModel(
+      postId: this.postId,
+      commentId: this.commentId,
+      comment: this.comment,
+      commentTime: this.commentTime,
+      commenterUserId: this.commenterUserId,
+      commenterUsername: this.commenterUsername,
+      commentProfileImageUrl: commentProfileImageUrl,
+    );
+  }
 }

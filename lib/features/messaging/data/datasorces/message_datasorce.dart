@@ -2,13 +2,12 @@ import 'dart:developer';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/common/shared_fun/get_logged_userId.dart';
 import 'package:gramify/core/errors/server_exception.dart';
+import 'package:gramify/features/messaging/domain/model/chat_user_model.dart';
 import 'package:gramify/features/messaging/domain/model/message_model.dart';
 import 'package:gramify/features/messaging/domain/model/search_user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class MessageDatasorce {
-  Future<List<SearchUserModel>?> loadUserPrevChats();
-
   Future<List<SearchUserModel>> searchUserToChat({required String searchQuery});
 
   Future<String> setChatRoom({required String userIdToChat});
@@ -35,6 +34,8 @@ abstract interface class MessageDatasorce {
     required String loggedUSerId,
     required String userIdToChat,
   });
+
+  Future<List<ChatUserModel>> getUserChats();
 }
 
 class MessageDataSourceImpl implements MessageDatasorce {
@@ -265,20 +266,77 @@ class MessageDataSourceImpl implements MessageDatasorce {
   }
 
   @override
-  Future<List<SearchUserModel>?> loadUserPrevChats() async {
-    final loggedUSerID = await getLoggedUserId();
+  Future<List<ChatUserModel>> getUserChats() async {
+    final List<ChatUserModel> chatList = [];
     try {
-      final listOfChatId = await supabase.client
-          .from(userTable)
-          .select('chats')
-          .eq('user_id', loggedUSerID);
+      final loggedUserId = await getLoggedUserId();
+      final getUserChats =
+          await supabase.client
+              .from(userTable)
+              .select('chats')
+              .eq('user_id', loggedUserId)
+              .single();
 
-      if (listOfChatId.isEmpty) {
-        return [];
+      final List<dynamic> userChatsList = getUserChats['chats'];
+      final List<String> talkedUSerChats = [];
+      for (var chatId in userChatsList) {
+        final res = await supabase.client
+            .from(messageTable)
+            .select()
+            .eq('chat_id', chatId);
+        if (res.isNotEmpty) {
+          talkedUSerChats.add(res.first['chat_id']);
+        }
       }
-      for (var item in listOfChatId) {}
-    } catch (err) {}
-    return null;
+      log('here 1');
+      for (var chatID in talkedUSerChats) {
+        final getParticipants =
+            await supabase.client
+                .from(chatsTable)
+                .select('participant_1, participant_2')
+                .eq('chat_id', chatID)
+                .single();
+        log('here 2');
+        final String otherParticipant;
+        if (getParticipants['participant_1'] == loggedUserId) {
+          otherParticipant = getParticipants['participant_2'];
+        } else {
+          otherParticipant = getParticipants['participant_1'];
+        }
+        log('here 3');
+        final getotherParticpantData =
+            await supabase.client
+                .from(userTable)
+                .select('fullname, profile_image_url ')
+                .eq('user_id', otherParticipant)
+                .single();
+        log('here 4');
+        final getLatMessage =
+            await supabase.client
+                .from(messageTable)
+                .select('message, created_at')
+                .eq('chat_id', chatID)
+                .order('created_at', ascending: false)
+                .limit(1)
+                .single();
+
+        //  log(getLatMessage.length.toString());
+        final ChatUserModel chatUserModel = ChatUserModel(
+          chatId: chatID,
+          receepintFullname: getotherParticpantData['fullname'],
+          receepintUserId: otherParticipant,
+          receipintProfile: getotherParticpantData['profile_image_url'],
+          lastMessage: getLatMessage['message'],
+          createdAt: DateTime.parse(getLatMessage['created_at']),
+        );
+
+        chatList.add(chatUserModel);
+      }
+      return chatList;
+    } catch (err) {
+      log('Error in messagedatasource.getuserchats : ${err.toString()} ');
+      throw ServerException(message: err.toString());
+    }
   }
 }
 

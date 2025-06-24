@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
+import 'package:gramify/core/common/shared_fun/calculate_upload_time.dart';
 import 'package:gramify/core/common/shared_fun/csnack.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 import 'package:gramify/features/home/domain/models/comment_model.dart';
@@ -35,6 +36,8 @@ class CommentSection extends StatefulWidget {
 }
 
 class _CommentSectionState extends State<CommentSection> {
+  final List<CommentModel> commentLIst = [];
+
   @override
   void initState() {
     super.initState(); // looadcomments
@@ -213,6 +216,7 @@ class _CommentsInputboxState extends State<CommentsInputbox> {
                               comment: commentController.text.trim(),
                             ),
                           );
+                          commentController.clear();
                         },
                         icon: const Icon(Ionicons.send_outline),
                         padding: const EdgeInsets.only(top: 10),
@@ -268,13 +272,13 @@ class CommentsTile extends StatelessWidget {
                         textAlign: TextAlign.start,
                         style: txtStyle(small12, Colors.white),
                       ),
-                      const Gap(15),
+                      const Gap(5),
                       Text(
-                        '3h',
+                        claulateCommentTime(commentModel.commentTime),
                         style: txtStyle(
                           small12,
                           Colors.grey.shade600,
-                        ).copyWith(fontWeight: FontWeight.bold),
+                        ).copyWith(fontWeight: FontWeight.normal),
                       ), // to print actual time
                     ],
                   ),

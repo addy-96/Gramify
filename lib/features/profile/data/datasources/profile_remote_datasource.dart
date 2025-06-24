@@ -18,6 +18,7 @@ abstract interface class ProfileRemoteDatasource {
     required String followerID,
     required String followedID,
   });
+  Future unfollowRequested({required String userID});
 }
 
 class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
@@ -74,7 +75,7 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
           .select()
           .eq('user_id', userID);
 
-      bool? isFollowing = await followStatus(userIDforAction: userID);
+      bool isFollowing = await followStatus(userIDforAction: userID);
       final List<dynamic> listOfFollowers =
           response.first['list-of-followers'] ?? [];
       final List<dynamic> listOfFollowing =
@@ -87,6 +88,7 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
         followingCount: listOfFollowing.length,
         isFollowing: isFollowing,
         userPostMap: {},
+        userID: userID,
       );
     } catch (err, stack) {
       log('getProfilePicture: Error occurred - $err\n$stack');
@@ -96,7 +98,7 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
 
   //
   @override
-  Future<bool?> followStatus({required String userIDforAction}) async {
+  Future<bool> followStatus({required String userIDforAction}) async {
     try {
       final userid = await getLoggedUserId();
 
@@ -113,7 +115,7 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
       } else if (followers.contains(userid)) {
         return true;
       }
-      return null;
+      return false;
     } catch (err, stack) {
       log('getFollowUnfollowStatus: Error occurred - $err\n$stack');
       throw Exception('Failed to fetch follow/unfollow status');
@@ -125,9 +127,7 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
   Future followRequested({required String userID}) async {
     try {
       final loggedInUserID = await getLoggedUserId();
-
       await addToFollowing(followedID: userID, followerID: loggedInUserID);
-
       await addToFollowers(followerID: loggedInUserID, followedID: userID);
     } catch (err) {
       log(err.toString());
@@ -156,7 +156,8 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
           .update({'list-of-following': listOfFollowing})
           .eq('user_id', followerID);
     } catch (err) {
-      log(err.toString());
+      log('profile_remote_datasorce.addtofollowing: Error occurred - $err');
+      throw Exception('Failed to fetch follow/unfollow status');
     }
   }
 
@@ -182,7 +183,57 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
           .update({'list-of-followers': listOfFollowers})
           .eq('user_id', followedID);
     } catch (err) {
-      log(err.toString());
+      log('profile_remote_datasorce.addtofollowers: Error occurred - $err');
+      throw Exception('Failed to fetch follow/unfollow status');
+    }
+  }
+
+  @override
+  Future unfollowRequested({required String userID}) async {
+    try {
+      final loggedInUserId = await getLoggedUserId();
+      {
+        final getloggedUserIdfollowingList =
+            await supabase.client
+                .from(userTable)
+                .select('list-of-following')
+                .eq('user_id', loggedInUserId)
+                .single();
+
+        final List<dynamic> followingList =
+            getloggedUserIdfollowingList['list-of-following'];
+
+        followingList.contains(userID) ? followingList.remove(userID) : null;
+
+        await supabase.client
+            .from(userTable)
+            .update({'list-of-following': followingList})
+            .eq('user_id', loggedInUserId);
+      }
+
+      {
+        final getotherUserfollowerList =
+            await supabase.client
+                .from(userTable)
+                .select('list-of-followers')
+                .eq('user_id', userID)
+                .single();
+
+        final List<dynamic> followerList =
+            getotherUserfollowerList['list-of-followers'];
+
+        followerList.contains(loggedInUserId)
+            ? followerList.remove(loggedInUserId)
+            : null;
+
+        await supabase.client
+            .from(userTable)
+            .update({'list-of-followers': followerList})
+            .eq('user_id', userID);
+      }
+    } catch (err) {
+      log('profile_remote_datasorce.addtofollowing: Error occurred - $err');
+      throw Exception('Failed to fetch follow/unfollow status');
     }
   }
 }

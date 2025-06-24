@@ -52,6 +52,11 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
         final fullname = response['fullname'];
         final profileImageUrl = response['profile_image_url'];
         final List<dynamic> likedby = post['liked_by'] ?? [];
+        final getCommentCount = await supabase.client
+            .from(commentsTable)
+            .count()
+            .eq('post_id', post['post_id']);
+
         postList.add(
           PostModel(
             postId: post['post_id'],
@@ -64,6 +69,7 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
             posterProfileImageUrl: profileImageUrl,
             isLiked: likedby.contains(userId),
             fullname: fullname,
+            commentsCount: getCommentCount,
           ),
         );
       }

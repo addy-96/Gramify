@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gramify/features/profile/domain/models/other_user_profile_model.dart';
 import 'package:gramify/features/profile/domain/repositories/profile_repository.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_event.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_state.dart';
@@ -15,6 +16,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     //
     on<FollowRequested>(_onFollowRequested);
+
+    //
+    on<UnfollowRequested>(_onUnfollowRequested);
   }
 
   _onProfileDataRequested(
@@ -63,8 +67,46 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   _onFollowRequested(FollowRequested event, Emitter<ProfileState> emit) async {
     try {
-      await profileRepository.followRequested(followedUserId: event.followedId);
-      emit(FollowedUserSuccessState());
+      await profileRepository.followRequested(
+        followedUserId: event.otherUserProfileModel.userID,
+      );
+      final currentState = state as OtherUserProfileFetchedState;
+      final newOtherUserDataModel = OtherUserProfileModel(
+        userID: currentState.userdata.userID,
+        username: currentState.userdata.username,
+        fullname: currentState.userdata.fullname,
+        profileImageUrl: currentState.userdata.profileImageUrl,
+        followersCount: currentState.userdata.followersCount + 1,
+        followingCount: currentState.userdata.followingCount,
+        userPostMap: currentState.userdata.userPostMap,
+        isFollowing: true,
+      );
+      emit(OtherUserProfileFetchedState(userdata: newOtherUserDataModel));
+    } catch (err) {
+      emit(ProfileErrorState(errorMessage: err.toString()));
+    }
+  }
+
+  _onUnfollowRequested(
+    UnfollowRequested event,
+    Emitter<ProfileState> emit,
+  ) async {
+    try {
+      final res = await profileRepository.unfollowRequested(
+        followedUserID: event.otherUserProfileModel.userID,
+      );
+      final currentState = state as OtherUserProfileFetchedState;
+      final newOtherUserDataModel = OtherUserProfileModel(
+        userID: currentState.userdata.userID,
+        username: currentState.userdata.username,
+        fullname: currentState.userdata.fullname,
+        profileImageUrl: currentState.userdata.profileImageUrl,
+        followersCount: currentState.userdata.followersCount - 1,
+        followingCount: currentState.userdata.followingCount,
+        userPostMap: currentState.userdata.userPostMap,
+        isFollowing: false,
+      );
+      emit(OtherUserProfileFetchedState(userdata: newOtherUserDataModel));
     } catch (err) {
       emit(ProfileErrorState(errorMessage: err.toString()));
     }

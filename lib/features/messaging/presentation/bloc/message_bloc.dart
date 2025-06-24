@@ -21,6 +21,9 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
     //
     on<LoadMessagesRequested>(_onLoadMessagesRequested);
+
+    //
+    on<ChatsScreenRequested>(_onChatsScreenRequested);
   }
 
   _onSearchUserRequested(
@@ -53,7 +56,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       final res = await messageRepository.setChatRoom(userId: event.userId);
       res.fold(
         (l) {
-          emit(LoadUserChatsFailureState(errorMessage: l.message));
+          emit(LoadUserMessageFailureState(errorMessage: l.message));
         },
         (r) {
           emit(RoomSetState(chatID: r));
@@ -63,7 +66,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       log(
         'Error in messageblooc._onChattingScreenRequested : ${err.toString()}',
       );
-      emit(LoadUserChatsFailureState(errorMessage: err.toString()));
+      emit(LoadUserMessageFailureState(errorMessage: err.toString()));
     }
   }
 
@@ -81,9 +84,9 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       final res2 = await messageRepository.loadMessage(chatId: event.chatId);
 
       res2.fold(
-        (l) => emit(LoadUserChatsFailureState(errorMessage: l.message)),
+        (l) => emit(LoadUserMessageFailureState(errorMessage: l.message)),
         (r) =>
-            emit(LoadUserChatsState(messages: r, loggedUserId: loggedUserID)),
+            emit(LoadUserMessageState(messages: r, loggedUserId: loggedUserID)),
       );
     } catch (err) {
       log('Error in messageblooc._onSendMessageRequested : ${err.toString()}');
@@ -102,14 +105,32 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       final res2 = await messageRepository.loadMessage(chatId: event.chatID);
 
       res2.fold(
-        (l) => emit(LoadUserChatsFailureState(errorMessage: l.message)),
+        (l) => emit(LoadUserMessageFailureState(errorMessage: l.message)),
         (r) =>
-            emit(LoadUserChatsState(messages: r, loggedUserId: loggedUserID)),
+            emit(LoadUserMessageState(messages: r, loggedUserId: loggedUserID)),
       );
     } catch (err) {
       log('Error in messageblooc._onSendMessageRequested : ${err.toString()}');
 
       emit(MessageSendFailState(errorMessage: err.toString()));
+    }
+  }
+
+  _onChatsScreenRequested(
+    ChatsScreenRequested event,
+    Emitter<MessageState> emit,
+  ) async {
+    try {
+      emit(ChatLoadingState());
+      final res = await messageRepository.loadprevChats();
+      res.fold(
+        (l) => emit(LoadUserChatsFailureState(errorMessage: l.message)),
+        (r) => emit(ChatsLoadedState(chatsList: r)),
+      );
+    } catch (err) {
+      log('Error in messageblooc._onChatsScreenRequested : ${err.toString()}');
+
+      emit(LoadUserChatsFailureState(errorMessage: err.toString()));
     }
   }
 }

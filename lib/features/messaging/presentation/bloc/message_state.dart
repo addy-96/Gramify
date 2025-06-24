@@ -1,3 +1,4 @@
+import 'package:gramify/features/messaging/domain/model/chat_user_model.dart';
 import 'package:gramify/features/messaging/domain/model/message_model.dart';
 import 'package:gramify/features/messaging/domain/model/search_user_model.dart';
 
@@ -24,15 +25,15 @@ final class SearchUserFailureState extends MessageState {
   SearchUserFailureState({required this.errorMessage});
 }
 
-final class LoadUserChatsState extends MessageState {
+final class LoadUserMessageState extends MessageState {
   final Stream<List<MessageModel>> messages;
   final String loggedUserId;
-  LoadUserChatsState({required this.messages, required this.loggedUserId});
+  LoadUserMessageState({required this.messages, required this.loggedUserId});
 }
 
-final class LoadUserChatsFailureState extends MessageState {
+final class LoadUserMessageFailureState extends MessageState {
   final String errorMessage;
-  LoadUserChatsFailureState({required this.errorMessage});
+  LoadUserMessageFailureState({required this.errorMessage});
 }
 
 final class MessageSentState extends MessageState {}
@@ -40,4 +41,16 @@ final class MessageSentState extends MessageState {}
 final class MessageSendFailState extends MessageState {
   final String errorMessage;
   MessageSendFailState({required this.errorMessage});
+}
+
+final class ChatsLoadedState extends MessageState {
+  final List<ChatUserModel> chatsList;
+  ChatsLoadedState({required this.chatsList});
+}
+
+final class ChatLoadingState extends MessageState {}
+
+final class LoadUserChatsFailureState extends MessageState {
+  final String errorMessage;
+  LoadUserChatsFailureState({required this.errorMessage});
 }

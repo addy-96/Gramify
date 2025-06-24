@@ -25,4 +25,4 @@ final class OtherUserProfileFetchedState extends ProfileState {
   OtherUserProfileFetchedState({required this.userdata});
 }
 
-final class FollowedUserSuccessState extends ProfileState {}
+final class FollowLoadingState extends ProfileState {}

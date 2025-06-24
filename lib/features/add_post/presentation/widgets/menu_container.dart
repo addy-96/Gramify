@@ -57,7 +57,7 @@ class _MenuContainerState extends State<MenuContainer> {
                           value: item,
                           child: Text(
                             item.name,
-                            style: txtStyleNoColor(18),
+                            style: txtStyle(bodyText14, Colors.white),
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -103,7 +103,7 @@ class _MenuContainerState extends State<MenuContainer> {
                           ),
                         );
                       },
-                      child: const Icon(Ionicons.camera_outline, size: 30),
+                      child: const Icon(Ionicons.camera_outline, size: 20),
                     ),
                   ],
                 ),

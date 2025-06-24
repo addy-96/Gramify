@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
+import 'package:gramify/core/common/shared_fun/calculate_upload_time.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 import 'package:gramify/features/home/domain/models/post_model.dart';
 import 'package:gramify/features/home/presentation/bloc/post_bloc/post_bloc.dart';
@@ -69,7 +70,7 @@ class Post extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(8),
                   child: FadeInImage.assetNetwork(
                     placeholderFit: BoxFit.contain,
                     placeholder: 'assets/images/logo_black.png',
@@ -90,12 +91,28 @@ class Post extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                LikeButton(isLiked: post.isLiked, postId: post.postId),
+                LikeButton(
+                  isLiked: post.isLiked,
+                  postId: post.postId,
+                  likesCount: post.likesCount,
+                ),
                 IconButton(
                   onPressed: () {
                     openCommentModalSheet(context, postId: post.postId);
                   },
-                  icon: const Icon(Ionicons.chatbubbles_outline),
+                  icon: Row(
+                    children: [
+                      const Icon(Ionicons.chatbubbles_outline),
+                      const Gap(2),
+                      post.commentsCount != 0
+                          ? Text(
+                            post.commentsCount.toString(),
+                            style: txtStyle(small12, Colors.white).copyWith(),
+                            textAlign: TextAlign.center,
+                          )
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
                   color: Colors.white,
                 ),
                 IconButton(
@@ -117,13 +134,6 @@ class Post extends StatelessWidget {
                 ),
               ],
             ),
-            post.likesCount == 0
-                ? const SizedBox.shrink()
-                : BlocBuilder<PostBloc, PostState>(
-                  builder: (context, state) {
-                    return Text('Liked by ${post.likesCount}');
-                  },
-                ),
             post.caption != null
                 ? Padding(
                   padding: const EdgeInsets.all(10),
@@ -134,15 +144,25 @@ class Post extends StatelessWidget {
                 )
                 : const SizedBox.shrink(),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment:
+                  post.commentsCount == 0
+                      ? MainAxisAlignment.end
+                      : MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'View all Comments (4)',
-                  style: txtStyle(
-                    small12,
-                    Colors.grey.shade700,
-                  ).copyWith(fontWeight: FontWeight.w200),
-                ),
+                post.commentsCount != 0
+                    ? TextButton(
+                      onPressed: () {
+                        openCommentModalSheet(context, postId: post.postId);
+                      },
+                      child: Text(
+                        'View all Comments (${post.commentsCount})',
+                        style: txtStyle(
+                          small12,
+                          Colors.grey.shade700,
+                        ).copyWith(fontWeight: FontWeight.w200),
+                      ),
+                    )
+                    : const SizedBox.shrink(),
                 Row(
                   children: [
                     Icon(
@@ -152,7 +172,7 @@ class Post extends StatelessWidget {
                     ),
                     const Gap(5),
                     Text(
-                      '3 Hours ago',
+                      calculatePostUploadTime(post.createdAt),
                       style: txtStyle(
                         small12,
                         Colors.grey.shade700,
