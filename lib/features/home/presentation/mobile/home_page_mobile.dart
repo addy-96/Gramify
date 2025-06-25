@@ -5,6 +5,7 @@ import 'package:gramify/features/home/presentation/widgets/post_section.dart';
 import 'package:gramify/features/home/presentation/widgets/story_section.dart';
 import 'package:gramify/features/messaging/presentation/mobile/chats_page.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomePageMobile extends StatefulWidget {
   const HomePageMobile({super.key, required this.loggedUserId});
@@ -26,7 +27,7 @@ class _HomePageMobileState extends State<HomePageMobile> {
         leading: IconButton(
           onPressed: () {},
           icon: IconButton(
-            onPressed: () {},
+            onPressed: () async {},
             icon: Icon(Ionicons.camera_outline, size: screenWidth / 15),
           ),
         ),
@@ -48,12 +49,12 @@ class _HomePageMobileState extends State<HomePageMobile> {
           ),
         ],
       ),
-      body: Column(
+      body: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Gap(15),
+          Gap(15),
           //   const StorySection(),
-          const Gap(5),
+          Gap(5),
           PostSection(),
         ],
       ),

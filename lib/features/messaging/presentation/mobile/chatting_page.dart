@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
+import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/common/shared_fun/csnack.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
@@ -52,67 +53,63 @@ class _ChattingPageState extends State<ChattingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size(double.infinity, 70),
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [thmegrad1, thmegrad2],
+        appBar: AppBar(
+          elevation: 10,
+          bottom: PreferredSize(
+            preferredSize: const Size(double.infinity, 1),
+            child: Container(
+              height: 1,
+              width: double.infinity,
+              decoration: const BoxDecoration(color: Colors.white10),
+            ),
+          ),
+          leading: InkWell(
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const ChatsPage()),
+              );
+            },
+            child: const Icon(
+              Ionicons.chevron_back_outline,
+              color: Colors.white,
+              size: 22,
+            ),
+          ),
+          titleSpacing: 0,
+          title: Row(
+            children: [
+              CircleAvatar(
+                radius: screenWidth / 22,
+                backgroundImage:
+                    widget.imageUrl != null
+                        ? NetworkImage(widget.imageUrl!)
+                        : null,
+                child:
+                    widget.imageUrl != null
+                        ? null
+                        : Icon(Ionicons.person_outline, size: screenWidth / 25),
               ),
-            ),
-            child: Row(
-              children: [
-                const Gap(5),
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const ChatsPage(),
-                      ),
-                    );
-                  },
-                  child: Icon(
-                    Ionicons.chevron_back_outline,
-                    color: Theme.of(context).scaffoldBackgroundColor,
+              const Gap(10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.username,
+                    style: txtStyle(subTitle20, Colors.white),
                   ),
-                ),
-                const Gap(5),
-                Expanded(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage:
-                          widget.imageUrl != null
-                              ? NetworkImage(widget.imageUrl!)
-                              : null,
-                      child:
-                          widget.imageUrl != null
-                              ? null
-                              : const Icon(Ionicons.person_outline),
-                    ),
-                    title: Text(
-                      widget.username,
-                      style: txtStyle(
-                        22,
-                        Theme.of(context).scaffoldBackgroundColor,
-                      ),
-                    ),
-                    subtitle: const Text('Online'),
-                    subtitleTextStyle: txtStyle(
-                      15,
-                      Theme.of(context).scaffoldBackgroundColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                  Text('Online', style: txtStyle(small12, Colors.white)),
+                ],
+              ),
+            ],
           ),
         ),
         body: Column(
           children: [
+            const Gap(5),
             Expanded(
               child: BlocConsumer<MessageBloc, MessageState>(
                 builder: (context, state) {
@@ -142,7 +139,6 @@ class _ChattingPageState extends State<ChattingPage> {
                     return StreamBuilder(
                       stream: state.messages,
                       builder: (context, snapshot) {
-                        log('streamed');
                         if (snapshot.hasData) {
                           if (snapshot.data!.isEmpty) {
                             return Center(
@@ -158,6 +154,7 @@ class _ChattingPageState extends State<ChattingPage> {
                                     state.loggedUserId ==
                                     snapshot.data![index].senderId,
                                 message: snapshot.data![index].message,
+                                messageTime: snapshot.data![index].messageTime,
                               );
                             },
                           );
@@ -179,7 +176,7 @@ class _ChattingPageState extends State<ChattingPage> {
             ),
             Container(
               padding: const EdgeInsets.all(12),
-              height: 80,
+              height: screenHeight / 9,
               width: double.infinity,
               decoration: const BoxDecoration(
                 border: Border(
@@ -189,62 +186,46 @@ class _ChattingPageState extends State<ChattingPage> {
               child: Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      height: 60,
-                      padding: const EdgeInsets.only(
-                        left: 12,
-                        right: 12,
-                        top: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        border: Border.all(
-                          width: 1,
-                          color: Colors.grey.shade700,
-                        ),
-                      ),
-                      child: TextField(
-                        controller: messageController,
-                        style: txtStyle(22, whiteForText),
-                        maxLines: 30,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
+                    child: TextField(
+                      controller: messageController,
+                      style: txtStyle(bodyText16, whiteForText),
+                      maxLines: 30,
+                      decoration: InputDecoration(
+                        hintText: 'Type your message here...',
+                        hintStyle: txtStyle(bodyText14, Colors.grey.shade700),
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            width: 2,
+                            color: Colors.white,
+                          ),
+                          borderRadius: BorderRadius.circular(14),
                         ),
                       ),
                     ),
                   ),
                   const Gap(10),
                   Container(
-                    padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
-                      gradient: const LinearGradient(
-                        colors: [thmegrad1, thmegrad2],
-                      ),
+                      color: Theme.of(context).scaffoldBackgroundColor,
                     ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                      ),
-                      child: IconButton(
-                        onPressed: () async {
-                          if (messageController.text.trim().isEmpty) {
-                            csnack(context, 'Please enter a message :)');
-                            return;
-                          }
-                          context.read<MessageBloc>().add(
-                            SendMessageRequested(
-                              receipintId: widget.userid,
-                              message: messageController.text.trim(),
-                              chatId: widget.chatId,
-                            ),
-                          );
+                    child: IconButton(
+                      onPressed: () async {
+                        if (messageController.text.trim().isEmpty) {
+                          csnack(context, 'Please enter a message :)');
+                          return;
+                        }
+                        context.read<MessageBloc>().add(
+                          SendMessageRequested(
+                            receipintId: widget.userid,
+                            message: messageController.text.trim(),
+                            chatId: widget.chatId,
+                          ),
+                        );
 
-                          messageController.clear();
-                        },
-                        icon: const ShaderIcon(iconWidget: Icon(Ionicons.send)),
-                      ),
+                        messageController.clear();
+                      },
+                      icon: const ShaderIcon(iconWidget: Icon(Ionicons.send)),
                     ),
                   ),
                 ],

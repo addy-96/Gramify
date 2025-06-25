@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/features/add_post/presentation/mobile/select_post_picture.dart';
 import 'package:gramify/main_presentaiton/app_bloc/wrapper_bloc/wrapper_bloc.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
@@ -240,7 +241,7 @@ class _WrapperWebState extends State<WrapperWeb> {
           children: [
             Container(
               height: heeight,
-              width: wiidth > 1120 ? 225 : wiidth / 5,
+              width: wiidth > 1120 ? 300 : wiidth / 4,
               decoration: BoxDecoration(
                 border: Border(
                   right: BorderSide(
@@ -255,9 +256,15 @@ class _WrapperWebState extends State<WrapperWeb> {
                   SizedBox(
                     height: 200,
                     width: double.infinity,
-                    child: Image.asset(
-                      'assets/images/test_picture.jpg',
-                      fit: BoxFit.cover,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(14),
+                        child: Image.asset(
+                          'assets/images/test_picture.jpg',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
                   const Gap(30),
@@ -335,10 +342,10 @@ class TabsForWeb extends StatelessWidget {
               (state is ExplorePageSelectedWeb && index == 2) ||
               (state is UploadPageSelectedWeb && index == 3)) {
             return ShaderIcon(
-              iconWidget: Icon(icondata, size: 25, color: whiteForText),
+              iconWidget: Icon(icondata, size: 32, color: whiteForText),
             );
           }
-          return Icon(icondata, size: 18, color: whiteForText);
+          return Icon(icondata, size: 24, color: whiteForText);
         },
       ),
       title: BlocBuilder<WrapperBloc, WrapperState>(
@@ -350,7 +357,7 @@ class TabsForWeb extends StatelessWidget {
             return ShaderText(
               textWidget: Text(
                 title,
-                style: txtStyleNoColor(22),
+                style: txtStyleNoColor(title32),
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -358,7 +365,7 @@ class TabsForWeb extends StatelessWidget {
           }
           return Text(
             title,
-            style: txtStyle(15, whiteForText),
+            style: txtStyle(title24, whiteForText),
             softWrap: true,
             overflow: TextOverflow.ellipsis,
           );

@@ -45,40 +45,32 @@ class _ChatsPageState extends State<ChatsPage> {
         title: BlocBuilder<MessagingUiBloc, MessagingUiState>(
           builder: (context, state) {
             if (state is SearchBoxOpenUIState) {
-              return Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(width: 1.5, color: Colors.white70),
-                ),
-                padding: const EdgeInsets.all(2),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: TextField(
-                    onChanged: (value) {
-                      context.read<MessageBloc>().add(
-                        SearchUserRequested(
-                          inputString: searchController.text.trim(),
-                        ),
-                      );
-                    },
-                    controller: searchController,
-                    style: txtStyle(18, whiteForText),
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      hintStyle: txtStyle(16, Colors.white30),
-                      contentPadding: const EdgeInsets.all(8),
-                      border: InputBorder.none,
+              return TextField(
+                onChanged: (value) {
+                  context.read<MessageBloc>().add(
+                    SearchUserRequested(
+                      inputString: searchController.text.trim(),
                     ),
+                  );
+                },
+                controller: searchController,
+                style: txtStyle(18, whiteForText),
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  hintStyle: txtStyle(16, Colors.white30),
+                  contentPadding: const EdgeInsets.all(8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
                   ),
                 ),
               );
             }
             return Text(
               'Messages',
-              style: txtStyleNoColor(28).copyWith(fontWeight: FontWeight.w400),
+              style: txtStyle(
+                subTitle22,
+                Colors.white70,
+              ).copyWith(fontWeight: FontWeight.w400),
             );
           },
         ),
@@ -93,12 +85,12 @@ class _ChatsPageState extends State<ChatsPage> {
             icon: BlocBuilder<MessagingUiBloc, MessagingUiState>(
               builder: (context, state) {
                 if (state is SearchBoxOpenUIState) {
-                  return const Icon(CupertinoIcons.multiply, size: 30);
+                  return const Icon(CupertinoIcons.multiply, size: subTitle20);
                 }
                 if (state is SearchBoxClosedUIState) {
-                  return const Icon(Ionicons.search_outline, size: 30);
+                  return const Icon(Ionicons.search_outline, size: subTitle20);
                 }
-                return const Icon(Ionicons.search_outline, size: 30);
+                return const Icon(Ionicons.search_outline, size: subTitle20);
               },
             ),
           ),
@@ -121,7 +113,7 @@ class _ChatsPageState extends State<ChatsPage> {
                         child: ShaderText(
                           textWidget: Text(
                             'Try Searching...',
-                            style: txtStyleNoColor(22),
+                            style: txtStyle(bodyText16, Colors.white),
                           ),
                         ),
                       );

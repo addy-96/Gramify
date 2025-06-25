@@ -13,7 +13,7 @@ import 'package:gramify/features/profile/presentation/widgets/profile_image_avat
 class ProfileInfoSection extends StatelessWidget {
   ProfileInfoSection({super.key});
   final TextStyle fullnameStyle = txtStyle(
-    bodyText14,
+    bodyText16,
     Colors.white,
   ).copyWith(fontWeight: FontWeight.w600);
   @override
@@ -26,7 +26,10 @@ class ProfileInfoSection extends StatelessWidget {
         border: Border(bottom: BorderSide(width: 1, color: Colors.white24)),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth / 15,
+          vertical: 18,
+        ),
         child: Column(
           children: [
             Row(
@@ -53,9 +56,9 @@ class ProfileInfoSection extends StatelessWidget {
                             );
                           } else if (state is ProfileLoadingState ||
                               state is ProfileInitialState) {
-                            return const ShimmerContainer(
-                              height: double.minPositive,
-                              width: double.minPositive,
+                            return ShimmerContainer(
+                              height: bodyText16,
+                              width: screenWidth / 5,
                             );
                           }
                           return const Text('Error!');

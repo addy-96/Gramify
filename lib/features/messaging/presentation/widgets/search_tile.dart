@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
+import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 import 'package:gramify/features/messaging/presentation/bloc/ui/messaging_ui_bloc.dart';
@@ -44,13 +45,16 @@ class SearchTile extends StatelessWidget {
       enableFeedback: false,
 
       leading: CircleAvatar(
+        radius: bodyText16,
         backgroundImage: imageUrl == null ? null : NetworkImage(imageUrl!),
         child:
             imageUrl == null
-                ? const ShaderIcon(iconWidget: Icon(Ionicons.person_outline))
+                ? const ShaderIcon(
+                  iconWidget: Icon(Ionicons.person_outline, size: bodyText16),
+                )
                 : null,
       ),
-      title: Text(username, style: txtStyle(22, whiteForText)),
+      title: Text(username, style: txtStyle(bodyText16, whiteForText)),
     );
   }
 }

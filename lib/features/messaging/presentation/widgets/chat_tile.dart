@@ -16,7 +16,7 @@ class ChatTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () async {
-        Navigator.of(context).push(
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder:
                 (context) => ChattingPage(
@@ -32,14 +32,19 @@ class ChatTile extends StatelessWidget {
       enableFeedback: true,
       style: ListTileStyle.list,
       leading: CircleAvatar(
-        backgroundColor: Colors.transparent,
+        radius: MediaQuery.of(context).size.width / 20,
+        backgroundColor: Colors.grey.shade800,
         backgroundImage:
             chatUserModel.receipintProfile != null
                 ? NetworkImage(chatUserModel.receipintProfile!)
                 : null,
         child:
             chatUserModel.receipintProfile == null
-                ? const Icon(Ionicons.person_outline)
+                ? Icon(
+                  Ionicons.person_outline,
+                  size: bodyText16,
+                  color: Colors.grey.shade500,
+                )
                 : null,
       ),
       title: Text(
@@ -48,11 +53,11 @@ class ChatTile extends StatelessWidget {
       ),
       trailing: Text(
         calulateChatLatTime(chatUserModel.createdAt),
-        style: txtStyle(15, whiteForText.withOpacity(0.4)),
+        style: txtStyle(small12, whiteForText.withOpacity(0.4)),
       ),
       subtitle: Text(
         chatUserModel.lastMessage,
-        style: txtStyle(15, Colors.grey.withOpacity(0.4)),
+        style: txtStyle(bodyText14, Colors.grey.withOpacity(0.4)),
       ),
     );
   }

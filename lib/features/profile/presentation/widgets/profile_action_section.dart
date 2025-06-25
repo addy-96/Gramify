@@ -30,7 +30,7 @@ class ProfileActionSection extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 25,
-                      vertical: 4,
+                      vertical: 8,
                     ),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade900,
@@ -48,14 +48,14 @@ class ProfileActionSection extends StatelessWidget {
                   ),
                 ),
               ),
-              const Gap(20),
+              const Gap(15),
               Expanded(
                 child: InkWell(
                   onTap: () {},
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 25,
-                      vertical: 4,
+                      vertical: 8,
                     ),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade900,
@@ -73,24 +73,18 @@ class ProfileActionSection extends StatelessWidget {
                   ),
                 ),
               ),
-              const Gap(20),
+              const Gap(15),
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 25,
-                  vertical: 4,
+                  vertical: 8,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade900,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Center(
-                  child: Text(
-                    'H',
-                    style: txtStyle(
-                      small12,
-                      Colors.white,
-                    ).copyWith(fontWeight: FontWeight.w600),
-                  ),
+                child: const Center(
+                  child: Icon(Ionicons.person_add_outline, size: bodyText14),
                 ),
               ),
             ],
@@ -238,7 +232,7 @@ class ProfileActionSection extends StatelessWidget {
                             ),
                             const Gap(10),
                             const ShaderIcon(
-                              iconWidget: const Icon(
+                              iconWidget: Icon(
                                 Ionicons.chevron_down_sharp,
                                 size: 15,
                               ),
@@ -285,15 +279,7 @@ class ProfileActionSection extends StatelessWidget {
                     color: Colors.grey.shade900,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Center(
-                    child: Text(
-                      'H',
-                      style: txtStyle(
-                        small12,
-                        Colors.white,
-                      ).copyWith(fontWeight: FontWeight.w600),
-                    ),
-                  ),
+                  child: Center(child: Icon(Ionicons.person_add, size: 12)),
                 ),
               ],
             );
@@ -343,15 +329,7 @@ class ProfileActionSection extends StatelessWidget {
                     color: Colors.grey.shade900,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Center(
-                    child: Text(
-                      'H',
-                      style: txtStyle(
-                        small12,
-                        Colors.white,
-                      ).copyWith(fontWeight: FontWeight.w600),
-                    ),
-                  ),
+                  child: Center(child: Icon(Ionicons.person_add, size: 12)),
                 ),
               ],
             );

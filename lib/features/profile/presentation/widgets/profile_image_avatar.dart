@@ -40,6 +40,13 @@ class ProfileImageAvatar extends StatelessWidget {
                     : null,
           );
         }
+        if (state is ProfileLoadingState) {
+          return CircleAvatar(
+            backgroundColor: Colors.grey.shade800,
+            radius: screenWidth / 12,
+            child: const Icon(Ionicons.person_outline),
+          );
+        }
         return CircleAvatar(
           backgroundColor: Colors.grey.shade800,
           radius: screenWidth / 12,

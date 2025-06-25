@@ -10,92 +10,14 @@ class HomePageWeb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scrrenHeight = MediaQuery.of(context).size.height;
+    final scrrenWidth = MediaQuery.of(context).size.width;
     return Row(
       children: [
-        const Gap(100),
-        Column(
-          children: [
-            SizedBox(
-              height: 100,
-              width: 500,
-              child: Padding(
-                padding: const EdgeInsets.all(4),
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(width: 4, color: Colors.white),
-                            ),
-                            width: 95,
-                          ),
-                          const Positioned(
-                            right: 0,
-                            bottom: 8,
-                            child: ShaderIcon(
-                              iconWidget: Icon(Ionicons.add_circle, size: 35),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const ShaderNormal(
-                      childWidget: VerticalDivider(
-                        thickness: 2,
-                        endIndent: 10,
-                        indent: 10,
-                        width: 20,
-                      ),
-                    ),
-                    for (var i = 0; i <= 10; i++)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [thmegrad1, thmegrad2],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          padding: const EdgeInsets.all(3),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(46),
-                            ),
-                            width: 85,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(46),
-                              child: Image.asset(
-                                'assets/images/test_picture.jpg',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-
-            const Gap(40),
-            const Expanded(
-              child: SizedBox(
-                width: 400,
-                child: SingleChildScrollView(child: Column(children: [])),
-              ),
-            ),
-          ],
-        ),
-        const Gap(40),
+        Gap(scrrenWidth / 5),
+        Container(height: 50, width: scrrenWidth / 3, color: Colors.green),
+        const Gap(20),
+        Container(height: 50, width: scrrenWidth / 4, color: Colors.green),
       ],
     );
   }

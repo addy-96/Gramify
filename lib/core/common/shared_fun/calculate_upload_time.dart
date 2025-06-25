@@ -64,3 +64,7 @@ String calulateChatLatTime(DateTime lastTime) {
   }
   return '${lastTime.day} ${months[lastTime.month + 1]} ${lastTime.year}';
 }
+
+String calculateMessageTime(DateTime datetime) {
+  return '${datetime.hour} : ${datetime.minute}';
+}

@@ -43,7 +43,7 @@ class _ExplorePageMobileState extends State<ExplorePageMobile> {
           return Center(
             child: Text(
               'Search to Explore...',
-              style: txtStyle(22, whiteForText),
+              style: txtStyle(bodyText16, Colors.grey.shade800),
             ),
           );
         }

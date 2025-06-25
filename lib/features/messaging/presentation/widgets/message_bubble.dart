@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
+import 'package:gramify/core/common/shared_attri/constrants.dart';
+import 'package:gramify/core/common/shared_fun/calculate_upload_time.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 
@@ -8,61 +10,44 @@ class MessageBubble extends StatelessWidget {
     super.key,
     required this.isRight,
     required this.message,
+    required this.messageTime,
   });
 
   final bool isRight;
   final String message;
+  final DateTime messageTime;
 
   @override
   Widget build(BuildContext context) {
     final bubbleRadius = BorderRadius.only(
-      topLeft: const Radius.circular(20),
-      topRight: const Radius.circular(20),
-      bottomLeft: Radius.circular(isRight ? 20 : 0),
-      bottomRight: Radius.circular(isRight ? 0 : 20),
+      topLeft: const Radius.circular(14),
+      topRight: const Radius.circular(14),
+      bottomLeft: Radius.circular(isRight ? 14 : 0),
+      bottomRight: Radius.circular(isRight ? 0 : 14),
     );
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
       child: Align(
         alignment: isRight ? Alignment.centerRight : Alignment.centerLeft,
         child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
           constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width * 0.75,
           ),
-          padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
+            color: Colors.grey.shade900,
             borderRadius: bubbleRadius,
-            gradient:
-                isRight
-                    ? const LinearGradient(
-                      colors: [thmegrad1, thmegrad2],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    )
-                    : null,
-            color:
-                isRight
-                    ? null
-                    : Theme.of(
-                      context,
-                    ).scaffoldBackgroundColor.withOpacity(0.95),
-            border:
-                isRight ? null : Border.all(color: thmegrad1.withOpacity(0.5)),
           ),
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 12.0,
-            ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: bubbleRadius,
-            ),
-            child: Text(
-              message,
-              style: isRight ? txtStyle(16, whiteForText) : txtStyleNoColor(16),
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(message, style: txtStyle(bodyText14, Colors.grey.shade400)),
+              Text(
+                calculateMessageTime(messageTime),
+                style: txtStyle(10, Colors.grey.shade700),
+              ),
+            ],
           ),
         ),
       ),

@@ -72,7 +72,6 @@ class MessageDataSourceImpl implements MessageDatasorce {
     required String loggedUserId,
     required String receipintUserID,
   }) async {
-    log('logged user');
     try {
       final res = await supabase.client
           .from(chatsTable)
@@ -105,7 +104,7 @@ class MessageDataSourceImpl implements MessageDatasorce {
       final List<dynamic> listOfLoggedChats = loggedUsrDat.first['chats'] ?? [];
 
       if (!listOfLoggedChats.contains(chatId)) {
-        listOfLoggedChats.add(chatId);
+        listOfLoggedChats.insert(0, chatId);
       }
 
       await supabase.client
@@ -123,7 +122,7 @@ class MessageDataSourceImpl implements MessageDatasorce {
           recepintUsrDat.first['chats'] ?? [];
 
       if (!listOfRecieverChats.contains(chatId)) {
-        listOfRecieverChats.add(chatId);
+        listOfRecieverChats.insert(0, chatId);
       }
 
       await supabase.client
@@ -211,8 +210,12 @@ class MessageDataSourceImpl implements MessageDatasorce {
         'receiver_id': reciepntuserID,
         'message': message,
       });
+      await supabase.client
+          .from(chatsTable)
+          .update({'last_updated': DateTime.now().toIso8601String()})
+          .eq('chat_id', getChatID!);
     } catch (err) {
-      log('Error in messagedatasource.searchusertochat : ${err.toString()}');
+      log('Error in messagedatasource.sendMessage : ${err.toString()}');
 
       throw ServerException(message: err.toString());
     }
@@ -220,7 +223,6 @@ class MessageDataSourceImpl implements MessageDatasorce {
 
   @override
   Stream<List<MessageModel>> loadChatsStream({required String chatId}) {
-    log('calllllllllllllllllllled');
     return supabase.client
         .from(messageTable)
         .stream(
@@ -278,7 +280,9 @@ class MessageDataSourceImpl implements MessageDatasorce {
               .single();
 
       final List<dynamic> userChatsList = getUserChats['chats'];
+
       final List<String> talkedUSerChats = [];
+
       for (var chatId in userChatsList) {
         final res = await supabase.client
             .from(messageTable)
@@ -288,29 +292,29 @@ class MessageDataSourceImpl implements MessageDatasorce {
           talkedUSerChats.add(res.first['chat_id']);
         }
       }
-      log('here 1');
+
       for (var chatID in talkedUSerChats) {
         final getParticipants =
             await supabase.client
                 .from(chatsTable)
-                .select('participant_1, participant_2')
+                .select('participant_1, participant_2,last_updated')
                 .eq('chat_id', chatID)
                 .single();
-        log('here 2');
+
         final String otherParticipant;
         if (getParticipants['participant_1'] == loggedUserId) {
           otherParticipant = getParticipants['participant_2'];
         } else {
           otherParticipant = getParticipants['participant_1'];
         }
-        log('here 3');
+
         final getotherParticpantData =
             await supabase.client
                 .from(userTable)
                 .select('fullname, profile_image_url ')
                 .eq('user_id', otherParticipant)
                 .single();
-        log('here 4');
+
         final getLatMessage =
             await supabase.client
                 .from(messageTable)
@@ -320,7 +324,6 @@ class MessageDataSourceImpl implements MessageDatasorce {
                 .limit(1)
                 .single();
 
-        //  log(getLatMessage.length.toString());
         final ChatUserModel chatUserModel = ChatUserModel(
           chatId: chatID,
           receepintFullname: getotherParticpantData['fullname'],
@@ -328,10 +331,13 @@ class MessageDataSourceImpl implements MessageDatasorce {
           receipintProfile: getotherParticpantData['profile_image_url'],
           lastMessage: getLatMessage['message'],
           createdAt: DateTime.parse(getLatMessage['created_at']),
+          lastUpdated: DateTime.parse(getParticipants['last_updated']),
         );
 
         chatList.add(chatUserModel);
       }
+      chatList.sort((a, b) => b.lastUpdated.compareTo(a.lastUpdated));
+
       return chatList;
     } catch (err) {
       log('Error in messagedatasource.getuserchats : ${err.toString()} ');

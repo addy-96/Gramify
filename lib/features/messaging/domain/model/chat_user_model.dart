@@ -5,8 +5,10 @@ class ChatUserModel {
   final String chatId;
   final String lastMessage;
   final DateTime createdAt;
+  final DateTime lastUpdated;
 
   ChatUserModel({
+    required this.lastUpdated,
     required this.createdAt,
     required this.lastMessage,
     required this.chatId,
