@@ -208,85 +208,69 @@ class _WrapperWebState extends State<WrapperWeb> {
 
   @override
   Widget build(BuildContext context) {
-    final heeight = MediaQuery.of(context).size.height;
-    final wiidth = MediaQuery.of(context).size.width;
-
-    log(heeight.toString());
-    log(wiidth.toString());
-    if (MediaQuery.of(context).size.width < 800) {
-      return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.square(50),
-          child: Container(
-            height: 50,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [thmegrad1, thmegrad2],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.only(left: 8),
-              child: Row(
-                children: [Icon(Ionicons.menu, color: Colors.black54)],
-              ),
-            ),
-          ),
-        ),
-      );
-    } else {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    log(' screen width : $screenWidth');
+    if (MediaQuery.of(context).size.width < 900) {
       return Scaffold(
         body: Row(
           children: [
             Container(
-              height: heeight,
-              width: wiidth > 1120 ? 300 : wiidth / 4,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 border: Border(
-                  right: BorderSide(
-                    width: 0.5,
-                    color: whiteForText.withOpacity(0.2),
-                  ),
+                  right: BorderSide(width: 3, color: Colors.white10),
                 ),
               ),
+              width: 80,
+              height: double.infinity,
+
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: 200,
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(14),
-                        child: Image.asset(
-                          'assets/images/test_picture.jpg',
-                          fit: BoxFit.cover,
+                  const Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconTabsForWeb(
+                          icondata: Ionicons.home_outline,
+                          index: 0,
                         ),
-                      ),
+                        IconTabsForWeb(
+                          icondata: Ionicons.heart_outline,
+                          index: 1,
+                        ),
+                        IconTabsForWeb(
+                          icondata: Ionicons.compass_outline,
+                          index: 2,
+                        ),
+                        IconTabsForWeb(
+                          icondata: Ionicons.create_outline,
+                          index: 3,
+                        ),
+                        IconTabsForWeb(
+                          icondata: Ionicons.send_outline,
+                          index: 4,
+                        ),
+                        IconTabsForWeb(
+                          icondata: Ionicons.search_outline,
+                          index: 5,
+                        ),
+                        IconTabsForWeb(
+                          icondata: Ionicons.person_outline,
+                          index: 6,
+                        ),
+                      ],
                     ),
                   ),
-                  const Gap(30),
-                  const TabsForWeb(
-                    icondata: Ionicons.home_outline,
-                    title: 'Home',
-                    index: 0,
-                  ),
-                  const TabsForWeb(
-                    icondata: Ionicons.heart_outline,
-                    title: 'Notification',
-                    index: 1,
-                  ),
-                  const TabsForWeb(
-                    icondata: Ionicons.compass_outline,
-                    title: 'Explore',
-                    index: 2,
-                  ),
-                  const TabsForWeb(
-                    icondata: Ionicons.add_circle_outline,
-                    title: 'Create',
-                    index: 3,
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Ionicons.log_out_outline,
+                          size: title24,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -304,6 +288,145 @@ class _WrapperWebState extends State<WrapperWeb> {
                 }
                 if (state is UploadPageSelectedWeb) {
                   return const Center(child: Text('Upload'));
+                }
+                if (state is MessagePageSelectedWeb) {
+                  return const Center(child: Text('message'));
+                }
+                if (state is UploadPageSelectedWeb) {
+                  return const Center(child: Text('Search'));
+                }
+                if (state is UploadPageSelectedWeb) {
+                  return const Center(child: Text('Profile'));
+                }
+                return const Center(child: Text('Home'));
+              },
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Scaffold(
+        body: Row(
+          children: [
+            Container(
+              height: screenHeight,
+              width: screenWidth > 1120 ? 300 : screenWidth / 4,
+              decoration: BoxDecoration(
+                border: Border(
+                  right: BorderSide(
+                    width: 0.5,
+                    color: whiteForText.withOpacity(0.2),
+                  ),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 200,
+                          width: double.infinity,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(14),
+                              child: Image.asset(
+                                'assets/images/test_picture.jpg',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const Gap(30),
+                        const TabsForWeb(
+                          icondata: Ionicons.home_outline,
+                          title: 'Home',
+                          index: 0,
+                        ),
+
+                        const TabsForWeb(
+                          icondata: Ionicons.heart_outline,
+                          title: 'Notification',
+                          index: 1,
+                        ),
+
+                        const TabsForWeb(
+                          icondata: Ionicons.compass_outline,
+                          title: 'Explore',
+                          index: 2,
+                        ),
+
+                        const TabsForWeb(
+                          icondata: Ionicons.add_circle_outline,
+                          title: 'Create',
+                          index: 3,
+                        ),
+
+                        const TabsForWeb(
+                          icondata: Ionicons.send_outline,
+                          title: 'Message',
+                          index: 4,
+                        ),
+
+                        const TabsForWeb(
+                          icondata: Ionicons.search_outline,
+                          title: 'Search',
+                          index: 5,
+                        ),
+
+                        const TabsForWeb(
+                          icondata: Ionicons.person_outline,
+                          title: 'Profile',
+                          index: 6,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      ListTile(
+                        splashColor: Colors.grey.shade900,
+                        onTap: () {},
+                        title: Text(
+                          'Log out',
+                          style: txtStyle(
+                            subTitle22,
+                            Colors.white,
+                          ).copyWith(fontWeight: FontWeight.w500),
+                        ),
+                        leading: const Icon(
+                          Ionicons.log_out_outline,
+                          size: title26,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            BlocBuilder<WrapperBloc, WrapperState>(
+              builder: (context, state) {
+                if (state is HomePageSelectedWeb) {
+                  return HomePageRes(loggedUserID: widget.userId);
+                }
+                if (state is NotificationPageSelectedWeb) {
+                  return const Center(child: Text('Notification'));
+                }
+                if (state is ExplorePageSelectedWeb) {
+                  return const Center(child: Text('Explore'));
+                }
+                if (state is UploadPageSelectedWeb) {
+                  return const Center(child: Text('Upload'));
+                }
+                if (state is MessagePageSelectedWeb) {
+                  return const Center(child: Text('message'));
+                }
+                if (state is SearchPageSelectedWeb) {
+                  return const Center(child: Text('Search'));
+                }
+                if (state is ProfilePageSelectedWeb) {
+                  return const Center(child: Text('Profile'));
                 }
                 return const Center(child: Text('Home'));
               },
@@ -340,12 +463,15 @@ class TabsForWeb extends StatelessWidget {
           if ((state is HomePageSelectedWeb && index == 0) ||
               (state is NotificationPageSelectedWeb && index == 1) ||
               (state is ExplorePageSelectedWeb && index == 2) ||
-              (state is UploadPageSelectedWeb && index == 3)) {
+              (state is UploadPageSelectedWeb && index == 3) ||
+              (state is MessagePageSelectedWeb && index == 4) ||
+              (state is SearchPageSelectedWeb && index == 5) ||
+              (state is ProfilePageSelectedWeb && index == 6)) {
             return ShaderIcon(
-              iconWidget: Icon(icondata, size: 32, color: whiteForText),
+              iconWidget: Icon(icondata, size: title32, color: whiteForText),
             );
           }
-          return Icon(icondata, size: 24, color: whiteForText);
+          return Icon(icondata, size: title24, color: whiteForText);
         },
       ),
       title: BlocBuilder<WrapperBloc, WrapperState>(
@@ -353,11 +479,14 @@ class TabsForWeb extends StatelessWidget {
           if ((state is HomePageSelectedWeb && index == 0) ||
               (state is NotificationPageSelectedWeb && index == 1) ||
               (state is ExplorePageSelectedWeb && index == 2) ||
-              (state is UploadPageSelectedWeb && index == 3)) {
+              (state is UploadPageSelectedWeb && index == 3) ||
+              (state is MessagePageSelectedWeb && index == 4) ||
+              (state is SearchPageSelectedWeb && index == 5) ||
+              (state is ProfilePageSelectedWeb && index == 6)) {
             return ShaderText(
               textWidget: Text(
                 title,
-                style: txtStyleNoColor(title32),
+                style: txtStyleNoColor(title30),
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -365,10 +494,47 @@ class TabsForWeb extends StatelessWidget {
           }
           return Text(
             title,
-            style: txtStyle(title24, whiteForText),
+            style: txtStyle(subTitle22, whiteForText),
             softWrap: true,
             overflow: TextOverflow.ellipsis,
           );
+        },
+      ),
+    );
+  }
+}
+
+class IconTabsForWeb extends StatelessWidget {
+  const IconTabsForWeb({
+    super.key,
+    required this.icondata,
+    required this.index,
+  });
+
+  final IconData icondata;
+  final int index;
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        context.read<WrapperBloc>().add(
+          PageChageRequestedWeb(selectedIndex: index),
+        );
+      },
+      icon: BlocBuilder<WrapperBloc, WrapperState>(
+        builder: (context, state) {
+          if ((state is HomePageSelectedWeb && index == 0) ||
+              (state is NotificationPageSelectedWeb && index == 1) ||
+              (state is ExplorePageSelectedWeb && index == 2) ||
+              (state is UploadPageSelectedWeb && index == 3) ||
+              (state is MessagePageSelectedWeb && index == 4) ||
+              (state is SearchPageSelectedWeb && index == 5) ||
+              (state is ProfilePageSelectedWeb && index == 6)) {
+            return ShaderIcon(
+              iconWidget: Icon(icondata, size: 35, color: whiteForText),
+            );
+          }
+          return Icon(icondata, size: 20, color: whiteForText);
         },
       ),
     );

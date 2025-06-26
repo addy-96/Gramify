@@ -106,10 +106,11 @@ class Gramify extends StatefulWidget {
 
 class _GramifyState extends State<Gramify> {
   late final AppLifecycleListener _lifeCycleListener;
+
   @override
   void initState() {
     super.initState();
-    log('Start');
+    sendUserOnlineStat();
     _lifeCycleListener = AppLifecycleListener(
       onRestart: () => log('App restareted'),
       onPause: () => log('App restareted'),
@@ -119,6 +120,17 @@ class _GramifyState extends State<Gramify> {
         log('App state changed to ${value.name}');
       },
     );
+  }
+
+  void sendUserOnlineStat() async {
+    try {
+      await Future.delayed(const Duration(minutes: 2));
+      log('executed\n');
+
+      sendUserOnlineStat();
+    } catch (err) {
+      log(err.toString());
+    }
   }
 
   @override

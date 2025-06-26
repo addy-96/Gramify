@@ -21,3 +21,9 @@ final class UploadPageSelectedWeb extends WrapperState {}
 final class ExplorePageSelectedWeb extends WrapperState {}
 
 final class NotificationPageSelectedWeb extends WrapperState {}
+
+final class MessagePageSelectedWeb extends WrapperState {}
+
+final class SearchPageSelectedWeb extends WrapperState {}
+
+final class ProfilePageSelectedWeb extends WrapperState {}

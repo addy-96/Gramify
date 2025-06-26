@@ -35,15 +35,26 @@ class Post extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    height: screenHeight / 22,
-                    width: screenWeidth / 15,
+                    height:
+                        screenWeidth < 600
+                            ? 30
+                            : screenWeidth >= 600 && screenWeidth <= 1300
+                            ? 35
+                            : 40,
+                    width:
+                        screenWeidth < 600
+                            ? 30
+                            : screenWeidth >= 600 && screenWeidth <= 1300
+                            ? 35
+                            : 40,
+
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(100),
                     ),
                     child:
                         post.posterProfileImageUrl != null
                             ? ClipRRect(
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(100),
                               child: Image.network(
                                 post.posterProfileImageUrl!,
                                 fit: BoxFit.cover,
@@ -158,8 +169,8 @@ class Post extends StatelessWidget {
                         'View all Comments (${post.commentsCount})',
                         style: txtStyle(
                           small12,
-                          Colors.grey.shade700,
-                        ).copyWith(fontWeight: FontWeight.w200),
+                          Colors.grey.shade600,
+                        ).copyWith(fontWeight: FontWeight.w400),
                       ),
                     )
                     : const SizedBox.shrink(),
@@ -175,8 +186,8 @@ class Post extends StatelessWidget {
                       calculatePostUploadTime(post.createdAt),
                       style: txtStyle(
                         small12,
-                        Colors.grey.shade700,
-                      ).copyWith(fontWeight: FontWeight.w200),
+                        Colors.grey.shade600,
+                      ).copyWith(fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),

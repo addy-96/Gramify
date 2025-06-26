@@ -21,7 +21,6 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
   @override
   Future<List<PostModel>> loadFeeds() async {
     try {
-      log('getfeeds called');
       final userId = await getLoggedUserId();
       final res =
           await supabase.client

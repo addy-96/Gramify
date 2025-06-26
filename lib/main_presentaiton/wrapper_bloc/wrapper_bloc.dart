@@ -24,6 +24,12 @@ class WrapperBloc extends Bloc<WrapperEvent, WrapperState> {
         emit(ExplorePageSelectedWeb());
       } else if (event.selectedIndex == 3) {
         emit(UploadPageSelectedWeb());
+      } else if (event.selectedIndex == 4) {
+        emit(MessagePageSelectedWeb());
+      } else if (event.selectedIndex == 5) {
+        emit(SearchPageSelectedWeb());
+      } else if (event.selectedIndex == 6) {
+        emit(ProfilePageSelectedWeb());
       }
     });
   }

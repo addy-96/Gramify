@@ -20,8 +20,7 @@ class _HomePageMobileState extends State<HomePageMobile> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    final devicePxRatioo = MediaQuery.of(context).devicePixelRatio;
-    log(devicePxRatioo.toString());
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

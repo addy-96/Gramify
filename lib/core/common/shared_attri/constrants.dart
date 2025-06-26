@@ -28,3 +28,17 @@ final postPictureBucket = 'users-post-pictures';
 
 //sharedPreference Constant
 final userIdSharedKey = 'loggedUserId';
+
+//device sizes
+
+final double xsMax = 575;
+
+final double smMax = 767;
+
+final double mdMax = 991;
+
+final double lgMAx = 1199;
+
+final double xlMax = 1399;
+
+final double xxlMax = 1600;
