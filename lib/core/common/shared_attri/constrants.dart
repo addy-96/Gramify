@@ -1,3 +1,5 @@
+enum GenderEnum { Male, Female, Other }
+
 const emailMAXLength = 20;
 const passwordMAXLength = 20;
 const usernameMAXLenght = 20;

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/features/add_post/presentation/mobile/select_post_picture.dart';
-import 'package:gramify/main_presentaiton/app_bloc/wrapper_bloc/wrapper_bloc.dart';
+import 'package:gramify/main_presentaiton/app_bloc/app_bloc.dart';
+import 'package:gramify/main_presentaiton/app_bloc/app_event.dart';
+import 'package:gramify/main_presentaiton/wrapper_bloc/wrapper_bloc.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
@@ -14,28 +17,62 @@ import 'package:gramify/features/home/presentation/home_res_page.dart';
 import 'package:gramify/features/profile/presentation/mobile/profile_page.dart';
 import 'package:ionicons/ionicons.dart';
 
-class WrapperRes extends StatelessWidget {
+class WrapperRes extends StatefulWidget {
   const WrapperRes({super.key, required this.userID});
   final String userID;
+
+  @override
+  State<WrapperRes> createState() => _WrapperResState();
+}
+
+class _WrapperResState extends State<WrapperRes> {
+  Timer? _userOnlineTimer;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AppBloc>().add(SetUserOnlineEvent());
+    });
+
+    _userOnlineTimer = Timer.periodic(const Duration(minutes: 2), (_) {
+      log('set user online');
+      context.read<AppBloc>().add(SetUserOnlineEvent());
+    });
+  }
+
+  @override
+  void dispose() {
+    _userOnlineTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (kIsWeb) {
-          return WrapperWeb(userId: userID);
+          return WrapperWeb(userId: widget.userID);
         } else if (defaultTargetPlatform == TargetPlatform.android ||
             defaultTargetPlatform == TargetPlatform.iOS ||
             constraints.maxWidth <= 700) {
-          return WrapperMobile(userId: userID);
+          return WrapperMobile(userId: widget.userID);
         }
         throw Exception('Unsupported platform');
       },
     );
   }
 }
+/*
 
-//
+
+
+
+
+
+
+
+
+*/
 
 class WrapperMobile extends StatefulWidget {
   const WrapperMobile({super.key, required this.userId});
@@ -79,7 +116,7 @@ class _WrapperMobileState extends State<WrapperMobile> {
 
       bottomNavigationBar: const CustomNavBarMobile(
         borderRadius: 14,
-        horizontalPadding: 60,
+        horizontalPadding: 20,
         verticalPadding: 20,
         navitemsLength: 4,
         iconColor: Colors.black87,
@@ -117,8 +154,6 @@ class CustomNavBarMobile extends StatefulWidget {
 }
 
 class _CustomNavBarMobileState extends State<CustomNavBarMobile> {
-  int selectedIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -153,33 +188,67 @@ class _CustomNavBarMobileState extends State<CustomNavBarMobile> {
                 for (var i = 0; i < widget.navitemsLength; i++)
                   InkWell(
                     onTap: () {
-                      selectedIndex = i;
                       context.read<WrapperBloc>().add(
                         PageChageRequestedMobile(selectedIndex: i),
                       );
-                      setState(() {});
                     },
 
-                    child: Icon(
-                      i == 0
-                          ? (i == selectedIndex
-                              ? Ionicons.home_sharp
-                              : Ionicons.home_outline)
-                          : i == 1
-                          ? (i == selectedIndex
-                              ? Ionicons.add_circle
-                              : Ionicons.add_circle_outline)
-                          : i == 2
-                          ? (i == selectedIndex
-                              ? Ionicons.compass
-                              : Ionicons.compass_outline)
-                          : i == 3
-                          ? (i == selectedIndex
-                              ? Ionicons.person_sharp
-                              : Ionicons.person_outline)
-                          : null,
-                      color: widget.iconColor,
-                      size: widget.iconSize,
+                    child: BlocBuilder<WrapperBloc, WrapperState>(
+                      builder: (context, state) {
+                        if (i == 0) {
+                          if (state is HomePageSelectedMobile) {
+                            return Icon(
+                              Ionicons.home_sharp,
+                              size: widget.iconSize,
+                              color: widget.iconColor,
+                            );
+                          }
+                          return Icon(
+                            Ionicons.home_outline,
+                            size: widget.iconSize,
+                            color: widget.iconColor,
+                          );
+                        } else if (i == 1) {
+                          if (state is UploadPageSelectedMobile) {
+                            return Icon(
+                              Ionicons.add_circle_sharp,
+                              size: widget.iconSize,
+                              color: widget.iconColor,
+                            );
+                          }
+                          return Icon(
+                            Ionicons.add_circle_outline,
+                            size: widget.iconSize,
+                            color: widget.iconColor,
+                          );
+                        } else if (i == 2) {
+                          if (state is ExplorePageSelectedMobile) {
+                            return Icon(
+                              Ionicons.compass_sharp,
+                              size: widget.iconSize,
+                              color: widget.iconColor,
+                            );
+                          }
+                          return Icon(
+                            Ionicons.compass_outline,
+                            size: widget.iconSize,
+                            color: widget.iconColor,
+                          );
+                        } else {
+                          if (state is ProfilePageSlectedMobile) {
+                            return Icon(
+                              Ionicons.person_sharp,
+                              size: widget.iconSize,
+                              color: widget.iconColor,
+                            );
+                          }
+                          return Icon(
+                            Ionicons.person_outline,
+                            size: widget.iconSize,
+                            color: widget.iconColor,
+                          );
+                        }
+                      },
                     ),
                   ),
               ],
@@ -191,7 +260,17 @@ class _CustomNavBarMobileState extends State<CustomNavBarMobile> {
   }
 }
 
-//
+/*
+
+
+
+
+
+
+
+
+
+*/
 class WrapperWeb extends StatefulWidget {
   const WrapperWeb({super.key, required this.userId});
   final String userId;

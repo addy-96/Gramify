@@ -4,7 +4,9 @@ class UserProfileModel {
   final String? profileImageUrl;
   final int followersCount;
   final int followingCount;
+  final String? bio;
   final Map<String, String> userPostMap;
+  final String? gender;
 
   UserProfileModel({
     required this.userPostMap,
@@ -13,5 +15,7 @@ class UserProfileModel {
     required this.profileImageUrl,
     required this.followersCount,
     required this.followingCount,
+    required this.bio,
+    required this.gender,
   });
 }

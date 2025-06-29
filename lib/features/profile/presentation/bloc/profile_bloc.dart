@@ -19,6 +19,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     //
     on<UnfollowRequested>(_onUnfollowRequested);
+
+    on<ProfilePictureEditRequested>(_onProfilePictureEditRequested);
   }
 
   _onProfileDataRequested(
@@ -80,6 +82,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         followingCount: currentState.userdata.followingCount,
         userPostMap: currentState.userdata.userPostMap,
         isFollowing: true,
+        isPrivate: currentState.userdata.isPrivate,
+        bio: currentState.userdata.bio,
+        gender: currentState.userdata.gender,
       );
       emit(OtherUserProfileFetchedState(userdata: newOtherUserDataModel));
     } catch (err) {
@@ -105,10 +110,32 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         followingCount: currentState.userdata.followingCount,
         userPostMap: currentState.userdata.userPostMap,
         isFollowing: false,
+        isPrivate: currentState.userdata.isPrivate,
+        bio: currentState.userdata.bio,
+        gender: currentState.userdata.gender,
       );
       emit(OtherUserProfileFetchedState(userdata: newOtherUserDataModel));
     } catch (err) {
       emit(ProfileErrorState(errorMessage: err.toString()));
+    }
+  }
+
+  _onProfilePictureEditRequested(
+    ProfilePictureEditRequested event,
+    Emitter<ProfileState> emit,
+  ) async {
+    emit(ProfilePictureUploadingState());
+    try {
+      final res = await profileRepository.ediProfilePicture(
+        profilePicture: event.profilePicture,
+      );
+
+      res.fold(
+        (l) => emit(ProfilePictureEditFailureState(errorMessage: l.message)),
+        (r) => emit(ProfilePictureEditEditSuccessState(newImageUrl: r)),
+      );
+    } catch (err) {
+      emit(ProfilePictureEditFailureState(errorMessage: err.toString()));
     }
   }
 }

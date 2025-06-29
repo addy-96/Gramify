@@ -12,8 +12,8 @@ import 'package:gramify/features/messaging/presentation/bloc/message_state.dart'
 import 'package:gramify/features/messaging/presentation/bloc/ui/messaging_ui_bloc.dart';
 import 'package:gramify/features/messaging/presentation/bloc/ui/messaging_ui_event.dart';
 import 'package:gramify/features/messaging/presentation/bloc/ui/messaging_ui_state.dart';
-import 'package:gramify/features/messaging/presentation/widgets/chat_tile.dart';
 import 'package:gramify/features/messaging/presentation/widgets/chats_section.dart';
+import 'package:gramify/features/messaging/presentation/widgets/online_users_section.dart';
 import 'package:gramify/features/messaging/presentation/widgets/search_tile.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -140,6 +140,7 @@ class _ChatsPageState extends State<ChatsPage> {
                                       .profileImageUrl,
                               userid: state.searchedUserList![index].userId,
                               username: state.searchedUserList![index].username,
+                              lastSeen: state.searchedUserList![index].dateTime,
                             ),
                       );
                     }
@@ -159,21 +160,7 @@ class _ChatsPageState extends State<ChatsPage> {
 Widget defaultBody() => Column(
   mainAxisAlignment: MainAxisAlignment.start,
   children: [
-    SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          for (var i = 0; i <= 5; i++)
-            Container(
-              padding: const EdgeInsets.all(6),
-              child: const CircleAvatar(
-                radius: 35,
-                backgroundColor: Colors.white10,
-              ),
-            ),
-        ],
-      ),
-    ),
+    const OnlineUsersSection(),
     const Gap(20),
     Expanded(
       child: Padding(

@@ -1,5 +1,6 @@
 import 'package:gramify/features/messaging/domain/model/chat_user_model.dart';
 import 'package:gramify/features/messaging/domain/model/message_model.dart';
+import 'package:gramify/features/messaging/domain/model/online_user_model.dart';
 import 'package:gramify/features/messaging/domain/model/search_user_model.dart';
 
 sealed class MessageState {}
@@ -53,4 +54,14 @@ final class ChatLoadingState extends MessageState {}
 final class LoadUserChatsFailureState extends MessageState {
   final String errorMessage;
   LoadUserChatsFailureState({required this.errorMessage});
+}
+
+final class OnlineUserFetchedState extends MessageState {
+  final List<OnlineUserModel> listOfOnlineUser;
+  OnlineUserFetchedState({required this.listOfOnlineUser});
+}
+
+final class OnlineUserFetchErrorState extends MessageState {
+  final String errorMessage;
+  OnlineUserFetchErrorState({required this.errorMessage});
 }

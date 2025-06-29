@@ -26,3 +26,22 @@ final class OtherUserProfileFetchedState extends ProfileState {
 }
 
 final class FollowLoadingState extends ProfileState {}
+
+final class ProfilePictureEditEditSuccessState extends ProfileState {
+  final String? newImageUrl;
+  ProfilePictureEditEditSuccessState({required this.newImageUrl});
+}
+
+final class ProfilePictureEditFailureState extends ProfileState {
+  final String errorMessage;
+  ProfilePictureEditFailureState({required this.errorMessage});
+}
+
+final class ProfileInfoEditSuccessState extends ProfileState {}
+
+final class ProfileInfoEditFailureState extends ProfileState {
+  final String errorMessage;
+  ProfileInfoEditFailureState({required this.errorMessage});
+}
+
+final class ProfilePictureUploadingState extends ProfileState {}

@@ -1,10 +1,10 @@
 import 'dart:developer';
-
 import 'package:fpdart/fpdart.dart';
 import 'package:gramify/core/errors/failure.dart';
 import 'package:gramify/features/messaging/data/datasorces/message_datasorce.dart';
 import 'package:gramify/features/messaging/domain/model/chat_user_model.dart';
 import 'package:gramify/features/messaging/domain/model/message_model.dart';
+import 'package:gramify/features/messaging/domain/model/online_user_model.dart';
 import 'package:gramify/features/messaging/domain/model/search_user_model.dart';
 import 'package:gramify/features/messaging/domain/repositories/message_repository.dart';
 
@@ -77,6 +77,16 @@ class MessageRepositoriesImpl implements MessageRepository {
   Future<Either<Failure, List<ChatUserModel>>> loadprevChats() async {
     try {
       final res = await messageDatasorce.getUserChats();
+      return right(res);
+    } catch (err) {
+      return left(Failure(message: err.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<OnlineUserModel>>> getOnlineUsers() async {
+    try {
+      final res = await messageDatasorce.getOnlineUsers();
       return right(res);
     } catch (err) {
       return left(Failure(message: err.toString()));

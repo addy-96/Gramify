@@ -1,4 +1,4 @@
-import 'package:fpdart/src/either.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:gramify/core/errors/failure.dart';
 import 'package:gramify/main_domain/repository/app_repositories.dart';
 import 'package:gramify/main_remote_datasource/datasource/app_remote_datasource.dart';

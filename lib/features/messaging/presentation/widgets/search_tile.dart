@@ -16,11 +16,13 @@ class SearchTile extends StatelessWidget {
     required this.userid,
     required this.username,
     required this.chatID,
+    required this.lastSeen,
   });
   final String userid;
   final String? imageUrl;
   final String username;
   final String chatID;
+  final DateTime lastSeen;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,7 @@ class SearchTile extends StatelessWidget {
                   username: username,
                   imageUrl: imageUrl,
                   chatId: chatID,
+                  lastSeen: lastSeen,
                 ),
           ),
         );

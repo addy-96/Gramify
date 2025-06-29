@@ -1,8 +1,7 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
-import 'package:gramify/core/common/shared_fun/calculate_upload_time.dart';
+import 'package:gramify/core/common/shared_fun/cal_fun.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 import 'package:gramify/features/messaging/domain/model/chat_user_model.dart';
 import 'package:gramify/features/messaging/presentation/mobile/chatting_page.dart';
@@ -23,6 +22,7 @@ class ChatTile extends StatelessWidget {
                   userid: chatUserModel.receepintUserId,
                   username: chatUserModel.receepintFullname,
                   chatId: chatUserModel.chatId,
+                  lastSeen: chatUserModel.receipintLastSeen,
                 ),
           ),
         );

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -12,10 +14,12 @@ import 'package:gramify/features/profile/presentation/widgets/profile_image_avat
 
 class ProfileInfoSection extends StatelessWidget {
   ProfileInfoSection({super.key});
+
   final TextStyle fullnameStyle = txtStyle(
     bodyText16,
     Colors.white,
   ).copyWith(fontWeight: FontWeight.w600);
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -27,8 +31,8 @@ class ProfileInfoSection extends StatelessWidget {
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: screenWidth / 15,
-          vertical: 18,
+          horizontal: screenWidth / 18,
+          vertical: 15,
         ),
         child: Column(
           children: [
@@ -78,18 +82,64 @@ class ProfileInfoSection extends StatelessWidget {
               ],
             ),
             const Gap(15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  '~geet akjnfskijafnk oi sau iusf',
-                  style: txtStyle(
-                    small12,
-                    Colors.white,
-                  ).copyWith(fontWeight: FontWeight.w400),
-                ),
-              ],
+            BlocBuilder<ProfileBloc, ProfileState>(
+              builder: (context, state) {
+                if (state is ProfileDataFetchSuccessState) {
+                  if (state.userdata.bio != null) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            state.userdata.bio!,
+                            style: txtStyle(
+                              small12,
+                              Colors.white,
+                            ).copyWith(fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return const SizedBox.shrink();
+                }
+                if (state is ProfileLoadingState) {
+                  return const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ShimmerContainer(height: bodyText14, width: 100),
+                    ],
+                  );
+                }
+                if (state is OtherUserProfileFetchedState) {
+                  if (state.userdata.bio != null) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 4,
+                            state.userdata.bio!,
+                            softWrap: true,
+                            style: txtStyle(
+                              small12,
+                              Colors.white,
+                            ).copyWith(fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return const SizedBox.shrink();
+                }
+                return const SizedBox.shrink();
+              },
             ),
+
             const Gap(17),
             const ProfileActionSection(),
           ],

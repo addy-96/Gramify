@@ -7,7 +7,8 @@ import 'package:gramify/features/add_post/presentation/bloc/cubit/selectedPictur
 import 'package:gramify/features/home/presentation/bloc/post_bloc/post_bloc.dart';
 import 'package:gramify/features/messaging/presentation/bloc/message_bloc.dart';
 import 'package:gramify/features/messaging/presentation/bloc/ui/messaging_ui_bloc.dart';
-import 'package:gramify/main_presentaiton/app_bloc/wrapper_bloc/wrapper_bloc.dart';
+import 'package:gramify/main_presentaiton/app_bloc/app_bloc.dart';
+import 'package:gramify/main_presentaiton/wrapper_bloc/wrapper_bloc.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/features/auth/presentation/login_res_page.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
@@ -31,7 +32,6 @@ void main() async {
   runApp(const MyApp());
 }
 
-//
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -78,6 +78,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => PostBloc(homeRepositories: servicelocator()),
         ),
+        BlocProvider(
+          create: (context) => AppBloc(appRepositories: servicelocator()),
+        ),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
@@ -96,7 +99,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//
 class Gramify extends StatefulWidget {
   const Gramify({super.key});
 
@@ -110,7 +112,7 @@ class _GramifyState extends State<Gramify> {
   @override
   void initState() {
     super.initState();
-    sendUserOnlineStat();
+
     _lifeCycleListener = AppLifecycleListener(
       onRestart: () => log('App restareted'),
       onPause: () => log('App restareted'),
@@ -120,17 +122,6 @@ class _GramifyState extends State<Gramify> {
         log('App state changed to ${value.name}');
       },
     );
-  }
-
-  void sendUserOnlineStat() async {
-    try {
-      await Future.delayed(const Duration(minutes: 2));
-      log('executed\n');
-
-      sendUserOnlineStat();
-    } catch (err) {
-      log(err.toString());
-    }
   }
 
   @override
@@ -148,7 +139,6 @@ class _GramifyState extends State<Gramify> {
   }
 }
 
-//
 class AppStart extends StatelessWidget {
   const AppStart({super.key});
 

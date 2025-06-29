@@ -6,7 +6,8 @@ import 'package:gramify/features/auth/domain/usecase/check_username_usecase.dart
 import 'package:gramify/features/messaging/data/datasorces/message_datasorce.dart';
 import 'package:gramify/features/messaging/data/repositories/message_repositories_impl.dart';
 import 'package:gramify/features/messaging/domain/repositories/message_repository.dart';
-import 'package:gramify/main_presentaiton/app_bloc/wrapper_bloc/wrapper_bloc.dart';
+import 'package:gramify/main_domain/repository/app_repositories.dart';
+import 'package:gramify/main_presentaiton/wrapper_bloc/wrapper_bloc.dart';
 import 'package:gramify/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:gramify/features/auth/data/datasources/local_datasource.dart';
 import 'package:gramify/features/auth/data/repositories/auth_repository_impl.dart';
@@ -25,6 +26,8 @@ import 'package:gramify/features/home/domain/repositories/home_repositories.dart
 import 'package:gramify/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:gramify/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:gramify/features/profile/domain/repositories/profile_repository.dart';
+import 'package:gramify/main_remote_datasource/datasource/app_remote_datasource.dart';
+import 'package:gramify/main_remote_datasource/repositry/app_repositories_impl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -40,6 +43,17 @@ Future initDpendencies() async {
   await _exploreInit();
   await _homeInit();
   await _messagingInit();
+  await _appInit();
+}
+
+_appInit() async {
+  servicelocator.registerFactory<AppRemoteDatasource>(
+    () => AppRemoteDatasourceImpl(supaabse: servicelocator()),
+  );
+
+  servicelocator.registerFactory<AppRepositories>(
+    () => AppRepositoriesImpl(appRemoteDatasource: servicelocator()),
+  );
 }
 
 _authDepInit() async {
@@ -113,7 +127,10 @@ _addPostInit() {
 
 _profileInit() {
   servicelocator.registerFactory<ProfileRemoteDatasource>(
-    () => ProfileRemoteDatasourceImpl(supabase: servicelocator()),
+    () => ProfileRemoteDatasourceImpl(
+      supabase: servicelocator(),
+      authRemoteDatasource: servicelocator(),
+    ),
   );
 
   servicelocator.registerFactory<ProfileRepository>(

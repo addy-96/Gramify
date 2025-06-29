@@ -41,6 +41,11 @@ class SettingsPage extends StatelessWidget {
                   subTitleText: 'Edit bio, other personal details.',
                 ),
                 SettingsOption(
+                  settingsTitle: 'Private Account',
+                  settingIcon: Ionicons.lock_closed_outline,
+                  subTitleText: 'Set account private or public',
+                ),
+                SettingsOption(
                   settingsTitle: 'Audience',
                   settingIcon: Ionicons.people_outline,
                   subTitleText: 'Privacy, edit who can see your post.',

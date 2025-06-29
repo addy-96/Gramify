@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
-import 'package:gramify/core/common/shared_fun/calculate_upload_time.dart';
-import 'package:gramify/core/common/shared_fun/shaders.dart';
+import 'package:gramify/core/common/shared_fun/cal_fun.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 
 class MessageBubble extends StatelessWidget {

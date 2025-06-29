@@ -6,6 +6,7 @@ class ChatUserModel {
   final String lastMessage;
   final DateTime createdAt;
   final DateTime lastUpdated;
+  final DateTime receipintLastSeen;
 
   ChatUserModel({
     required this.lastUpdated,
@@ -15,5 +16,6 @@ class ChatUserModel {
     required this.receepintFullname,
     required this.receepintUserId,
     required this.receipintProfile,
+    required this.receipintLastSeen,
   });
 }

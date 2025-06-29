@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 import 'package:gramify/features/add_post/presentation/bloc/add_post_bloc.dart';
@@ -30,11 +29,7 @@ class _SelectPostPictureState extends State<SelectPostPicture> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_outlined),
 
-          onPressed: () => context.pop(),
-        ),
         title: Text('Create Post', style: txtStyle(subTitle18, Colors.white)),
         actions: [
           IconButton(

@@ -1,6 +1,10 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
+import 'package:gramify/core/common/shared_fun/cal_fun.dart';
 import 'package:gramify/core/common/shared_fun/get_logged_userId.dart';
+import 'package:gramify/core/errors/server_exception.dart';
+import 'package:gramify/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:gramify/features/profile/domain/models/other_user_profile_model.dart';
 import 'package:gramify/features/profile/domain/models/user_profile_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -19,11 +23,27 @@ abstract interface class ProfileRemoteDatasource {
     required String followedID,
   });
   Future unfollowRequested({required String userID});
+
+  Future editProfileDetails({
+    required String fullname,
+    required String username,
+    required GenderEnum genderenum,
+    required String bio,
+  });
+
+  Future<String?> editProfilePicture({required File? profileImageFile});
+
+  Future<bool> editProfileCheckUsername({required String username});
 }
 
 class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
   final Supabase supabase;
-  ProfileRemoteDatasourceImpl({required this.supabase});
+  final AuthRemoteDatasource
+  authRemoteDatasource; // here this breaks the sepration of concern principle but its temporary and will be resolved later
+  ProfileRemoteDatasourceImpl({
+    required this.supabase,
+    required this.authRemoteDatasource,
+  });
 
   //
   @override
@@ -57,6 +77,8 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
         followersCount: listOfFollowers.length,
         followingCount: listOfFollowing.length,
         userPostMap: postMap,
+        bio: response.first['bio'],
+        gender: response.first['gender'] as String,
       );
     } catch (err, stack) {
       log('getProfilePicture: Error occurred - $err\n$stack');
@@ -80,6 +102,7 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
           response.first['list-of-followers'] ?? [];
       final List<dynamic> listOfFollowing =
           response.first['list-of-following'] ?? [];
+
       return OtherUserProfileModel(
         username: response.first['username'],
         fullname: response.first['fullname'],
@@ -87,8 +110,11 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
         followersCount: listOfFollowers.length,
         followingCount: listOfFollowing.length,
         isFollowing: isFollowing,
+        isPrivate: response.first['is_private'] as bool,
         userPostMap: {},
         userID: userID,
+        bio: response.first['bio'],
+        gender: response.first['gender'] as String,
       );
     } catch (err, stack) {
       log('getProfilePicture: Error occurred - $err\n$stack');
@@ -234,6 +260,79 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
     } catch (err) {
       log('profile_remote_datasorce.addtofollowing: Error occurred - $err');
       throw Exception('Failed to fetch follow/unfollow status');
+    }
+  }
+
+  @override
+  Future editProfileDetails({
+    required String fullname,
+    required String username,
+    required GenderEnum genderenum,
+    required String bio,
+  }) async {
+    try {
+      final loggedUSerId = await getLoggedUserId();
+      await supabase.client
+          .from(userTable)
+          .update({
+            'username': username,
+            'fullname': getProperFullname(fullname),
+            'gender': genderenum.name,
+            'bio': bio,
+          })
+          .eq('user_id', loggedUSerId);
+    } catch (err) {
+      log(
+        'error in profileRemotedatasourceimpl.editProfileDetails: ${err.toString()}',
+      );
+      throw ServerException(message: err.toString());
+    }
+  }
+
+  @override
+  Future<String?> editProfilePicture({required File? profileImageFile}) async {
+    try {
+      final loggedUSerId = await getLoggedUserId();
+      if (profileImageFile == null) {
+        await supabase.client.storage.from(userProfilePictureBucket).remove([
+          '$loggedUSerId-profile-picture',
+        ]);
+        await supabase.client
+            .from(userTable)
+            .update({'profile_image_url': null})
+            .eq('user_id', loggedUSerId);
+        return null;
+      } else {
+        await supabase.client.storage
+            .from(userProfilePictureBucket)
+            .update('$loggedUSerId-profile-picture', profileImageFile);
+        final fileUrl = supabase.client.storage
+            .from(userProfilePictureBucket)
+            .getPublicUrl('$loggedUSerId-profile-picture');
+        await supabase.client
+            .from(userTable)
+            .update({'profile_image_url': fileUrl})
+            .eq('user_id', loggedUSerId);
+        return fileUrl;
+      }
+    } catch (err) {
+      log('error in profileremotedatasoource.editProfilePicture');
+      throw ServerException(message: err.toString());
+    }
+  }
+
+  @override
+  Future<bool> editProfileCheckUsername({required String username}) async {
+    try {
+      final res = await authRemoteDatasource.checkUsername(
+        enteredUsername: username,
+      );
+      return res;
+    } catch (err) {
+      log(
+        'error in profileremotedatasource.editProfileCheckUsername ${err.toString()}',
+      );
+      throw ServerException(message: err.toString());
     }
   }
 }

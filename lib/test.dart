@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gramify/main_presentaiton/app_bloc/wrapper_bloc/wrapper_bloc.dart';
+import 'package:gramify/main_presentaiton/wrapper_bloc/wrapper_bloc.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
 
 import 'package:ionicons/ionicons.dart';

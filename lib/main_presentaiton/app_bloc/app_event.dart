@@ -1,3 +1,3 @@
 sealed class AppEvent {}
 
-final class SetUserOnline extends AppEvent {}
+final class SetUserOnlineEvent extends AppEvent {}

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -7,9 +6,11 @@ import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/shimmer_container.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
+import 'package:gramify/features/profile/domain/models/user_profile_model.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_event.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_state.dart';
+import 'package:gramify/features/profile/presentation/mobile/edit_profile_page.dart';
 import 'package:ionicons/ionicons.dart';
 
 class ProfileActionSection extends StatelessWidget {
@@ -26,10 +27,24 @@ class ProfileActionSection extends StatelessWidget {
             children: [
               Expanded(
                 child: InkWell(
-                  onTap: () {},
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder:
+                            (context) => EditProfilePage(
+                              bio: state.userdata.bio,
+                              fullname: state.userdata.fullname,
+                              username: state.userdata.username,
+                              gender: state.userdata.gender,
+                              profileImgeUrl: state.userdata.profileImageUrl,
+                            ),
+                      ),
+                    );
+                  },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 25,
+                      horizontal: 4,
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
@@ -40,7 +55,7 @@ class ProfileActionSection extends StatelessWidget {
                       child: Text(
                         'Edit Profile',
                         style: txtStyle(
-                          small12,
+                          bodyText14,
                           Colors.white,
                         ).copyWith(fontWeight: FontWeight.w600),
                       ),
@@ -51,10 +66,11 @@ class ProfileActionSection extends StatelessWidget {
               const Gap(15),
               Expanded(
                 child: InkWell(
+                  borderRadius: BorderRadius.circular(8),
                   onTap: () {},
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 25,
+                      horizontal: 4,
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
@@ -65,7 +81,7 @@ class ProfileActionSection extends StatelessWidget {
                       child: Text(
                         'Share Profile',
                         style: txtStyle(
-                          small12,
+                          bodyText14,
                           Colors.white,
                         ).copyWith(fontWeight: FontWeight.w600),
                       ),
@@ -75,16 +91,13 @@ class ProfileActionSection extends StatelessWidget {
               ),
               const Gap(15),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 25,
-                  vertical: 8,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade900,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Center(
-                  child: Icon(Ionicons.person_add_outline, size: bodyText14),
+                  child: Icon(Ionicons.person_add_outline, size: bodyText16),
                 ),
               ),
             ],
@@ -117,7 +130,7 @@ class ProfileActionSection extends StatelessWidget {
                               child: Container(
                                 height: screenHeight / 6,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(14),
                                   border: Border.all(
                                     width: 1,
                                     color: Colors.white10,
@@ -145,7 +158,7 @@ class ProfileActionSection extends StatelessWidget {
                                                 bodyText16,
                                                 Colors.white70,
                                               ).copyWith(
-                                                fontWeight: FontWeight.w700,
+                                                fontWeight: FontWeight.w600,
                                                 overflow: TextOverflow.visible,
                                               ),
                                             ),
@@ -170,7 +183,7 @@ class ProfileActionSection extends StatelessWidget {
                                                   bodyText14,
                                                   Colors.white70,
                                                 ).copyWith(
-                                                  fontWeight: FontWeight.w600,
+                                                  fontWeight: FontWeight.w500,
                                                 ),
                                               ),
                                             ),
@@ -191,7 +204,7 @@ class ProfileActionSection extends StatelessWidget {
                                                   style: txtStyleNoColor(
                                                     bodyText14,
                                                   ).copyWith(
-                                                    fontWeight: FontWeight.w600,
+                                                    fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
                                               ),
@@ -210,7 +223,7 @@ class ProfileActionSection extends StatelessWidget {
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 25,
+                        horizontal: 10,
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
@@ -234,7 +247,7 @@ class ProfileActionSection extends StatelessWidget {
                             const ShaderIcon(
                               iconWidget: Icon(
                                 Ionicons.chevron_down_sharp,
-                                size: 15,
+                                size: bodyText14,
                               ),
                             ),
                           ],
@@ -250,7 +263,7 @@ class ProfileActionSection extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 25,
+                        horizontal: 10,
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
@@ -279,7 +292,9 @@ class ProfileActionSection extends StatelessWidget {
                     color: Colors.grey.shade900,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Center(child: Icon(Ionicons.person_add, size: 12)),
+                  child: const Center(
+                    child: Icon(Ionicons.person_add, size: 12),
+                  ),
                 ),
               ],
             );
@@ -297,7 +312,7 @@ class ProfileActionSection extends StatelessWidget {
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 25,
+                        horizontal: 10,
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
@@ -322,14 +337,16 @@ class ProfileActionSection extends StatelessWidget {
                 const Gap(20),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 25,
+                    horizontal: 10,
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.grey.shade900,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Center(child: Icon(Ionicons.person_add, size: 12)),
+                  child: const Center(
+                    child: Icon(Ionicons.person_add, size: 12),
+                  ),
                 ),
               ],
             );
@@ -340,11 +357,3 @@ class ProfileActionSection extends StatelessWidget {
     );
   }
 }
-
-
-
-
-/*
-
-
-*/ 

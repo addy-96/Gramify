@@ -1,11 +1,8 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:gramify/features/home/presentation/widgets/post_section.dart';
-import 'package:gramify/features/home/presentation/widgets/story_section.dart';
 import 'package:gramify/features/messaging/presentation/mobile/chats_page.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomePageMobile extends StatefulWidget {
   const HomePageMobile({super.key, required this.loggedUserId});
@@ -35,6 +32,10 @@ class _HomePageMobileState extends State<HomePageMobile> {
         actionsPadding: const EdgeInsets.all(4),
         forceMaterialTransparency: true,
         actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Ionicons.heart_outline, size: screenWidth / 15),
+          ),
           IconButton(
             onPressed: () {
               Navigator.of(context).push(

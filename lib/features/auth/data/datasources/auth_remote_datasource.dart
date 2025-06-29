@@ -136,9 +136,9 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     try {
       final ref = supabase.client.storage.from(userProfilePictureBucket);
 
-      await ref.upload('$username-profile-picture', profileImage);
       final userID = supabase.client.auth.currentUser!.id;
-      final profileImageUrl = ref.getPublicUrl('$username-profile-picture');
+      await ref.upload('$userID-profile-picture', profileImage);
+      final profileImageUrl = ref.getPublicUrl('$userID-profile-picture');
       await supabase.client
           .from('users_table')
           .update({'profile_image_url': profileImageUrl})

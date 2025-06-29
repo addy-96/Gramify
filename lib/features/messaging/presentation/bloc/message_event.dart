@@ -30,3 +30,5 @@ final class LoadMessagesRequested extends MessageEvent {
 
   LoadMessagesRequested({required this.chatID});
 }
+
+final class GetOnlineUserRequested extends MessageEvent {}

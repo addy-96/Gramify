@@ -68,36 +68,44 @@ class _ExplorePageMobileState extends State<ExplorePageMobile> {
               ),
             );
           }
-          return ListView.builder(
-            itemCount: state.peopleList.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder:
-                          (context) => ProfilePageMobile(
-                            userId: state.peopleList[index].userId,
-                          ),
-                    ),
-                  );
-                },
-                leading: CircleAvatar(
-                  radius: MediaQuery.of(context).size.width / 25,
-                  backgroundImage:
-                      state.peopleList[index].profileImageUrl == null
-                          ? null
-                          : NetworkImage(
-                            state.peopleList[index].profileImageUrl!,
-                          ),
-                ),
-                title: Text(
-                  state.peopleList[index].username,
-                  style: txtStyle(bodyText16, whiteForText),
-                ),
-              );
-            },
-          );
+          if (state.peopleList.isNotEmpty) {
+            return ListView.builder(
+              itemCount: state.peopleList.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder:
+                            (context) => ProfilePageMobile(
+                              userId: state.peopleList[index].userId,
+                            ),
+                      ),
+                    );
+                  },
+                  leading: CircleAvatar(
+                    radius: MediaQuery.of(context).size.width / 25,
+                    backgroundImage:
+                        state.peopleList[index].profileImageUrl == null
+                            ? null
+                            : NetworkImage(
+                              state.peopleList[index].profileImageUrl!,
+                            ),
+                    child:
+                        state.peopleList[index].profileImageUrl == null
+                            ? const Icon(Ionicons.person_outline, size: small12)
+                            : null,
+                  ),
+                  title: Text(
+                    state.peopleList[index].username,
+                    style: txtStyle(bodyText16, whiteForText),
+                  ),
+                );
+              },
+            );
+          }
+          return const SizedBox.shrink();
         }
         return Center(
           child: Text(

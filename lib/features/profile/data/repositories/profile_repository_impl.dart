@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:fpdart/fpdart.dart';
+import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/errors/failure.dart';
 import 'package:gramify/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:gramify/features/profile/domain/models/other_user_profile_model.dart';
@@ -55,6 +58,54 @@ class ProfileRepositoryImpl implements ProfileRepository {
     try {
       final res = await profileRemoteDatasource.unfollowRequested(
         userID: followedUserID,
+      );
+      return right(res);
+    } catch (err) {
+      return left(Failure(message: err.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> editProfileInfo({
+    required String fullname,
+    required String username,
+    required GenderEnum genderenum,
+    required String bio,
+  }) async {
+    try {
+      final res = await profileRemoteDatasource.editProfileDetails(
+        fullname: fullname,
+        bio: bio,
+        genderenum: genderenum,
+        username: username,
+      );
+      return right(res);
+    } catch (err) {
+      return left(Failure(message: err.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String?>> ediProfilePicture({
+    required File? profilePicture,
+  }) async {
+    try {
+      final res = await profileRemoteDatasource.editProfilePicture(
+        profileImageFile: profilePicture,
+      );
+      return right(res);
+    } catch (err) {
+      return left(Failure(message: err.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> editProfileCheckUSername({
+    required String enteredUSername,
+  }) async {
+    try {
+      final res = await profileRemoteDatasource.editProfileCheckUsername(
+        username: enteredUSername,
       );
       return right(res);
     } catch (err) {

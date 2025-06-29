@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
+import 'package:gramify/core/common/shared_fun/cal_fun.dart';
 import 'package:gramify/core/common/shared_fun/csnack.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
@@ -21,12 +22,14 @@ class ChattingPage extends StatefulWidget {
     this.imageUrl,
     required this.username,
     required this.chatId,
+    required this.lastSeen,
   });
 
   final String userid;
   final String? imageUrl;
   final String username;
   final String chatId;
+  final DateTime lastSeen;
 
   @override
   State<ChattingPage> createState() => _ChattingPageState();
@@ -101,7 +104,13 @@ class _ChattingPageState extends State<ChattingPage> {
                     widget.username,
                     style: txtStyle(subTitle20, Colors.white),
                   ),
-                  Text('Online', style: txtStyle(small12, Colors.white)),
+                  Text(
+                    calculateUserLatSeen(widget.lastSeen),
+                    style: txtStyle(
+                      small12,
+                      Colors.green,
+                    ).copyWith(fontWeight: FontWeight.w600),
+                  ),
                 ],
               ),
             ],

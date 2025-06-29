@@ -17,7 +17,7 @@ class AppRemoteDatasourceImpl implements AppRemoteDatasource {
       final loggedUserId = await getLoggedUserId();
       final res = await supaabse.client
           .from(userTable)
-          .update({'last_seen': DateTime.now()})
+          .update({'last_seen': DateTime.now().toIso8601String()})
           .eq('user_id', loggedUserId);
     } catch (err) {
       log('error in setting user online: ${err.toString()}');

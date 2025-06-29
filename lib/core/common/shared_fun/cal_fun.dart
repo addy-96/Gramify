@@ -68,3 +68,28 @@ String calulateChatLatTime(DateTime lastTime) {
 String calculateMessageTime(DateTime datetime) {
   return '${datetime.hour} : ${datetime.minute}';
 }
+
+String calculateUserLatSeen(DateTime datetime) {
+  final now = DateTime.now();
+  final diffenrece = now.difference(datetime);
+  if (diffenrece.inMinutes <= 2) {
+    return 'Online';
+  } else if (diffenrece.inHours < 24) {
+    return '${datetime.hour} : ${datetime.minute}';
+  } else {
+    return 'Seen on ${datetime.day}/${datetime.month}/${datetime.year}';
+  }
+}
+
+String getProperFullname(String word) {
+  String name = word[0].toUpperCase();
+
+  for (var i = 1; i < word.length; i++) {
+    if (word[i - 1] == ' ') {
+      name = name + word[i].toUpperCase();
+    } else {
+      name = name + word[i];
+    }
+  }
+  return name;
+}

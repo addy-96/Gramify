@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:gramify/core/errors/failure.dart';
 import 'package:gramify/features/messaging/domain/model/chat_user_model.dart';
 import 'package:gramify/features/messaging/domain/model/message_model.dart';
+import 'package:gramify/features/messaging/domain/model/online_user_model.dart';
 import 'package:gramify/features/messaging/domain/model/search_user_model.dart';
 
 abstract interface class MessageRepository {
@@ -21,4 +22,6 @@ abstract interface class MessageRepository {
   });
 
   Future<Either<Failure, List<ChatUserModel>>> loadprevChats();
+
+  Future<Either<Failure, List<OnlineUserModel>>> getOnlineUsers();
 }

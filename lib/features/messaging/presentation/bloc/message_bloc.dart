@@ -24,6 +24,11 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
     //
     on<ChatsScreenRequested>(_onChatsScreenRequested);
+
+    //
+    on<GetOnlineUserRequested>(_onGetOnlineUserRequested);
+
+    //
   }
 
   _onSearchUserRequested(
@@ -131,6 +136,21 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       log('Error in messageblooc._onChatsScreenRequested : ${err.toString()}');
 
       emit(LoadUserChatsFailureState(errorMessage: err.toString()));
+    }
+  }
+
+  _onGetOnlineUserRequested(
+    GetOnlineUserRequested event,
+    Emitter<MessageState> emit,
+  ) async {
+    try {
+      final res = await messageRepository.getOnlineUsers();
+      res.fold(
+        (l) => emit(OnlineUserFetchErrorState(errorMessage: l.message)),
+        (r) => emit(OnlineUserFetchedState(listOfOnlineUser: r)),
+      );
+    } catch (err) {
+      emit(OnlineUserFetchErrorState(errorMessage: err.toString()));
     }
   }
 }

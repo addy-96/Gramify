@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -10,8 +8,6 @@ import 'package:gramify/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_event.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_state.dart';
 import 'package:gramify/features/profile/presentation/mobile/settings_page.dart';
-import 'package:gramify/features/profile/presentation/widgets/profile_action_section.dart';
-import 'package:gramify/features/profile/presentation/widgets/profile_count.dart';
 import 'package:gramify/features/profile/presentation/widgets/profile_info_section.dart';
 import 'package:gramify/features/profile/presentation/widgets/user_posts_section.dart';
 import 'package:ionicons/ionicons.dart';
@@ -49,7 +45,6 @@ class _ProfilePageMobileState extends State<ProfilePageMobile> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: double.maxFinite,
         title: Padding(
           padding: const EdgeInsets.all(8.0),
           child: BlocBuilder<ProfileBloc, ProfileState>(
@@ -69,16 +64,21 @@ class _ProfilePageMobileState extends State<ProfilePageMobile> {
             },
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const SettingsPage()),
-              );
-            },
-            icon: const Icon(Ionicons.reorder_three_outline),
-          ),
-        ],
+        actions:
+            isOwnProfile
+                ? [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const SettingsPage(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Ionicons.reorder_three_outline),
+                  ),
+                ]
+                : [],
       ),
       body: Column(
         children: [

@@ -4,6 +4,7 @@ import 'package:gramify/core/common/shared_fun/get_logged_userId.dart';
 import 'package:gramify/core/errors/server_exception.dart';
 import 'package:gramify/features/messaging/domain/model/chat_user_model.dart';
 import 'package:gramify/features/messaging/domain/model/message_model.dart';
+import 'package:gramify/features/messaging/domain/model/online_user_model.dart';
 import 'package:gramify/features/messaging/domain/model/search_user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -36,6 +37,7 @@ abstract interface class MessageDatasorce {
   });
 
   Future<List<ChatUserModel>> getUserChats();
+  Future<List<OnlineUserModel>> getOnlineUsers();
 }
 
 class MessageDataSourceImpl implements MessageDatasorce {
@@ -159,7 +161,7 @@ class MessageDataSourceImpl implements MessageDatasorce {
       for (var userid in listOfAllUSer) {
         final res2 = await supabase.client
             .from(userTable)
-            .select('username, profile_image_url, user_id')
+            .select('username, profile_image_url, user_id, last_seen')
             .eq('user_id', userid);
 
         final username = res2.first['username'] as String;
@@ -180,6 +182,7 @@ class MessageDataSourceImpl implements MessageDatasorce {
             userId: res2.first['user_id'],
             username: res2.first['username'],
             chatID: chatID,
+            dateTime: DateTime.parse(res2.first['last_seen']),
           );
 
           listOfSearchedUser.add(user);
@@ -311,7 +314,7 @@ class MessageDataSourceImpl implements MessageDatasorce {
         final getotherParticpantData =
             await supabase.client
                 .from(userTable)
-                .select('fullname, profile_image_url ')
+                .select('fullname, profile_image_url, last_seen')
                 .eq('user_id', otherParticipant)
                 .single();
 
@@ -332,6 +335,9 @@ class MessageDataSourceImpl implements MessageDatasorce {
           lastMessage: getLatMessage['message'],
           createdAt: DateTime.parse(getLatMessage['created_at']),
           lastUpdated: DateTime.parse(getParticipants['last_updated']),
+          receipintLastSeen: DateTime.parse(
+            getotherParticpantData['last_seen'],
+          ),
         );
 
         chatList.add(chatUserModel);
@@ -341,6 +347,52 @@ class MessageDataSourceImpl implements MessageDatasorce {
       return chatList;
     } catch (err) {
       log('Error in messagedatasource.getuserchats : ${err.toString()} ');
+      throw ServerException(message: err.toString());
+    }
+  }
+
+  @override
+  Future<List<OnlineUserModel>> getOnlineUsers() async {
+    List<OnlineUserModel> onlineUserList = [];
+    try {
+      final loggesUSerId = await getLoggedUserId();
+      final getallusers =
+          await supabase.client
+              .from(userTable)
+              .select('list-of-followers, list-of-following')
+              .eq('user_id', loggesUSerId)
+              .single();
+      Set<dynamic> listOfAllUsers = {
+        ...getallusers['list-of-followers'],
+        ...getallusers['list-of-followers'],
+      };
+      for (var userID in listOfAllUsers) {
+        final getUserdata =
+            await supabase.client
+                .from(userTable)
+                .select('username,profile_image_url,last_seen')
+                .eq('user_id', userID)
+                .single();
+
+        final lastseen = DateTime.parse(getUserdata['last_seen']);
+        log(lastseen.toString());
+        final difference = (DateTime.now()).difference(lastseen).inMinutes;
+        log('difference : $difference');
+        if (difference <= 2) {
+          log(getUserdata['username']);
+          final user = OnlineUserModel(
+            userId: userID,
+            username: getUserdata['username'],
+            profileImageUrl: getUserdata['profile_image_url'],
+          );
+          onlineUserList.add(user);
+        }
+      }
+      return onlineUserList;
+    } catch (err) {
+      log(
+        'error in messageremotedatasorce.getonline users : ${err.toString()}',
+      );
       throw ServerException(message: err.toString());
     }
   }
