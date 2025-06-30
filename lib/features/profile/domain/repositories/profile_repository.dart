@@ -32,7 +32,8 @@ abstract interface class ProfileRepository {
     required File? profilePicture,
   });
 
-  Future<Either<Failure, bool>> editProfileCheckUSername({
+  Future<Either<Failure, bool?>> editProfileCheckUSername({
     required String enteredUSername,
+    required String currentUSername,
   });
 }

@@ -74,7 +74,7 @@ class UserPostsSection extends StatelessWidget {
                         Colors.white,
                       ).copyWith(fontWeight: FontWeight.w600),
                     ),
-                    Gap(5),
+                    const Gap(5),
                     TextButton(
                       onPressed: () {},
                       child: ShaderIcon(

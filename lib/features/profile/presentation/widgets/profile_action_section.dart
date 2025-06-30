@@ -6,7 +6,6 @@ import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/shimmer_container.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
-import 'package:gramify/features/profile/domain/models/user_profile_model.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_event.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_state.dart';

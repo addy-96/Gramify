@@ -43,4 +43,11 @@ final class ProfilePictureEditRequested extends ProfileEvent {
   ProfilePictureEditRequested({required this.profilePicture});
 }
 
-final class CheckUsernameRequested extends ProfileEvent {}
+final class CheckUsernameRequested extends ProfileEvent {
+  final String enteredUSername;
+  final String currentUSername;
+  CheckUsernameRequested({
+    required this.enteredUSername,
+    required this.currentUSername,
+  });
+}

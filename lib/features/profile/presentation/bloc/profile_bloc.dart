@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gramify/features/profile/domain/models/other_user_profile_model.dart';
 import 'package:gramify/features/profile/domain/repositories/profile_repository.dart';
@@ -20,7 +22,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     //
     on<UnfollowRequested>(_onUnfollowRequested);
 
+    //
     on<ProfilePictureEditRequested>(_onProfilePictureEditRequested);
+
+    //
+    on<CheckUsernameRequested>(_onCheckUsernameRequested);
+
+    //
+    on<EditProfileInfoRequested>(_onEditProfileInfoRequested);
   }
 
   _onProfileDataRequested(
@@ -136,6 +145,48 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       );
     } catch (err) {
       emit(ProfilePictureEditFailureState(errorMessage: err.toString()));
+    }
+  }
+
+  _onCheckUsernameRequested(
+    CheckUsernameRequested event,
+    Emitter<ProfileState> emit,
+  ) async {
+    try {
+      final res = await profileRepository.editProfileCheckUSername(
+        enteredUSername: event.enteredUSername,
+        currentUSername: event.currentUSername,
+      );
+      res.fold(
+        (l) => ProfileErrorState(errorMessage: l.message),
+        (r) => emit(UsernameCheckedState(isAvailable: r)),
+      );
+    } catch (err) {
+      ProfileErrorState(errorMessage: err.toString());
+    }
+  }
+
+  _onEditProfileInfoRequested(
+    EditProfileInfoRequested event,
+    Emitter<ProfileState> emit,
+  ) async {
+    emit(ProfileInfoEditLoadingState());
+    ;
+    try {
+      final res = await profileRepository.editProfileInfo(
+        fullname: event.fullname,
+        username: event.username,
+        genderenum: event.genderenum,
+        bio: event.bio,
+      );
+      res.fold(
+        (l) => emit(ProfileInfoEditFailureState(errorMessage: l.message)),
+        (r) {
+          emit(ProfileInfoEditSuccessState());
+        },
+      );
+    } catch (err) {
+      emit(ProfileInfoEditFailureState(errorMessage: err.toString()));
     }
   }
 }

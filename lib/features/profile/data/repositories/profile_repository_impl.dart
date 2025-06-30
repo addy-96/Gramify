@@ -100,12 +100,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> editProfileCheckUSername({
+  Future<Either<Failure, bool?>> editProfileCheckUSername({
     required String enteredUSername,
+    required String currentUSername,
   }) async {
     try {
       final res = await profileRemoteDatasource.editProfileCheckUsername(
-        username: enteredUSername,
+        enteredUsername: enteredUSername,
+        currentUsername: currentUSername,
       );
       return right(res);
     } catch (err) {

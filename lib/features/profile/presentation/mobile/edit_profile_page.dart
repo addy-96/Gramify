@@ -11,13 +11,13 @@ import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_event.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_state.dart';
+import 'package:gramify/features/profile/presentation/mobile/profile_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 
 class EditProfilePage extends StatefulWidget {
   EditProfilePage({
     super.key,
-
     required this.fullname,
     required this.username,
     required this.gender,
@@ -92,7 +92,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               OutlinedButton(
                 onPressed: () {
                   context.read<ProfileBloc>().add(
-                    ProfilePictureEditRequeested(profilePicture: pickedimage),
+                    ProfilePictureEditRequested(profilePicture: pickedimage),
                   );
                   Navigator.of(context).pop();
                 },
@@ -103,6 +103,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ),
               ),
+              OutlinedButton(
+                onPressed: () {
+                  selectProfilePicture();
+                },
+                child: Text(
+                  'Select another?',
+                  style: txtStyle(small12, Colors.white),
+                ),
+              ),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Cancel', style: txtStyle(small12, Colors.white)),
+              ),
               const Gap(20),
             ],
           ),
@@ -111,16 +126,54 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  void onSave() async {
-    bool isFullnameChanged = false;
-    bool isUsernameChanged = false;
-    bool isGenderChanged = false;
+  void _onSave() async {
+    if (_fullnameController.text.trim().isEmpty ||
+        _fullnameController.text.trim().length < 8) {
+      csnack(context, 'Fullname should be atlease 8 characters!');
+      return;
+    }
+    if (_usernameController.text.trim().isEmpty ||
+        _usernameController.text.trim().length < 8) {
+      csnack(context, 'Username should be atlease 8 characters!');
+      return;
+    }
+    if (_genderController.text.trim().isEmpty ||
+        !(_genderController.text.trim() != 'Male' ||
+            _genderController.text.trim() != 'Female' ||
+            _genderController.text.trim() != 'Others')) {
+      csnack(
+        context,
+        'Please fill gender as Male, Female or Others (case-sensitive).',
+      );
+      return;
+    }
+
+    context.read<ProfileBloc>().add(
+      EditProfileInfoRequested(
+        fullname: _fullnameController.text.trim(),
+        username: _usernameController.text.trim(),
+        genderenum:
+            _genderController.text == 'Male'
+                ? GenderEnum.Male
+                : _genderController.text == 'Female'
+                ? GenderEnum.Female
+                : GenderEnum.Other,
+        bio: _bioController.text.trim(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            context.read<ProfileBloc>().add(ProfileDataRequested());
+          },
+          icon: const Icon(Ionicons.chevron_back),
+        ),
         title: Text(
           'Edit Profile',
           style: txtStyle(
@@ -140,7 +193,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     if (state is ProfilePictureEditFailureState) {
                       csnack(
                         context,
-                        'Error in Uploading proofile picture ${state.errorMessage.toString()}',
+                        'Error in Uploading profile picture ${state.errorMessage.toString()}',
                       );
                     }
                     if (state is ProfilePictureEditEditSuccessState) {
@@ -265,6 +318,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 textEditingController: _fullnameController,
                 hintText: 'Type your fullname here.',
                 maxLenght: fullnameMAXLength,
+                currentUsername: null,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Gap(10),
+                  Text(
+                    '*Fullname should be at least 8 charcters!',
+                    style: txtStyle(small12, Colors.grey.shade800),
+                  ),
+                ],
               ),
               const Gap(15),
               EditProileInputField(
@@ -272,6 +336,76 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 textEditingController: _usernameController,
                 hintText: 'Type your Username here.',
                 maxLenght: usernameMAXLenght,
+                currentUsername: widget.username,
+              ),
+              BlocConsumer<ProfileBloc, ProfileState>(
+                listener: (context, state) {
+                  if (state is ProfileErrorState) {
+                    return csnack(context, state.errorMessage);
+                  }
+                },
+                builder: (context, state) {
+                  if (state is UsernameCheckedState) {
+                    if (_usernameController.text.trim().isEmpty ||
+                        _usernameController.text.trim().length <
+                            usernameMINLenght) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Gap(10),
+                          Text(
+                            '*Username Should be at least 8 charcters!',
+                            style: txtStyle(small12, Colors.grey.shade800),
+                          ),
+                        ],
+                      );
+                    }
+                    if (state.isAvailable == null) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Current Username',
+                            style: txtStyle(small12, Colors.green),
+                          ),
+                        ],
+                      );
+                    } else {
+                      if (state.isAvailable!) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Availble',
+                              style: txtStyle(small12, Colors.green),
+                            ),
+                          ],
+                        );
+                      } else if (!state.isAvailable!) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Unavailble',
+                              style: txtStyle(small12, Colors.red),
+                            ),
+                          ],
+                        );
+                      } else if (_usernameController.text.trim() ==
+                          widget.username) {
+                        return Row(
+                          children: [
+                            Text(
+                              'Current Username',
+                              style: txtStyle(small12, Colors.green),
+                            ),
+                          ],
+                        );
+                      }
+                    }
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
               const Gap(15),
               EditProileInputField(
@@ -279,6 +413,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 textEditingController: _genderController,
                 hintText: 'Tap To Select Gender.',
                 maxLenght: 10,
+                currentUsername: null,
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Gap(10),
+                  Text(
+                    '*You can type Male, Female or Others.',
+                    style: txtStyle(small12, Colors.grey.shade800),
+                  ),
+                ],
               ),
               const Gap(15),
               EditProileInputField(
@@ -286,33 +432,85 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 maxLenght: 150,
                 lableText: 'Bio',
                 textEditingController: _bioController,
+                currentUsername: null,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Gap(10),
+                  Text(
+                    '*This will be seen on your Profile.(max 150)',
+                    style: txtStyle(small12, Colors.grey.shade800),
+                  ),
+                ],
               ),
               const Gap(20),
-              InkWell(
-                borderRadius: BorderRadius.circular(14),
-                onTap: () {},
-                child: Container(
-                  decoration: BoxDecoration(
+              BlocConsumer<ProfileBloc, ProfileState>(
+                listener: (context, state) {
+                  if (state is ProfileInfoEditFailureState) {
+                    csnack(
+                      context,
+                      'Some error Occured: ${state.errorMessage}, try again later!',
+                    );
+                    Navigator.of(context).pop();
+                    context.read<ProfileBloc>().add(ProfileDataRequested());
+                  }
+                  if (state is ProfileInfoEditSuccessState) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder:
+                            (context) => const ProfilePageMobile(userId: null),
+                      ),
+                    );
+                    csnack(context, 'Profile Updated Succesfully!');
+                  }
+                },
+                builder: (context, state) {
+                  if (state is ProfileInfoEditLoadingState) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        gradient: const LinearGradient(
+                          colors: [thmegrad1, thmegrad2],
+                        ),
+                      ),
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 20,
+                      ),
+                      child: const Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  return InkWell(
                     borderRadius: BorderRadius.circular(14),
-                    gradient: const LinearGradient(
-                      colors: [thmegrad1, thmegrad2],
+                    onTap: () {
+                      _onSave();
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        gradient: const LinearGradient(
+                          colors: [thmegrad1, thmegrad2],
+                        ),
+                      ),
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 20,
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Save',
+                          style: txtStyle(
+                            bodyText14,
+                            Colors.black,
+                          ).copyWith(fontWeight: FontWeight.w500),
+                        ),
+                      ),
                     ),
-                  ),
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 20,
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Save',
-                      style: txtStyle(
-                        bodyText14,
-                        Colors.black,
-                      ).copyWith(fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ),
+                  );
+                },
               ),
             ],
           ),
@@ -322,78 +520,55 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 }
 
-class EditProileInputField extends StatelessWidget {
-  const EditProileInputField({
+class EditProileInputField extends StatefulWidget {
+  EditProileInputField({
     super.key,
     required this.hintText,
     required this.lableText,
     required this.textEditingController,
     required this.maxLenght,
+    required this.currentUsername,
   });
   final String hintText;
   final TextEditingController textEditingController;
   final String lableText;
   final int maxLenght;
+  String? currentUsername;
 
+  @override
+  State<EditProileInputField> createState() => _EditProileInputFieldState();
+}
+
+class _EditProileInputFieldState extends State<EditProileInputField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      maxLength: maxLenght,
-      controller: textEditingController,
+      maxLength: widget.maxLenght,
+
+      controller: widget.textEditingController,
       style: txtStyle(bodyText14, Colors.white),
-      maxLines: hintText == 'bio' || hintText == 'Bio' ? 5 : 1,
-      onTap:
-          lableText == 'Gender'
-              ? () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Dialog(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Select Gender',
-                            style: txtStyle(
-                              bodyText16,
-                              Colors.white,
-                            ).copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                            ),
-                            onPressed: () {},
-                            child: Text(
-                              'Male',
-                              style: txtStyle(small12, Colors.white),
-                            ),
-                          ),
-                          OutlinedButton(
-                            onPressed: () {},
-                            child: Text(
-                              'Female',
-                              style: txtStyle(small12, Colors.white),
-                            ),
-                          ),
-                          OutlinedButton(
-                            onPressed: () {},
-                            child: Text(
-                              'Others',
-                              style: txtStyle(small12, Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
+      onChanged:
+          widget.lableText == 'Fullname'
+              ? (value) {}
+              : widget.lableText == 'Gender'
+              ? (value) {}
+              : widget.lableText == 'Username'
+              ? (value) {
+                if (widget.currentUsername != null) {
+                  context.read<ProfileBloc>().add(
+                    CheckUsernameRequested(
+                      enteredUSername: value,
+                      currentUSername: widget.currentUsername!,
+                    ),
+                  );
+                }
               }
               : null,
+      maxLines: widget.lableText == 'bio' || widget.lableText == 'Bio' ? 5 : 1,
       decoration: InputDecoration(
         counterText: '',
-        hintText: hintText,
-        labelText: lableText,
+        hintText: widget.hintText,
+        labelText: widget.lableText,
         hintStyle: txtStyle(bodyText14, Colors.grey.shade800),
         labelStyle: txtStyle(
           bodyText14,

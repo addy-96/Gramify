@@ -33,7 +33,10 @@ abstract interface class ProfileRemoteDatasource {
 
   Future<String?> editProfilePicture({required File? profileImageFile});
 
-  Future<bool> editProfileCheckUsername({required String username});
+  Future<bool?> editProfileCheckUsername({
+    required String enteredUsername,
+    required String currentUsername,
+  });
 }
 
 class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
@@ -78,7 +81,7 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
         followingCount: listOfFollowing.length,
         userPostMap: postMap,
         bio: response.first['bio'],
-        gender: response.first['gender'] as String,
+        gender: response.first['gender'],
       );
     } catch (err, stack) {
       log('getProfilePicture: Error occurred - $err\n$stack');
@@ -322,16 +325,26 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
   }
 
   @override
-  Future<bool> editProfileCheckUsername({required String username}) async {
+  Future<bool?> editProfileCheckUsername({
+    required String enteredUsername,
+    required String currentUsername,
+  }) async {
+    if (enteredUsername == currentUsername) {
+      return null;
+    }
     try {
-      final res = await authRemoteDatasource.checkUsername(
-        enteredUsername: username,
-      );
-      return res;
+      final res = await supabase.client
+          .from(userTable)
+          .select('username')
+          .eq('username', enteredUsername);
+      if (res.isEmpty) {
+        return true;
+      } else if (res.first['username'] == enteredUsername) {
+        return false;
+      }
+      return true;
     } catch (err) {
-      log(
-        'error in profileremotedatasource.editProfileCheckUsername ${err.toString()}',
-      );
+      log('error in auth remnotdatatsourec. checkUserna: ${err.toString()}');
       throw ServerException(message: err.toString());
     }
   }

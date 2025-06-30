@@ -27,6 +27,8 @@ final class OtherUserProfileFetchedState extends ProfileState {
 
 final class FollowLoadingState extends ProfileState {}
 
+final class ProfilePictureUploadingState extends ProfileState {}
+
 final class ProfilePictureEditEditSuccessState extends ProfileState {
   final String? newImageUrl;
   ProfilePictureEditEditSuccessState({required this.newImageUrl});
@@ -37,6 +39,8 @@ final class ProfilePictureEditFailureState extends ProfileState {
   ProfilePictureEditFailureState({required this.errorMessage});
 }
 
+final class ProfileInfoEditLoadingState extends ProfileState {}
+
 final class ProfileInfoEditSuccessState extends ProfileState {}
 
 final class ProfileInfoEditFailureState extends ProfileState {
@@ -44,4 +48,7 @@ final class ProfileInfoEditFailureState extends ProfileState {
   ProfileInfoEditFailureState({required this.errorMessage});
 }
 
-final class ProfilePictureUploadingState extends ProfileState {}
+final class UsernameCheckedState extends ProfileState {
+  final bool? isAvailable;
+  UsernameCheckedState({required this.isAvailable});
+}
