@@ -57,7 +57,10 @@ class UserPostsSection extends StatelessWidget {
                 );
                 final imageUrl = entry.value;
                 log(imageUrl);
-                return Image.network(imageUrl);
+                return Padding(
+                  padding: const EdgeInsets.all(3),
+                  child: Image.network(imageUrl, fit: BoxFit.cover),
+                );
               },
             );
           }

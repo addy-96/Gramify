@@ -456,12 +456,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     context.read<ProfileBloc>().add(ProfileDataRequested());
                   }
                   if (state is ProfileInfoEditSuccessState) {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder:
-                            (context) => const ProfilePageMobile(userId: null),
-                      ),
-                    );
+                    Navigator.of(context).pop();
+                    context.read<ProfileBloc>().add(ProfileDataRequested());
                     csnack(context, 'Profile Updated Succesfully!');
                   }
                 },
