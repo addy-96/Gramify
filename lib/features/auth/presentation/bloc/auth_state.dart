@@ -53,3 +53,15 @@ final class CheckedUsernameFailureState extends AuthState {
   final String errorMessage;
   CheckedUsernameFailureState({required this.errorMessage});
 }
+
+final class EmailExistenceLoader extends AuthState {}
+
+final class IfEmailExistsState extends AuthState {
+  final bool emailExist;
+  IfEmailExistsState({required this.emailExist});
+}
+
+final class CheckEmailFailure extends AuthState {
+  final String error;
+  CheckEmailFailure({required this.error});
+}

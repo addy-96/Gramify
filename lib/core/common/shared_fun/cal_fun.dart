@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 String calculatePostUploadTime(DateTime uploadTime) {
   final DateTime now = DateTime.now();
 
@@ -92,4 +94,12 @@ String getProperFullname(String word) {
     }
   }
   return name;
+}
+
+double getHeight(BuildContext context) {
+  return MediaQuery.of(context).size.height;
+}
+
+double getWidth(BuildContext context) {
+  return MediaQuery.of(context).size.width;
 }

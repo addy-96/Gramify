@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
+import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 
 class CustomButton extends StatelessWidget {
@@ -21,6 +22,7 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      enableFeedback: true,
       onTap: onTapEvent,
       borderRadius: BorderRadius.circular(buttonRadius),
       child: Container(
@@ -82,18 +84,18 @@ class CustomButtonWithLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Container(
-        height: MediaQuery.of(context).size.height / 18,
-        decoration: BoxDecoration(
-          color: Colors.black54,
-          border:
-              isFilled
-                  ? Border.all(width: 1, color: Colors.black26)
-                  : Border.all(width: 1),
-          borderRadius: BorderRadius.circular(buttonRadius),
-        ),
-        child: const Center(child: CircularProgressIndicator()),
+    return Container(
+      height: MediaQuery.of(context).size.height / 18,
+      decoration: BoxDecoration(
+        color: Colors.black54,
+        border:
+            isFilled
+                ? Border.all(width: 1, color: Colors.black26)
+                : Border.all(width: 1),
+        borderRadius: BorderRadius.circular(buttonRadius),
+      ),
+      child: const Center(
+        child: ShaderNormal(childWidget: CircularProgressIndicator()),
       ),
     );
   }

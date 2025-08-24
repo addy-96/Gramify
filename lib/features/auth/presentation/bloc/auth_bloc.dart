@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gramify/features/auth/domain/usecase/check_email_usecase.dart';
 import 'package:gramify/features/auth/domain/usecase/check_username_usecase.dart';
 import 'package:gramify/features/auth/domain/usecase/login_usecase.dart';
 import 'package:gramify/features/auth/domain/usecase/logout_usecase.dart';
@@ -16,6 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SelectimageUsecase selectimageUsecase;
   final UploadProfilepictureUsecase uploadProfilepictureUsecase;
   final CheckUsernameUsecase checkUsernameUsecase;
+  final CheckEmailUsecase checkEmailUsecase;
 
   AuthBloc({
     required this.loginUsecase,
@@ -24,6 +26,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.selectimageUsecase,
     required this.uploadProfilepictureUsecase,
     required this.checkUsernameUsecase,
+    required this.checkEmailUsecase,
   }) : super(AuthInitialState()) {
     //
     on<LogInRequested>(_onLogInRequested);
@@ -42,6 +45,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     //
     on<CheckUsernameRequested>(_onCheckUsernameRequested);
+
+    on<CheckIfEmailExistRequested>(_onCheckIfEmailExistRequested);
   }
 
   _onLogInRequested(LogInRequested event, Emitter<AuthState> emit) async {
@@ -131,6 +136,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     res.fold(
       (l) => emit(CheckedUsernameFailureState(errorMessage: l.message)),
       (r) => emit(CheckedUsernameState(isAvailable: r)),
+    );
+  }
+
+  _onCheckIfEmailExistRequested(
+    CheckIfEmailExistRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(EmailExistenceLoader());
+
+    final res = await checkEmailUsecase.call(
+      CheckEmailUsecaseParams(email: event.email),
+    );
+
+    res.fold(
+      (l) => emit(CheckEmailFailure(error: l.message)),
+      (r) => emit(IfEmailExistsState(emailExist: r)),
     );
   }
 }

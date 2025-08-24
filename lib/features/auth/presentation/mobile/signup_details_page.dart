@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:gramify/features/auth/presentation/mobile/add_prfile_picture.dart';
+import 'package:gramify/features/auth/presentation/mobile/add_profile_picture.dart';
 import 'package:gramify/features/auth/presentation/widgets/custom_button.dart';
 import 'package:gramify/core/common/shared_attri/colors.dart';
 import 'package:gramify/core/common/shared_fun/csnack.dart';

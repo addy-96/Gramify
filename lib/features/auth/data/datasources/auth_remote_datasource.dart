@@ -34,6 +34,8 @@ abstract interface class AuthRemoteDatasource {
   });
 
   Future<bool> checkUsername({required String enteredUsername});
+
+  Future<bool> checkIfEmailExist({required String email});
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
@@ -87,6 +89,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
         email: email,
         password: password,
       );
+
       if (res.user == null) {
         throw ServerException(message: 'Failed! Server Authentication Error!');
       }
@@ -153,7 +156,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
 
   @override
   Future<bool> checkUsername({required String enteredUsername}) async {
-    //true if doesnot exist except return false
+    //true if does not exist except return false
     try {
       final res = await supabase.client
           .from(userTable)
@@ -167,6 +170,26 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       return true;
     } catch (err) {
       log('error in auth remnotdatatsourec. checkUserna: ${err.toString()}');
+      throw ServerException(message: err.toString());
+    }
+  }
+
+  @override
+  Future<bool> checkIfEmailExist({required String email}) async {
+    //true if does not exist except return false
+    try {
+      final res = await supabase.client
+          .from(userTable)
+          .select('email')
+          .eq('email', email);
+      if (res.isEmpty) {
+        return true;
+      } else if (res.first['email'] == email) {
+        return false;
+      }
+      return true;
+    } catch (err) {
+      log('error in auth remnotdatasource checkemail: ${err.toString()}');
       throw ServerException(message: err.toString());
     }
   }

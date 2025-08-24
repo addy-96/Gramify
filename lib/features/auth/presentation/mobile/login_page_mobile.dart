@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
+import 'package:gramify/core/common/shared_fun/cal_fun.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/features/auth/presentation/widgets/custom_button.dart';
 import 'package:gramify/features/auth/presentation/widgets/forgot_pass_button.dart';
@@ -27,12 +28,12 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
   void onLogIn() async {
     if (_emailController.text.trim().isEmpty ||
         _passwordController.text.trim().isEmpty) {
-      return csnack(context, 'Enter email to proceed');
+      return csnack(context, 'Enter email to proceed!');
     }
 
     if (!_emailController.text.trim().contains('@') ||
         !_emailController.text.trim().contains('.')) {
-      return csnack(context, 'Invalid Email !');
+      return csnack(context, 'Invalid Email!');
     }
 
     context.read<AuthBloc>().add(
@@ -45,9 +46,8 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
 
   @override
   Widget build(BuildContext context) {
-    var heeight = MediaQuery.of(context).size.height;
-    var wiidth = MediaQuery.of(context).size.width;
-    var thm = Theme.of(context);
+    final height = getHeight(context);
+    final width = getWidth(context);
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
@@ -67,7 +67,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
         return Scaffold(
           body: SafeArea(
             child: SizedBox(
-              height: heeight,
+              height: height,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
@@ -94,19 +94,17 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                             ],
                           ),
                         ),
-                        Gap(heeight / 10),
+                        Gap(height / 10),
                         ShaderIamge(
                           imageWidget: Image.asset(
                             'assets/images/logo_black.png',
-                            width: wiidth / 2,
-                            height: heeight / 10,
+                            width: width / 2,
+                            height: height / 10,
                           ),
                         ),
-                        Gap(heeight / 8),
+                        Gap(height / 8),
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: wiidth / 16,
-                          ),
+                          padding: EdgeInsets.symmetric(horizontal: width / 16),
                           child: Column(
                             children: [
                               InputBoxMobile(
@@ -119,9 +117,9 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                                 textController: _passwordController,
                                 isPasswordfield: true,
                               ),
-                              Gap(heeight / 25),
+                              Gap(height / 25),
                               SizedBox(
-                                height: MediaQuery.of(context).size.height / 15,
+                                height: MediaQuery.of(context).size.height / 18,
                                 child: CustomButton(
                                   buttonRadius: 50,
                                   isFilled: true,
@@ -133,7 +131,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                               forgotPasswordButton(context),
                               const Gap(30),
                               SizedBox(
-                                height: MediaQuery.of(context).size.height / 15,
+                                height: MediaQuery.of(context).size.height / 18,
                                 child: CustomButton(
                                   isFacebookButton: false,
                                   buttonRadius: 50,

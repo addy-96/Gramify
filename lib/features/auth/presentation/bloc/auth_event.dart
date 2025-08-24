@@ -42,3 +42,8 @@ final class CheckUsernameRequested extends AuthEvent {
   final String enteredString;
   CheckUsernameRequested({required this.enteredString});
 }
+
+final class CheckIfEmailExistRequested extends AuthEvent {
+  final String email;
+  CheckIfEmailExistRequested({required this.email});
+}

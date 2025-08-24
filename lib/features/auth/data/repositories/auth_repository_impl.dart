@@ -100,4 +100,17 @@ class AuthRepositoryImpl implements AuthRepository {
       return left(Failure(message: err.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, bool>> checkEmail({required String email}) async {
+    try {
+      final res = await authRemoteDatasource.checkIfEmailExist(
+        email: email,
+      );
+      return right(res);
+    } catch (err) {
+      
+     return left(Failure(message: err.toString()));
+    }
+  }
 }

@@ -18,9 +18,7 @@ import 'package:gramify/features/explore/presentation/bloc/explore_tab_bloc/expl
 import 'package:gramify/features/home/presentation/bloc/homepage_bloc/homepage_bloc.dart';
 import 'package:gramify/core/ignore.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_bloc.dart';
-import 'package:gramify/test.dart';
 import 'package:gramify/wrapper.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sAuth;
 
 void main() async {
@@ -48,6 +46,7 @@ class MyApp extends StatelessWidget {
                 logoutUsecase: servicelocator(),
                 uploadProfilepictureUsecase: servicelocator(),
                 checkUsernameUsecase: servicelocator(),
+                checkEmailUsecase: servicelocator()
               ),
         ),
         BlocProvider(create: (context) => WrapperBloc()),
@@ -145,43 +144,23 @@ class AppStart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<InternetStatus>(
-        stream: InternetConnection().onStatusChange,
-        builder: (context, netSnapshot) {
-          if (netSnapshot.connectionState == ConnectionState.waiting) {
+      body: StreamBuilder(
+        stream: sAuth.Supabase.instance.client.auth.onAuthStateChange,
+        builder: (context, authSnapshot) {
+          final session = sAuth.Supabase.instance.client.auth.currentSession;
+
+          if (authSnapshot.connectionState == ConnectionState.waiting &&
+              session == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (netSnapshot.hasData &&
-              netSnapshot.data == InternetStatus.connected) {
-            return StreamBuilder(
-              stream: sAuth.Supabase.instance.client.auth.onAuthStateChange,
-              builder: (context, authSnapshot) {
-                final session =
-                    sAuth.Supabase.instance.client.auth.currentSession;
-
-                if (authSnapshot.connectionState == ConnectionState.waiting &&
-                    session == null) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (session != null &&
-                    authSnapshot.data?.event !=
-                        sAuth.AuthChangeEvent.signedOut) {
-                  final userId = session.user.id;
-                  return WrapperRes(userID: userId);
-                } else {
-                  return const LoginResPage();
-                }
-              },
-            );
-          } else if (netSnapshot.hasData &&
-              netSnapshot.data == InternetStatus.disconnected) {
-            return const Test(receivedText: 'No internet');
-          } else if (netSnapshot.hasError) {
-            return Test(receivedText: '${netSnapshot.error} is the error');
+          if (session != null &&
+              authSnapshot.data?.event != sAuth.AuthChangeEvent.signedOut) {
+            final userId = session.user.id;
+            return WrapperRes(userID: userId);
+          } else {
+            return const LoginResPage();
           }
-          return const Test(receivedText: 'Unknown connection state');
         },
       ),
     );
