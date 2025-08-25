@@ -69,5 +69,3 @@
 - Supabase integration was tricky at first, but now authentication and basic CRUD are working.
 
 ---
-
-*This saga will be updated as the project progresses!*
