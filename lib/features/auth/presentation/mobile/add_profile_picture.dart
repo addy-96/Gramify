@@ -11,7 +11,6 @@ import 'package:gramify/core/common/shared_fun/csnack.dart';
 import 'package:gramify/core/common/shared_fun/shaders.dart';
 import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 import 'package:gramify/features/auth/presentation/widgets/custom_button.dart';
-import 'package:ionicons/ionicons.dart';
 
 class AddProfilePage extends StatefulWidget {
   const AddProfilePage({

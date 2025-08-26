@@ -171,7 +171,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     Emitter<ProfileState> emit,
   ) async {
     emit(ProfileInfoEditLoadingState());
-    ;
     try {
       final res = await profileRepository.editProfileInfo(
         fullname: event.fullname,

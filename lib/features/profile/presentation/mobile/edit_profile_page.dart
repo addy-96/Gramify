@@ -323,7 +323,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Gap(10),
+                  const Gap(10),
                   Text(
                     '*Fullname should be at least 8 charcters!',
                     style: txtStyle(small12, Colors.grey.shade800),
@@ -352,7 +352,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Gap(10),
+                          const Gap(10),
                           Text(
                             '*Username Should be at least 8 charcters!',
                             style: txtStyle(small12, Colors.grey.shade800),
@@ -419,7 +419,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Gap(10),
+                  const Gap(10),
                   Text(
                     '*You can type Male, Female or Others.',
                     style: txtStyle(small12, Colors.grey.shade800),
@@ -437,7 +437,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Gap(10),
+                  const Gap(10),
                   Text(
                     '*This will be seen on your Profile.(max 150)',
                     style: txtStyle(small12, Colors.grey.shade800),

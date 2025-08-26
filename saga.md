@@ -1,4 +1,4 @@
-# gramify - hiss
+<!-- # gramify - hiss
 
 
 + Gramify is a inspiration of Instagram and will look mostly like Instagram, altghough I will be adding extra features, later in my project, this will be my first major project, which I am doing for my personal development. I still beleive myselef to be beginner in coding, ao the code may look bit lousy here and there 😅, but I will try to follow standards, and learn the most by this project.
@@ -68,4 +68,4 @@
 - Faced issues with dependency injection and navigation, but resolved them by reading documentation and community posts.
 - Supabase integration was tricky at first, but now authentication and basic CRUD are working.
 
----
+--- -->
