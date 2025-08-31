@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fpdart/fpdart.dart';
 import 'package:gramify/core/errors/failure.dart';
 import 'package:gramify/features/home/data/datasources/home_remote_datasorce.dart';
@@ -30,9 +32,7 @@ class HomeRepsitoriedImpl implements HomeRepositories {
   }
 
   @override
-  Future<Either<Failure, List<CommentModel>>> loadComments({
-    required String postID,
-  }) async {
+  Future<Either<Failure, List<CommentModel>>> loadComments({required String postID}) async {
     try {
       final res = await homeRemoteDatasorce.loadComments(postId: postID);
       return right(res);
@@ -42,18 +42,24 @@ class HomeRepsitoriedImpl implements HomeRepositories {
   }
 
   @override
-  Future<Either<Failure, void>> addComment({
-    required String postID,
-    required String comment,
-  }) async {
+  Future<Either<Failure, void>> addComment({required String postID, required String comment}) async {
     try {
-      final res = await homeRemoteDatasorce.addComment(
-        postId: postID,
-        comment: comment,
-      );
+      final res = await homeRemoteDatasorce.addComment(postId: postID, comment: comment);
       return right(res);
     } catch (err) {
       return left(Failure(message: err.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> addToStory({required File stooryImage}) async {
+    try {
+      final res = await homeRemoteDatasorce.addToStory(storyImage: stooryImage);
+      return right(res);
+    } catch (err) {
+      return left(Failure(message: err.toString()));
+    }
+  }
+
+
 }

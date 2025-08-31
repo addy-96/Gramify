@@ -29,7 +29,6 @@ class _SelectPostPictureState extends State<SelectPostPicture> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-
         title: Text('Create Post', style: txtStyle(subTitle18, Colors.white)),
         actions: [
           IconButton(

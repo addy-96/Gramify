@@ -4,7 +4,7 @@ import 'package:gramify/features/auth/presentation/login_res_page.dart';
 import 'package:gramify/features/auth/presentation/signup_res_page.dart';
 import 'package:gramify/core/routes/app_routes_const.dart';
 import 'package:gramify/main.dart';
-import 'package:gramify/wrapper.dart';
+import 'package:gramify/main_presentaiton/wrapper.dart';
 
 class MyAppRoutes {
   static final GoRouter router = GoRouter(
@@ -13,6 +13,9 @@ class MyAppRoutes {
         name: MyAppRoutesConstant.defaultRouteName,
         path: '/',
         builder: (context, state) => const Gramify(),
+        routes: [
+          
+        ]
       ),
       GoRoute(
         name: MyAppRoutesConstant.loginRouteName,

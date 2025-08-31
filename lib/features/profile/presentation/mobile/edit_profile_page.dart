@@ -11,7 +11,6 @@ import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_event.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_state.dart';
-import 'package:gramify/features/profile/presentation/mobile/profile_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 

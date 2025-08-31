@@ -15,7 +15,6 @@ class MakeStoryPage extends StatelessWidget {
         saveConfig: SaveConfig.photo(),
         onMediaCaptureEvent: (mediaCapture) async {
           await Future.delayed(const Duration(milliseconds: 1500));
-
           mediaCapture.captureRequest.path != null
               ? Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
@@ -42,30 +41,21 @@ class MakeStoryPage extends StatelessWidget {
                     ],
                   ),
                 ),
-
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: InkWell(
-                    onTap: () {
-                      state.when(
-                        onPhotoMode: (photoState) => photoState.takePhoto(),
-                      );
-                    },
-                    child: Container(
-                      height: 80,
-                      width: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        gradient: const LinearGradient(
-                          colors: [thmegrad1, thmegrad2],
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: Theme.of(context).scaffoldBackgroundColor,
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 18),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: InkWell(
+                      onTap: () {
+                        state.when(onPhotoMode: (photoState) => photoState.takePhoto());
+                      },
+                      child: Container(
+                        height: 80,
+                        width: 80,
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), gradient: const LinearGradient(colors: [thmegrad1, thmegrad2])),
+                        child: Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Theme.of(context).scaffoldBackgroundColor),
                           ),
                         ),
                       ),

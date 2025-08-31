@@ -24,9 +24,11 @@ final userPostTable = 'users_posts';
 final chatsTable = 'chats_table';
 final messageTable = 'messages_table';
 final commentsTable = 'post_comments_table';
+final storyTable = 'user_stories_table';
 
 final userProfilePictureBucket = 'user-profile-pictures';
 final postPictureBucket = 'users-post-pictures';
+final storyPictureBucket = 'user-stories';
 
 //sharedPreference Constant
 final userIdSharedKey = 'loggedUserId';

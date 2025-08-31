@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gramify/core/common/shared_fun/txtstyl.dart';
 import 'package:gramify/features/home/presentation/bloc/homepage_bloc/homepage_bloc.dart';
 import 'package:gramify/features/home/presentation/bloc/homepage_bloc/homepage_event.dart';
 import 'package:gramify/features/home/presentation/bloc/homepage_bloc/homepage_state.dart';
@@ -34,8 +35,7 @@ class _PostSectionState extends State<PostSection> {
           }
           if (state is FeedsFetchedState) {
             if (state.feedList.isEmpty) {
-              return const Center(
-                child: Text('No Feeds to show, follw more people : )'),
+              return Center(child: Text('No Feeds to show, follow more people : )', style: txtStyle(18, Colors.white)),
               );
             }
             return ListView.builder(
@@ -46,7 +46,6 @@ class _PostSectionState extends State<PostSection> {
               },
             );
           }
-
           return const SizedBox.shrink();
         },
       ),

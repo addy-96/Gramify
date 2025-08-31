@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'dart:io';
 import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/common/shared_fun/get_logged_userId.dart';
 import 'package:gramify/core/errors/server_exception.dart';
@@ -12,6 +12,7 @@ abstract interface class HomeRemoteDatasorce {
   Future<void> postLikeAction({required String postId});
   Future<List<CommentModel>> loadComments({required String postId});
   Future<void> addComment({required String postId, required String comment});
+  Future<void> addToStory({required File storyImage});
 }
 
 class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
@@ -22,39 +23,21 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
   Future<List<PostModel>> loadFeeds() async {
     try {
       final userId = await getLoggedUserId();
-      final res =
-          await supabase.client
-              .from(userTable)
-              .select('feed')
-              .eq('user_id', userId)
-              .single();
+      final res = await supabase.client.from(userTable).select('feed').eq('user_id', userId).single();
 
       final List<dynamic> feedList = res['feed'] ?? [];
 
       final List<PostModel> postList = [];
       for (var postId in feedList) {
-        final post =
-            await supabase.client
-                .from(userPostTable)
-                .select()
-                .eq('post_id', postId)
-                .single();
+        final post = await supabase.client.from(userPostTable).select().eq('post_id', postId).single();
 
-        final response =
-            await supabase.client
-                .from(userTable)
-                .select('username, profile_image_url, fullname')
-                .eq('user_id', post['posted_by'])
-                .single();
+        final response = await supabase.client.from(userTable).select('username, profile_image_url, fullname').eq('user_id', post['posted_by']).single();
 
         final username = response['username'];
         final fullname = response['fullname'];
         final profileImageUrl = response['profile_image_url'];
         final List<dynamic> likedby = post['liked_by'] ?? [];
-        final getCommentCount = await supabase.client
-            .from(commentsTable)
-            .count()
-            .eq('post_id', post['post_id']);
+        final getCommentCount = await supabase.client.from(commentsTable).count().eq('post_id', post['post_id']);
 
         postList.add(
           PostModel(
@@ -83,12 +66,7 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
   Future<void> postLikeAction({required String postId}) async {
     try {
       final userId = await getLoggedUserId();
-      final res =
-          await supabase.client
-              .from(userPostTable)
-              .select('liked_by')
-              .eq('post_id', postId)
-              .single();
+      final res = await supabase.client.from(userPostTable).select('liked_by').eq('post_id', postId).single();
 
       final List<dynamic> likeduserlist = res['liked_by'] ?? [];
       if (likeduserlist.contains(userId)) {
@@ -96,10 +74,7 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
       } else if (!likeduserlist.contains(userId)) {
         likeduserlist.add(userId);
       }
-      await supabase.client
-          .from(userPostTable)
-          .update({'liked_by': likeduserlist})
-          .eq('post_id', postId);
+      await supabase.client.from(userPostTable).update({'liked_by': likeduserlist}).eq('post_id', postId);
     } catch (err) {
       log('error in Homeremotedatasource.postLiked : ${err.toString()}');
       throw ServerException(message: err.toString());
@@ -121,12 +96,7 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
       }
 
       for (var item in commentData) {
-        final userdata =
-            await supabase.client
-                .from(userTable)
-                .select('username, profile_image_url')
-                .eq('user_id', item['commentor_id'])
-                .single();
+        final userdata = await supabase.client.from(userTable).select('username, profile_image_url').eq('user_id', item['commentor_id']).single();
 
         final comment = CommentModel(
           postId: postId,
@@ -148,20 +118,27 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
   }
 
   @override
-  Future<void> addComment({
-    required String postId,
-    required String comment,
-  }) async {
+  Future<void> addComment({required String postId, required String comment}) async {
     try {
       final loggedUserId = await getLoggedUserId();
-      await supabase.client.from(commentsTable).insert({
-        'commentor_id': loggedUserId,
-        'comment': comment,
-        'post_id': postId,
-      });
+      await supabase.client.from(commentsTable).insert({'commentor_id': loggedUserId, 'comment': comment, 'post_id': postId});
     } catch (err) {
       log('error in Homeremotedatasource.addcomment : ${err.toString()}');
       throw ServerException(message: err.toString());
+    }
+  }
+
+  @override
+  Future<void> addToStory({required File storyImage}) async {
+    try {
+      final loggedUserId = await getLoggedUserId();
+      final path = '$loggedUserId+${DateTime.now()}';
+      final bucketRef = supabase.client.storage.from(storyPictureBucket);
+      await bucketRef.upload(path, storyImage);
+      final url = bucketRef.getPublicUrl(path);
+      final ref = await supabase.client.from(storyTable).insert({'created_by': loggedUserId, 'picture_url': url});
+    } catch (err) {
+      throw ServerException(message: 'Error in uploading story: $err');
     }
   }
 }

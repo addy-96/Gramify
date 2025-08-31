@@ -18,14 +18,11 @@ import 'package:gramify/features/explore/presentation/bloc/explore_tab_bloc/expl
 import 'package:gramify/features/home/presentation/bloc/homepage_bloc/homepage_bloc.dart';
 import 'package:gramify/core/ignore.dart';
 import 'package:gramify/features/profile/presentation/bloc/profile_bloc.dart';
-import 'package:gramify/wrapper.dart';
+import 'package:gramify/main_presentaiton/wrapper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sAuth;
 
 void main() async {
-  await sAuth.Supabase.initialize(
-    anonKey: SUPABSE_ANNON_KEY,
-    url: SUPABASE_URL,
-  );
+  await sAuth.Supabase.initialize(anonKey: SUPABSE_ANNON_KEY, url: SUPABASE_URL);
   await initDpendencies();
   runApp(const MyApp());
 }
@@ -46,54 +43,31 @@ class MyApp extends StatelessWidget {
                 logoutUsecase: servicelocator(),
                 uploadProfilepictureUsecase: servicelocator(),
                 checkUsernameUsecase: servicelocator(),
-                checkEmailUsecase: servicelocator()
+                checkEmailUsecase: servicelocator(),
               ),
         ),
         BlocProvider(create: (context) => WrapperBloc()),
-        BlocProvider(
-          create:
-              (context) => AddPostBloc(
-                addPostRepositories: servicelocator(), //implement use case
-              ),
-        ),
+        BlocProvider(create: (context) => AddPostBloc(addPostRepositories: servicelocator())),
         BlocProvider(create: (context) => SelectedpictureCubit()),
         BlocProvider(create: (context) => ExploreTabBloc()),
-        BlocProvider(
-          create: (context) => ProfileBloc(profileRepository: servicelocator()),
-        ),
-        BlocProvider(
-          create: (context) => ExploreBloc(exploreRepository: servicelocator()),
-        ),
-
-        BlocProvider(
-          create: (context) => HomepageBloc(homeRepositorie: servicelocator()),
-        ),
-
-        BlocProvider(
-          create: (context) => MessageBloc(messageRepository: servicelocator()),
-        ),
-
+        BlocProvider(create: (context) => ProfileBloc(profileRepository: servicelocator())),
+        BlocProvider(create: (context) => ExploreBloc(exploreRepository: servicelocator())),
+        BlocProvider(create: (context) => HomepageBloc(homeRepositorie: servicelocator())),
+        BlocProvider(create: (context) => MessageBloc(messageRepository: servicelocator())),
         BlocProvider(create: (context) => MessagingUiBloc()),
-        BlocProvider(
-          create: (context) => PostBloc(homeRepositories: servicelocator()),
-        ),
-        BlocProvider(
-          create: (context) => AppBloc(appRepositories: servicelocator()),
-        ),
+        BlocProvider(create: (context) => PostBloc(homeRepositories: servicelocator())),
+        BlocProvider(create: (context) => AppBloc(appRepositories: servicelocator())),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         routerConfig: MyAppRoutes.router,
         title: 'Gramify',
         theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-            surfaceTintColor: Colors.transparent,
-            backgroundColor: Colors.transparent,
-          ),
+          appBarTheme: const AppBarTheme(surfaceTintColor: Colors.transparent, backgroundColor: Colors.transparent),
           brightness: Brightness.dark,
           scaffoldBackgroundColor: Colors.black,
         ),
-      ),
+      )
     );
   }
 }
@@ -125,16 +99,7 @@ class _GramifyState extends State<Gramify> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(colors: [backGrad1, backGrad2]),
-          ),
-          child: const AppStart(),
-        ),
-      ),
-    );
+    return SafeArea(child: Scaffold(body: Container(decoration: const BoxDecoration(gradient: LinearGradient(colors: [backGrad1, backGrad2])), child: const AppStart())));
   }
 }
 
@@ -149,13 +114,11 @@ class AppStart extends StatelessWidget {
         builder: (context, authSnapshot) {
           final session = sAuth.Supabase.instance.client.auth.currentSession;
 
-          if (authSnapshot.connectionState == ConnectionState.waiting &&
-              session == null) {
+          if (authSnapshot.connectionState == ConnectionState.waiting && session == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (session != null &&
-              authSnapshot.data?.event != sAuth.AuthChangeEvent.signedOut) {
+          if (session != null && authSnapshot.data?.event != sAuth.AuthChangeEvent.signedOut) {
             final userId = session.user.id;
             return WrapperRes(userID: userId);
           } else {
