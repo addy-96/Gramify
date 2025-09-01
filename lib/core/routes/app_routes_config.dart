@@ -13,7 +13,7 @@ class MyAppRoutes {
         name: MyAppRoutesConstant.defaultRouteName,
         path: '/',
         builder: (context, state) => const Gramify(),
-        routes: [
+        routes: const [
           
         ]
       ),

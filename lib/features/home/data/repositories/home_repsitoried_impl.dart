@@ -60,6 +60,4 @@ class HomeRepsitoriedImpl implements HomeRepositories {
       return left(Failure(message: err.toString()));
     }
   }
-
-
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:gramify/features/add_post/presentation/mobile/camera_page_for_post.dart';
 import 'package:gramify/features/add_post/presentation/mobile/make_story_page.dart';
 
 class StorySection extends StatelessWidget {
