@@ -22,7 +22,7 @@ import 'package:gramify/features/explore/data/datasources/explore_remote_datasou
 import 'package:gramify/features/explore/data/repositories/explore_repository_impl.dart';
 import 'package:gramify/features/explore/domain/repository/explore_repository.dart';
 import 'package:gramify/features/home/data/datasources/home_remote_datasorce.dart';
-import 'package:gramify/features/home/data/repositories/home_repsitoried_impl.dart';
+import 'package:gramify/features/home/data/repositories/home_repsitories_impl.dart';
 import 'package:gramify/features/home/domain/repositories/home_repositories.dart';
 import 'package:gramify/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:gramify/features/profile/data/repositories/profile_repository_impl.dart';

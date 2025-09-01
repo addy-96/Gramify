@@ -4,7 +4,7 @@ import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/common/shared_fun/get_logged_userId.dart';
 import 'package:gramify/core/errors/server_exception.dart';
 import 'package:gramify/features/home/domain/models/comment_model.dart';
-import 'package:gramify/features/home/domain/models/post_model.dart';
+import 'package:gramify/features/home/domain/models/post_model.dart';import 'package:gramify/features/home/domain/models/story_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class HomeRemoteDatasorce {
@@ -12,7 +12,7 @@ abstract interface class HomeRemoteDatasorce {
   Future<void> postLikeAction({required String postId});
   Future<List<CommentModel>> loadComments({required String postId});
   Future<void> addComment({required String postId, required String comment});
-  Future<void> addToStory({required File storyImage});
+  Future<List<StoryModel>> fetchStories();
 }
 
 class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
@@ -128,17 +128,24 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
     }
   }
 
+ 
+
   @override
-  Future<void> addToStory({required File storyImage}) async {
+  Future<List<StoryModel>> fetchStories() async {
     try {
       final loggedUserId = await getLoggedUserId();
-      final path = '$loggedUserId+${DateTime.now()}';
-      final bucketRef = supabase.client.storage.from(storyPictureBucket);
-      await bucketRef.upload(path, storyImage);
-      final url = bucketRef.getPublicUrl(path);
-      final ref = await supabase.client.from(storyTable).insert({'created_by': loggedUserId, 'picture_url': url});
+      final getAllFollowers = await supabase.client.from(userTable).select('list-of-following').eq('user_id', loggedUserId).select('stories');
+
+      if (getAllFollowers.isEmpty) {
+        return [];
+      }
+
+      log(getAllFollowers.toString());
+
+      return [];
     } catch (err) {
-      throw ServerException(message: 'Error in uploading story: $err');
+      throw ServerException(message: 'Error in fetching sotries $err');
     }
   }
+  
 }

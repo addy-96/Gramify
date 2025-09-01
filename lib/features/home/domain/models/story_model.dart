@@ -1,5 +1,6 @@
 class StoryModel {
   final String imageUrl;
   final String uploadedBy;
-  StoryModel({required this.imageUrl, required this.uploadedBy});
+  final DateTime createdAt;
+  StoryModel({required this.imageUrl, required this.uploadedBy, required this.createdAt});
 }

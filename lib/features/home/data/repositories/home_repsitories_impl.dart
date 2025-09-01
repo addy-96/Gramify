@@ -5,6 +5,7 @@ import 'package:gramify/core/errors/failure.dart';
 import 'package:gramify/features/home/data/datasources/home_remote_datasorce.dart';
 import 'package:gramify/features/home/domain/models/comment_model.dart';
 import 'package:gramify/features/home/domain/models/post_model.dart';
+import 'package:gramify/features/home/domain/models/story_model.dart';
 import 'package:gramify/features/home/domain/repositories/home_repositories.dart';
 
 class HomeRepsitoriedImpl implements HomeRepositories {
@@ -51,10 +52,12 @@ class HomeRepsitoriedImpl implements HomeRepositories {
     }
   }
 
+
+
   @override
-  Future<Either<Failure, void>> addToStory({required File stooryImage}) async {
+  Future<Either<Failure, List<StoryModel>>> fetchAllStories() async {
     try {
-      final res = await homeRemoteDatasorce.addToStory(storyImage: stooryImage);
+      final res = await homeRemoteDatasorce.fetchStories();
       return right(res);
     } catch (err) {
       return left(Failure(message: err.toString()));

@@ -18,3 +18,8 @@ final class UploadPostRequested extends AddPostEvent {
 
   UploadPostRequested({required this.postCaption, required this.postImage});
 }
+
+final class UploadStoryRequested extends AddPostEvent {
+  final File storyImage;
+  UploadStoryRequested({required this.storyImage});
+}

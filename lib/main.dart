@@ -5,6 +5,7 @@ import 'package:gramify/core/dependencies.dart';
 import 'package:gramify/features/add_post/presentation/bloc/add_post_bloc.dart';
 import 'package:gramify/features/add_post/presentation/bloc/cubit/selectedPicture_cubit.dart';
 import 'package:gramify/features/home/presentation/bloc/post_bloc/post_bloc.dart';
+import 'package:gramify/features/home/presentation/bloc/story_bloc/story_bloc.dart';
 import 'package:gramify/features/messaging/presentation/bloc/message_bloc.dart';
 import 'package:gramify/features/messaging/presentation/bloc/ui/messaging_ui_bloc.dart';
 import 'package:gramify/main_presentaiton/app_bloc/app_bloc.dart';
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => MessagingUiBloc()),
         BlocProvider(create: (context) => PostBloc(homeRepositories: servicelocator())),
         BlocProvider(create: (context) => AppBloc(appRepositories: servicelocator())),
+        BlocProvider(create: (context) => StoryBloc(homeRepositories: servicelocator()))
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

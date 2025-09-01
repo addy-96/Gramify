@@ -49,4 +49,14 @@ class AddPostRepositoryImpl implements AddPostRepositories {
       return left(Failure(message: err.toString()));
     }
   }
+
+    @override
+  Future<Either<Failure, void>> addToStory({required File storyImage}) async {
+    try {
+      final res = await addPostDatasource.addToStory(storyImage: storyImage);
+      return right(res);
+    } catch (err) {
+      return left(Failure(message: err.toString()));
+    }
+  }
 }
