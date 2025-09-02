@@ -4,7 +4,8 @@ import 'package:gramify/core/common/shared_attri/constrants.dart';
 import 'package:gramify/core/common/shared_fun/get_logged_userId.dart';
 import 'package:gramify/core/errors/server_exception.dart';
 import 'package:gramify/features/home/domain/models/comment_model.dart';
-import 'package:gramify/features/home/domain/models/post_model.dart';import 'package:gramify/features/home/domain/models/story_model.dart';
+import 'package:gramify/features/home/domain/models/post_model.dart';
+import 'package:gramify/features/home/domain/models/story_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class HomeRemoteDatasorce {
@@ -13,6 +14,7 @@ abstract interface class HomeRemoteDatasorce {
   Future<List<CommentModel>> loadComments({required String postId});
   Future<void> addComment({required String postId, required String comment});
   Future<List<StoryModel>> fetchStories();
+  Future<StoryModel> fetchSelfStory();
 }
 
 class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
@@ -128,8 +130,6 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
     }
   }
 
- 
-
   @override
   Future<List<StoryModel>> fetchStories() async {
     try {
@@ -147,5 +147,13 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
       throw ServerException(message: 'Error in fetching sotries $err');
     }
   }
-  
+
+  @override
+  Future<StoryModel> fetchSelfStory() async {
+    try {
+      return StoryModel(imageUrl: '', uploadedBy: '', createdAt: DateTime.now());
+    } catch (err) {
+      throw ServerException(message: 'Error in fetching self story');
+    }
+  }
 }
