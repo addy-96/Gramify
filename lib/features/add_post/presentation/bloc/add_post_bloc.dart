@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gramify/features/add_post/domain/repositories/add_post_repositories.dart';
 import 'package:photo_manager/photo_manager.dart';

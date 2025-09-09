@@ -142,15 +142,13 @@ class Post extends StatelessWidget {
                 ),
               ],
             ),
-            post.caption != null
-                ? Padding(
+            Padding(
                   padding: const EdgeInsets.all(10),
                   child: Text(
                     post.caption,
                     style: txtStyle(bodyText14, whiteForText),
                   ),
-                )
-                : const SizedBox.shrink(),
+                ),
             Row(
               mainAxisAlignment:
                   post.commentsCount == 0
