@@ -12,8 +12,8 @@ abstract interface class HomeRemoteDatasorce {
   Future<void> postLikeAction({required String postId});
   Future<List<CommentModel>> loadComments({required String postId});
   Future<void> addComment({required String postId, required String comment});
-  Future<List<StoryModel>> fetchStories();
-  Future<StoryModel> fetchSelfStory();
+  Future<List<String>> fetchStories();
+  Future<List<String>> fetchSelfStory();
 }
 
 class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
@@ -130,7 +130,7 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
   }
 
   @override
-  Future<List<StoryModel>> fetchStories() async {
+  Future<List<String>> fetchStories() async {
     try {
       final loggedUserId = await getLoggedUserId();
       final getAllFollowers = await supabase.client.from(userTable).select('list-of-following').eq('user_id', loggedUserId).select('stories');
@@ -148,9 +148,9 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasorce {
   }
 
   @override
-  Future<StoryModel> fetchSelfStory() async {
+  Future<List<String>> fetchSelfStory() async {
     try {
-      return StoryModel(imageUrl: '', uploadedBy: '', createdAt: DateTime.now());
+      return [];
     } catch (err) {
       throw ServerException(message: 'Error in fetching self story');
     }

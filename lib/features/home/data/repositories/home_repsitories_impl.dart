@@ -52,7 +52,7 @@ class HomeRepsitoriedImpl implements HomeRepositories {
   }
 
   @override
-  Future<Either<Failure, List<StoryModel>>> fetchAllStories() async {
+  Future<Either<Failure, List<String>>> fetchAllStories() async {
     try {
       final res = await homeRemoteDatasorce.fetchStories();
       return right(res);

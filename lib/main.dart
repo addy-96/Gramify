@@ -115,11 +115,9 @@ class AppStart extends StatelessWidget {
         stream: sAuth.Supabase.instance.client.auth.onAuthStateChange,
         builder: (context, authSnapshot) {
           final session = sAuth.Supabase.instance.client.auth.currentSession;
-
           if (authSnapshot.connectionState == ConnectionState.waiting && session == null) {
             return const Center(child: CircularProgressIndicator());
           }
-
           if (session != null && authSnapshot.data?.event != sAuth.AuthChangeEvent.signedOut) {
             final userId = session.user.id;
             return WrapperRes(userID: userId);

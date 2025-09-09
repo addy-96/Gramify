@@ -19,6 +19,7 @@ class StorySection extends StatefulWidget {
 class _StorySectionState extends State<StorySection> {
   @override
   void initState() {
+    context.read<StoryBloc>().add(GetSelfStoriesRequested());
     context.read<StoryBloc>().add(GetAllUserStoriesRequested());
     super.initState();
   }
@@ -46,6 +47,9 @@ class _StorySectionState extends State<StorySection> {
                       listener: (context, state) {
                         if (state is StoryUploadFailureState) {
                           csnack(context, state.errorMessage);
+                        }
+                        if (state is StoryUplaodedState) {
+                          context.read<StoryBloc>().add(GetSelfStoriesRequested());
                         }
                       },
                       builder: (context, state) {
@@ -93,7 +97,7 @@ class _StorySectionState extends State<StorySection> {
                           height: screenHeight / 14,
                           width: screenWidth / 6,
                           decoration: BoxDecoration(border: Border.all(width: 1, color: Colors.grey.shade500), borderRadius: BorderRadius.circular(14)),
-                          child: Image.network(story.imageUrl),
+                          child: Image.network(""),
                         ),
                       );
                     }

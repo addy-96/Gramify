@@ -13,8 +13,7 @@ class MyAppRoutes {
         name: MyAppRoutesConstant.defaultRouteName,
         path: '/',
         builder: (context, state) => const Gramify(),
-        routes: const [
-          
+        routes: [GoRoute(name: MyAppRoutesConstant.wrapperRouteName, path: 'wrapper/:userId', builder: (context, state) => WrapperRes(userID: state.pathParameters['userId']!)),
         ]
       ),
       GoRoute(
@@ -26,13 +25,6 @@ class MyAppRoutes {
         name: MyAppRoutesConstant.signupRouteName,
         path: '/signup',
         builder: (context, state) => const SignupResPage(),
-      ),
-      GoRoute(
-        name: MyAppRoutesConstant.wrapperRouteName,
-        path: '/wrapper/:userId',
-        builder:
-            (context, state) =>
-                WrapperRes(userID: state.pathParameters['userId']!),
       ),
       GoRoute(
         name: MyAppRoutesConstant.forgotPassRouteName,

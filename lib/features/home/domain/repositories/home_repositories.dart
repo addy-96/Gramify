@@ -10,5 +10,5 @@ abstract interface class HomeRepositories {
   Future<Either<Failure, void>> postLikeAction({required String postID});
   Future<Either<Failure, List<CommentModel>>> loadComments({required String postID});
   Future<Either<Failure, void>> addComment({required String postID, required String comment});
-  Future<Either<Failure, List<StoryModel>>> fetchAllStories();
+  Future<Either<Failure, List<String>>> fetchAllStories();
 }

@@ -5,4 +5,5 @@ class MyAppRoutesConstant {
   static const homeRouteName = 'home';
   static const forgotPassRouteName = 'forgot_password';
   static const wrapperRouteName = 'wrapper';
+  
 }
