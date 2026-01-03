@@ -1,6 +1,6 @@
 class ApiExceptions implements Exception {
   final String errorMessage;
-  final int statusCode;
+  final int? statusCode;
 
-  ApiExceptions({required this.errorMessage, required this.statusCode});
+  ApiExceptions({required this.errorMessage, this.statusCode});
 }

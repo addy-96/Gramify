@@ -1,49 +1,100 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:gramify/core/theme/spacing.dart';
 import 'package:gramify/core/theme/text_styles.dart';
 import 'package:gramify/core/widgets/app_filled_button.dart';
 import 'package:gramify/core/widgets/app_gradient_scaffold.dart';
+import 'package:gramify/core/widgets/app_snckbar.dart';
 import 'package:gramify/core/widgets/app_text_field.dart';
+import 'package:gramify/features/auth/domain/entites/user.dart';
+import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:gramify/features/auth/presentation/bloc/auth_events.dart';
+import 'package:gramify/features/auth/presentation/bloc/auth_states.dart';
 import 'package:gramify/features/auth/presentation/widgets/sso_button.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
+
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+
+  void _onRegiester() {
+    context.read<AuthBloc>().add(
+      SignUpEvent(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+        phone: _phoneController.text.trim(),
+        username: _usernameController.text.trim(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return AppGradientScaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.bodyxSmall, horizontal: AppSpacing.bodyxLarge),
-          child: SingleChildScrollView(
-            child: Column(
-              spacing: AppSpacing.componentxMedium,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Gap(AppSpacing.componentLarge),
-                Text('Create Your account', style: AppTextStyles.titleMedium().copyWith(fontWeight: FontWeight.bold)),
-                const AppTextField(hintText: 'Username'),
-                const AppTextField(hintText: 'Email Address'),
-                const AppTextField(hintText: 'Phone'),
-                const AppTextField(hintText: 'Password', suffixIcon: FontAwesomeIcons.eye),
-                const Gap(AppSpacing.bodySmall),
-                const Center(child: AppFilledButton()),
-                Center(child: Text('OR', style: AppTextStyles.bodyLarge().copyWith(color: Colors.grey.shade600, fontWeight: FontWeight.bold))),
-                Row(children: [kSsoButton(icon: FontAwesomeIcons.google), const Gap(AppSpacing.bodyLarge), kSsoButton(icon: FontAwesomeIcons.facebook)]),
-                Text('By logging in, you agree to our Terms & Privacy.', style: AppTextStyles.caption().copyWith(fontWeight: FontWeight.w100, fontSize: 9)),
-                const Gap(AppSpacing.bodySmall),
-              ],
+      body: BlocConsumer<AuthBloc, AuthStates>(
+        listener: (context, state) {
+          if (state is AuthenticatedState) {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen(user: state.logedInUser)));
+          }
+          if(state is AuthErrorState){
+            // ignore: void_checks
+            return appSnackBar(context, state.message);
+          }
+        },
+        builder: (context, state) {
+          if (state is AuthLoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.bodyxSmall, horizontal: AppSpacing.bodyxLarge),
+              child: SingleChildScrollView(
+                child: Column(
+                  spacing: AppSpacing.componentxMedium,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Gap(AppSpacing.componentLarge),
+                    Text('Create Your account', style: AppTextStyles.titleMedium().copyWith(fontWeight: FontWeight.bold)),
+                    AppTextField(hintText: 'Username', controller: _usernameController),
+                    AppTextField(hintText: 'Email Address', controller: _emailController),
+                    AppTextField(hintText: 'Phone', controller: _phoneController),
+                    AppTextField(hintText: 'Password', suffixIcon: FontAwesomeIcons.eye, controller: _passwordController),
+                    const Gap(AppSpacing.bodySmall),
+                    Center(child: AppFilledButton(onTap: _onRegiester)),
+                    Center(child: Text('OR', style: AppTextStyles.bodyLarge().copyWith(color: Colors.grey.shade600, fontWeight: FontWeight.bold))),
+                    Row(children: [kSsoButton(icon: FontAwesomeIcons.google), const Gap(AppSpacing.bodyLarge), kSsoButton(icon: FontAwesomeIcons.facebook)]),
+                    Text('By logging in, you agree to our Terms & Privacy.', style: AppTextStyles.caption().copyWith(fontWeight: FontWeight.w100, fontSize: 9)),
+                    const Gap(AppSpacing.bodySmall),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 }
 
-                 
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key, required this.user});
+  final User user;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppGradientScaffold(body: Center(child: Text(user.email)));
+  }
+}
 
   // Widget _authOption(String text, {bool showDivider = false}) => Expanded(
   //   child: Column(

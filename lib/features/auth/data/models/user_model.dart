@@ -1,10 +1,10 @@
 import 'package:gramify/features/auth/domain/entites/user.dart';
 
 class UserModel extends User {
-  UserModel({required super.email, required super.username, required super.followerCount, required super.followingCount, super.profile});
+  UserModel({required super.email, required super.username, required super.followerCount, required super.followingCount, super.profile, required super.id});
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(email: json['email'], username: json['username'], followerCount: json['followers'], followingCount: json['following']);
+    return UserModel(email: json['email'], username: json['username'], followerCount: json['followers'], followingCount: json['following'], id: json['id']);
   }
 
   Map<String, dynamic> toJson() {

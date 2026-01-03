@@ -3,9 +3,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gramify/core/theme/text_styles.dart';
 
 class AppTextField extends StatelessWidget {
-  const AppTextField({super.key, required this.hintText, this.suffixIcon});
+  const AppTextField({super.key, required this.hintText, this.suffixIcon, required this.controller});
   final String hintText;
   final IconData? suffixIcon;
+  final TextEditingController controller;
 
   final double radius = 20.0;
 
@@ -24,6 +25,7 @@ class AppTextField extends StatelessWidget {
         ],
       ),
       child: TextField(
+        controller: controller,
         style: AppTextStyles.bodyLarge(),
         cursorColor: Colors.black,
         cursorRadius: const Radius.circular(10),

@@ -1,7 +1,8 @@
-
 import 'package:gramify/features/auth/domain/entites/user.dart';
 
-sealed class AuthStates  {}
+sealed class AuthStates {}
+
+final class AuthLoadingState extends AuthStates {}
 
 final class AuthenticatedState extends AuthStates {
   final User logedInUser;
@@ -9,3 +10,8 @@ final class AuthenticatedState extends AuthStates {
 }
 
 final class UnAuthenticatedState extends AuthStates {}
+
+final class AuthErrorState extends AuthStates {
+  final String message;
+  AuthErrorState({required this.message});
+}

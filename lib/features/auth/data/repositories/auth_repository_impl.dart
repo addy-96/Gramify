@@ -1,4 +1,5 @@
-import 'package:fpdart/src/either.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:gramify/core/errors/exceptions.dart';
 import 'package:gramify/core/errors/failure.dart';
 import 'package:gramify/features/auth/data/datasorces/auth_datasource.dart';
 import 'package:gramify/features/auth/domain/entites/user.dart';
@@ -7,23 +8,31 @@ import 'package:gramify/features/auth/domain/repositories/auth_repository.dart';
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({required this.authDatasource});
   final AuthDatasource authDatasource;
-  
+
   @override
   Future<Either<Failure, bool>> changePassword({required String email, required String otp}) {
-    // TODO: implement changePassword
+    
     throw UnimplementedError();
   }
-  
+
   @override
   Future<Either<Failure, User>> login({required String email, required String password}) {
     // TODO: implement login
     throw UnimplementedError();
   }
-  
-  @override
-  Future<Either<Failure, User>> signUp({required String email, required password, required String username}) {
-    // TODO: implement signUp
-    throw UnimplementedError();
-  }
 
+  @override
+  Future<Either<Failure, User>> signUp({required String email, required password, required String username, required String phone}) async {
+    try {
+      final userModel = await authDatasource.signUp(email: email, password: password, username: username, phone: phone);
+      if (userModel == null) {
+        return left(const ServerFailure('User is null'));
+      }
+      return right(userModel);
+    } on ApiExceptions catch (e) {
+      return left(ServerFailure(e.errorMessage));
+    } catch (e) {
+      return left(ServerFailure(e.toString()));
+    }
+  }
 }

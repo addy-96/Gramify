@@ -3,10 +3,12 @@ import 'package:gramify/core/network/auth_interceptor.dart';
 
 class DioService {
   late final Dio dio;
-  final AuthInterceptor authInterceptor;
+  final AuthInterceptor? authInterceptor;
 
   void addInterceptors() {
-    dio.interceptors.addAll([LogInterceptor(), authInterceptor]);
+    if (authInterceptor != null) {
+      dio.interceptors.addAll([LogInterceptor(), authInterceptor!]);
+    }
   }
 
   DioService({required String baseUrl, Map<String, String>? header, required this.authInterceptor, bool authorization = true}) {
