@@ -43,11 +43,11 @@ class _SignupScreenState extends State<SignupScreen> {
     return AppGradientScaffold(
       body: BlocConsumer<AuthBloc, AuthStates>(
         listener: (context, state) {
+          print(state);
           if (state is AuthenticatedState) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen(user: state.logedInUser)));
           }
-          if(state is AuthErrorState){
-            // ignore: void_checks
+          if (state is AuthErrorState) {
             return appSnackBar(context, state.message);
           }
         },
