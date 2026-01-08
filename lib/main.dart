@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gramify/core/dependicies.dart';
+import 'package:gramify/core/routes/go_router.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:gramify/features/auth/presentation/screens/signup_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +32,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (_) => AuthBloc(signupUsecase: serviceLocator()), child: const MaterialApp(home: SignupScreen()));
+    return BlocProvider(create: (_) => AuthBloc(signupUsecase: serviceLocator()), child: MaterialApp.router(routerConfig: router));
   }
 }

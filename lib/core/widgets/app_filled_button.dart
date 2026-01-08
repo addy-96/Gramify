@@ -4,8 +4,9 @@ import 'package:gramify/core/theme/spacing.dart';
 import 'package:gramify/core/theme/text_styles.dart';
 
 class AppFilledButton extends StatelessWidget {
-  const AppFilledButton({super.key, required this.onTap});
+  const AppFilledButton({super.key, required this.onTap, required this.text});
   final GestureTapCallback onTap;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +15,10 @@ class AppFilledButton extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.bodyLarge),
-        decoration: BoxDecoration(color: Appcolors.gradientBlueButton, borderRadius: BorderRadius.circular(100)),
+        decoration: BoxDecoration(color: Appcolors.brandGreen, borderRadius: BorderRadius.circular(100)),
         child: Center(
           child: Text(
-            'Sign Up',
+            text,
             style: AppTextStyles.bodyLarge().copyWith(
               fontWeight: FontWeight.bold,
               letterSpacing: 2,

@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 
 class Appcolors {
-  static const gradientBlueDeep = Color.fromARGB(255, 119, 240, 220);
-  static const gradientBlueMidLight = Color.fromARGB(255, 179, 225, 216);
-  static const gradientBlueButton = Color.fromARGB(255, 88, 194, 180);
+  // The vibrant mint green at the top
+  static const gradientMint = Color.fromARGB(255, 124, 239, 220);
+  // A very pale version to transition into white
+  static const gradientLight = Color(0xFFEFFFFD);
+  // The solid button color from the image
+  static const brandGreen = Color(0xFF2AC3A3);
   static const white = Colors.white;
 }
+
+
+
+//bdf8e6
