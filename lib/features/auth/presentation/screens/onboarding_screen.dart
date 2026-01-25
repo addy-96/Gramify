@@ -1,12 +1,16 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gramify/core/routes/go_routes.dart';
 import 'package:gramify/core/theme/colors.dart';
 import 'package:gramify/core/theme/spacing.dart';
 import 'package:gramify/core/theme/text_styles.dart';
 import 'package:gramify/core/utils.dart';
 import 'package:gramify/core/widgets/app_filled_button.dart';
 import 'package:gramify/core/widgets/app_gradient_scaffold.dart';
+import 'package:gramify/features/auth/presentation/widgets/screen_switch_text_btn.dart';
+import 'package:gramify/features/auth/presentation/widgets/terms_and_condition.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -18,9 +22,12 @@ class OnboardingScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.bodyxLarge),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox.shrink(),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              spacing: 20,
               children: [
                 Material(
                   elevation: 2,
@@ -29,22 +36,20 @@ class OnboardingScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     child: Opacity(
                       opacity: 0.9,
-                      child: Image.asset(
-                        height: Utils.getScreenHeight(context) / 4,
-                        width: Utils.getScreenWidth(context) / 1.7,
-                        'assets/images/onboarding.png',
-                        fit: BoxFit.cover,
-                      ),
+                      child: Image.asset(height: Utils.getScreenHeight(context) / 4, width: Utils.getScreenWidth(context) / 1.7, 'assets/images/onboarding.png', fit: BoxFit.cover),
                     ),
                   ),
                 ),
-                const Gap(30),
-                Text('Connect,Share,\nDsicover', style: AppTextStyles.titleMedium().copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-                const Gap(20),
-                AppFilledButton(text: 'Sign Up Free', onTap: () {}),
-                const Gap(20),
+                const Gap(10),
+                Text('Connect, Share,\nDsicover', style: AppTextStyles.titleMedium().copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                AppFilledButton(
+                  text: 'Sign Up Free',
+                  onTap: () {
+                    context.pushNamed(GoRoutes.registerRoute);
+                  },
+                ),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     InkWell(
@@ -57,51 +62,12 @@ class OnboardingScreen extends StatelessWidget {
                       ),
                     ),
                     const Gap(10),
-                    Expanded(
-                      child: RichText(
-                        text: TextSpan(
-                          style: AppTextStyles.bodyLarge().copyWith(color: Colors.grey.shade500),
-                          children: [
-                            const TextSpan(text: "I agree to the "),
-                            TextSpan(
-                              text: "Terms ",
-                              style: AppTextStyles.bodyLarge().copyWith(color: Appcolors.brandGreen),
-                              recognizer: TapGestureRecognizer()..onTap = () {},
-                            ),
-                            TextSpan(text: "& ", style: AppTextStyles.bodyLarge()),
-                            TextSpan(
-                              text: "Privacy Policy",
-                              style: AppTextStyles.bodyLarge().copyWith(color: Appcolors.brandGreen),
-                              recognizer: TapGestureRecognizer()..onTap = () {},
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    termsAndCondition("I agree to the "),
                   ],
                 ),
               ],
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Divider(color: Colors.grey.shade500.withValues(alpha: 0.1), thickness: 2, radius: BorderRadius.circular(10)),
-                RichText(
-                  text: TextSpan(
-                    style: AppTextStyles.bodyLarge().copyWith(color: Colors.grey.shade500),
-                    children: [
-                      const TextSpan(text: "Already have an account? "),
-                      TextSpan(
-                        text: "Log In",
-                        style: AppTextStyles.bodyLarge().copyWith(color: Appcolors.brandGreen),
-                        recognizer: TapGestureRecognizer()..onTap = () {},
-                      ),
-                    ],
-                  ),
-                ),
-                const Gap(10),
-              ],
-            ),
+            screenSwitchTextBtn("Already have Account?", "Log in", () => context.goNamed(GoRoutes.loginRoute)),
           ],
         ),
       ),

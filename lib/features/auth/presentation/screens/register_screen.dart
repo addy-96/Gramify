@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gramify/core/routes/go_routes.dart';
 import 'package:gramify/core/theme/spacing.dart';
 import 'package:gramify/core/theme/text_styles.dart';
 import 'package:gramify/core/widgets/app_filled_button.dart';
 import 'package:gramify/core/widgets/app_gradient_scaffold.dart';
 import 'package:gramify/core/widgets/app_snckbar.dart';
 import 'package:gramify/core/widgets/app_text_field.dart';
-import 'package:gramify/features/auth/domain/entites/user.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_events.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_states.dart';
+import 'package:gramify/features/auth/presentation/widgets/screen_switch_text_btn.dart';
 import 'package:gramify/features/auth/presentation/widgets/sso_button.dart';
+import 'package:gramify/features/auth/presentation/widgets/terms_and_condition.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -44,7 +47,7 @@ class _SignupScreenState extends State<RegisterScreen> {
       body: BlocConsumer<AuthBloc, AuthStates>(
         listener: (context, state) {
           if (state is AuthenticatedState) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen(user: state.logedInUser)));
+            
           }
           if (state is AuthErrorState) {
             return appSnackBar(context, state.message);
@@ -58,23 +61,35 @@ class _SignupScreenState extends State<RegisterScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.bodyxSmall, horizontal: AppSpacing.bodyxLarge),
               child: SingleChildScrollView(
-                child: Column(
-                  spacing: AppSpacing.componentxMedium,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Gap(AppSpacing.componentLarge),
-                    Text('Create Your account', style: AppTextStyles.titleMedium().copyWith(fontWeight: FontWeight.bold)),
-                    AppTextField(hintText: 'Username', controller: _usernameController),
-                    AppTextField(hintText: 'Email Address', controller: _emailController),
-                    AppTextField(hintText: 'Phone', controller: _phoneController),
-                    AppTextField(hintText: 'Password', suffixIcon: FontAwesomeIcons.eye, controller: _passwordController),
-                    const Gap(AppSpacing.bodySmall),
-                    Center(child: AppFilledButton(text: 'Sign Up', onTap: _onRegiester)),
-                    Center(child: Text('OR', style: AppTextStyles.bodyLarge().copyWith(color: Colors.grey.shade600, fontWeight: FontWeight.bold))),
-                    Row(children: [kSsoButton(icon: FontAwesomeIcons.google), const Gap(AppSpacing.bodyLarge), kSsoButton(icon: FontAwesomeIcons.facebook)]),
-                    Text('By logging in, you agree to our Terms & Privacy.', style: AppTextStyles.caption().copyWith(fontWeight: FontWeight.w100, fontSize: 9)),
-                    const Gap(AppSpacing.bodySmall),
-                  ],
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height - AppSpacing.bodyxSmall * 2, // fill screen minus padding
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 20,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Gap(AppSpacing.componentLarge),
+                        Text('Create Your account', style: AppTextStyles.titleLarge().copyWith(fontWeight: FontWeight.bold)),
+                        AppTextField(hintText: 'Username', controller: _usernameController),
+                        AppTextField(hintText: 'Email Address', controller: _emailController),
+                        AppTextField(hintText: 'Phone', controller: _phoneController),
+                        AppTextField(hintText: 'Password', suffixIcon: FontAwesomeIcons.eye, controller: _passwordController),
+                        const Gap(AppSpacing.bodySmall),
+                        Center(child: AppFilledButton(text: 'Sign Up', onTap: _onRegiester)),
+                        Center(child: Text('OR', style: AppTextStyles.bodyLarge().copyWith(color: Colors.grey.shade600, fontWeight: FontWeight.bold))),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [kSsoButton(icon: FontAwesomeIcons.google), const Gap(AppSpacing.bodyLarge), kSsoButton(icon: FontAwesomeIcons.facebook)],
+                        ),
+                        Row(mainAxisAlignment: MainAxisAlignment.center, children: [termsAndCondition('By signing up, you agree to our ')]),
+                        const Gap(AppSpacing.bodySmall),
+                        screenSwitchTextBtn("Already have Account?", "Log in", () => context.goNamed(GoRoutes.loginRoute)),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -82,16 +97,6 @@ class _SignupScreenState extends State<RegisterScreen> {
         },
       ),
     );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, required this.user});
-  final User user;
-
-  @override
-  Widget build(BuildContext context) {
-    return AppGradientScaffold(body: Center(child: Text(user.email)));
   }
 }
 

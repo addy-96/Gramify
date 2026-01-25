@@ -14,13 +14,11 @@ class AppTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white54,
+        color: Colors.white70,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05), // very light shadow
-            blurRadius: 5, // soft blur
-            offset: const Offset(0, 2), // slight shadow below
+            color: Colors.black.withValues(alpha: 0.05), blurRadius: 5, offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -33,7 +31,7 @@ class AppTextField extends StatelessWidget {
         cursorErrorColor: Colors.red,
         decoration: InputDecoration(
           hintText: hintText,
-          suffixIcon: suffixIcon != null ? FaIcon(suffixIcon, color: Colors.grey.shade500) : null,
+          suffixIcon: suffixIcon != null ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [FaIcon(suffixIcon, color: Colors.grey.shade500)]) : null,
           hintStyle: AppTextStyles.bodyLarge().copyWith(fontWeight: FontWeight.bold, color: Colors.grey.shade500),
           contentPadding: const EdgeInsets.all(20),
           fillColor: Colors.white,
