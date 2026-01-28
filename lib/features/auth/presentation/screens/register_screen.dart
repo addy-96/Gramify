@@ -10,8 +10,8 @@ import 'package:gramify/core/theme/text_styles.dart';
 import 'package:gramify/core/utils.dart';
 import 'package:gramify/core/widgets/app_filled_button.dart';
 import 'package:gramify/core/widgets/app_gradient_scaffold.dart';
-import 'package:gramify/core/widgets/app_snckbar.dart';
 import 'package:gramify/core/widgets/app_text_field.dart';
+import 'package:gramify/core/widgets/gsnack.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_events.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_states.dart';
@@ -48,10 +48,10 @@ class _SignupScreenState extends State<RegisterScreen> {
       body: BlocConsumer<AuthBloc, AuthStates>(
         listener: (context, state) {
           if (state is AuthenticatedState) {
-            // to add navigation here
+            context.goNamed(GoRoutes.wrapperRoute);
           }
           if (state is AuthErrorState) {
-            return appSnackBar(context, state.message);
+            gSnack(context, state.message);
           }
         },
         builder: (context, state) {

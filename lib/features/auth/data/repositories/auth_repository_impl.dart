@@ -11,14 +11,22 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, bool>> changePassword({required String email, required String otp}) {
-    
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, User>> login({required String email, required String password}) {
-    // TODO: implement login
-    throw UnimplementedError();
+  Future<Either<Failure, User>> login({required String email, required String password}) async {
+    try {
+      final userModel = await authDatasource.login(email: email, password: password);
+      if (userModel == null) {
+        return left(const ServerFailure('User is null'));
+      }
+      return right(userModel);
+    } on ApiExceptions catch (e) {
+      return left(ServerFailure(e.errorMessage));
+    } catch (e) {
+      return left(ServerFailure(e.toString()));
+    }
   }
 
   @override

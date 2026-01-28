@@ -1,4 +1,4 @@
-import 'package:fpdart/src/either.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:gramify/core/errors/failure.dart';
 import 'package:gramify/core/usecase_interface.dart';
 import 'package:gramify/features/auth/domain/entites/user.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +11,9 @@ import 'package:gramify/core/utils.dart';
 import 'package:gramify/core/widgets/app_filled_button.dart';
 import 'package:gramify/core/widgets/app_gradient_scaffold.dart';
 import 'package:gramify/core/widgets/gsnack.dart';
+import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:gramify/features/auth/presentation/bloc/auth_events.dart';
+import 'package:gramify/features/auth/presentation/bloc/auth_states.dart';
 import 'package:gramify/features/auth/presentation/widgets/screen_switch_text_btn.dart';
 import 'package:gramify/features/auth/presentation/widgets/terms_and_condition.dart';
 
@@ -24,77 +28,99 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   var _hasAgreedToTerms = false;
 
   @override
+  void initState() {
+    context.read<AuthBloc>().add(CheckAuthStatusEvent());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AppGradientScaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.bodyxLarge),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox.shrink(),
-            Column(
+        child: BlocConsumer<AuthBloc, AuthStates>(
+          listener: (context, state) {
+            if (state is AuthErrorState) {
+              gSnack(context, state.message);
+            } else if (state is AuthenticatedState) {
+              context.goNamed(GoRoutes.wrapperRoute);
+            }
+          },
+          builder: (context, state) {
+            if (state is AuthLoadingState) {
+              return const Center(child: CircularProgressIndicator(color: Appcolors.white));
+            }
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
-              spacing: 20,
               children: [
-                Material(
-                  elevation: 2,
-                  borderRadius: BorderRadius.circular(20),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Opacity(
-                      opacity: 0.9,
-                      child: Image.asset(
-                        height: Utils.getScreenHeight(context) / 4,
-                        width: Utils.getScreenWidth(context) / 1.7,
-                        'assets/images/onboarding.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                const Gap(10),
-                Text('Connect, Share,\nDsicover', style: AppTextStyles.titleMedium().copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-                AppFilledButton(
-                  text: 'Sign Up Free',
-                  onTap: () {
-                    if (_hasAgreedToTerms) {
-                      context.pushNamed(GoRoutes.registerRoute);
-                    } else {
-                      gSnack(context, "Please agree to terms!");
-                    }
-                  },
-                ),
-                Row(
+                const SizedBox.shrink(),
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 20,
                   children: [
-                    InkWell(
-                      borderRadius: BorderRadius.circular(5),
-                      onTap: () {
-                        setState(() => _hasAgreedToTerms = !_hasAgreedToTerms);
-                      },
-                      child: Container(
-                        height: 25,
-                        width: 25,
-                        padding: const EdgeInsets.all(1),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(width: 2, color: Colors.grey.shade500),
-                          color: _hasAgreedToTerms ? Appcolors.brandGreen : null,
+                    Material(
+                      elevation: 2,
+                      borderRadius: BorderRadius.circular(20),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Opacity(
+                          opacity: 0.9,
+                          child: Image.asset(
+                            height: Utils.getScreenHeight(context) / 4,
+                            width: Utils.getScreenWidth(context) / 1.7,
+                            'assets/images/onboarding.png',
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                        child:
-                            _hasAgreedToTerms ? const Center(child: FaIcon(FontAwesomeIcons.check, color: Appcolors.white, size: 20)) : const SizedBox.shrink(),
                       ),
                     ),
                     const Gap(10),
-                    termsAndCondition("I agree to the "),
+                    Text('Connect, Share,\nDsicover', style: AppTextStyles.titleMedium().copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                    AppFilledButton(
+                      text: 'Sign Up Free',
+                      onTap: () {
+                        if (_hasAgreedToTerms) {
+                          context.pushNamed(GoRoutes.registerRoute);
+                        } else {
+                          gSnack(context, "Please agree to terms!");
+                        }
+                      },
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          borderRadius: BorderRadius.circular(5),
+                          onTap: () {
+                            setState(() => _hasAgreedToTerms = !_hasAgreedToTerms);
+                          },
+                          child: Container(
+                            height: 25,
+                            width: 25,
+                            padding: const EdgeInsets.all(1),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(width: 2, color: Colors.grey.shade500),
+                              color: _hasAgreedToTerms ? Appcolors.brandGreen : null,
+                            ),
+                            child:
+                                _hasAgreedToTerms
+                                    ? const Center(child: FaIcon(FontAwesomeIcons.check, color: Appcolors.white, size: 20))
+                                    : const SizedBox.shrink(),
+                          ),
+                        ),
+                        const Gap(10),
+                        termsAndCondition("I agree to the "),
+                      ],
+                    ),
                   ],
                 ),
+                screenSwitchTextBtn("Already have Account?", "Log in", () => context.goNamed(GoRoutes.loginRoute)),
               ],
-            ),
-            screenSwitchTextBtn("Already have Account?", "Log in", () => context.goNamed(GoRoutes.loginRoute)),
-          ],
+            );
+          },
         ),
       ),
     );

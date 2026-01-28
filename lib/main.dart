@@ -32,6 +32,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (_) => AuthBloc(signupUsecase: serviceLocator()), child: MaterialApp.router(routerConfig: router));
+    return BlocProvider(
+      create: (_) => AuthBloc(signupUsecase: serviceLocator(), loginUsecase: serviceLocator(), pref: serviceLocator()),
+      child: MaterialApp.router(routerConfig: router),
+    );
   }
 }

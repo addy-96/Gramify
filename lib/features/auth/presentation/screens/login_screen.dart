@@ -10,8 +10,8 @@ import 'package:gramify/core/theme/text_styles.dart';
 import 'package:gramify/core/utils.dart';
 import 'package:gramify/core/widgets/app_filled_button.dart';
 import 'package:gramify/core/widgets/app_gradient_scaffold.dart';
-import 'package:gramify/core/widgets/app_snckbar.dart';
 import 'package:gramify/core/widgets/app_text_field.dart';
+import 'package:gramify/core/widgets/gsnack.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_events.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_states.dart';
@@ -50,10 +50,10 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<AuthBloc, AuthStates>(
         listener: (context, state) {
           if (state is AuthenticatedState) {
-            // Navigate to home/dashboard
+            context.goNamed(GoRoutes.wrapperRoute);
           }
           if (state is AuthErrorState) {
-            appSnackBar(context, state.message);
+            gSnack(context, state.message);
           }
         },
         builder: (context, state) {
@@ -75,12 +75,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           const Gap(AppSpacing.componentLarge),
                           Text('Log in Your account', style: AppTextStyles.titleLarge().copyWith(fontWeight: FontWeight.bold)),
+                          const Gap(AppSpacing.bodymedium),
                           AppTextField(
                             hintText: 'Email Address',
                             controller: _emailController,
                             inputType: TextInputType.emailAddress,
                             validator: (value) => Utils.validateInput(Validator.email, value),
                           ),
+                          const Gap(AppSpacing.bodyxLarge),
                           AppTextField(
                             hintText: 'Password',
                             controller: _passwordController,
@@ -88,16 +90,18 @@ class _LoginScreenState extends State<LoginScreen> {
                             obsecure: true,
                             validator: (value) => Utils.validateInput(Validator.password, value),
                           ),
-                          const Gap(AppSpacing.bodySmall),
+                          const Gap(AppSpacing.bodyxLarge),
                           Center(child: AppFilledButton(text: 'Log in', onTap: _onLogin)),
+                          const Gap(AppSpacing.bodymedium),
                           screenSwitchTextBtn("Forgot your password?", "Reset password", () {}),
                           Center(child: Text('OR', style: AppTextStyles.bodyLarge().copyWith(color: Colors.grey.shade600, fontWeight: FontWeight.bold))),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [kSsoButton(icon: FontAwesomeIcons.google), const Gap(AppSpacing.bodyLarge), kSsoButton(icon: FontAwesomeIcons.facebook)],
                           ),
+                          const Gap(AppSpacing.bodymedium),
                           Row(mainAxisAlignment: MainAxisAlignment.center, children: [termsAndCondition('By logging in, you agree to our ')]),
-                          const Gap(AppSpacing.bodySmall),
+                          const Gap(AppSpacing.bodyLarge),
                           screenSwitchTextBtn("Dont't have an Account?", "Sign Up", () => context.goNamed(GoRoutes.registerRoute)),
                         ],
                       ),

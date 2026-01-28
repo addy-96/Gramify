@@ -5,7 +5,7 @@ sealed class AuthStates {}
 final class AuthLoadingState extends AuthStates {}
 
 final class AuthenticatedState extends AuthStates {
-  final User logedInUser;
+  final User? logedInUser;
   AuthenticatedState({required this.logedInUser});
 }
 
