@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:gramify/core/shared_pref_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthInterceptor extends Interceptor {
@@ -18,6 +19,6 @@ class AuthInterceptor extends Interceptor {
 
   Future<String> getAccessToken() async {
     final pref = await SharedPreferences.getInstance();
-    return pref.getString('accessToken') ?? "";
+    return pref.getString(SharedPrefRepo.accessToken) ?? "";
   }
 }

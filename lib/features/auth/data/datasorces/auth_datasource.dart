@@ -3,7 +3,7 @@ import 'package:gramify/core/backend/api_routes.dart';
 import 'package:gramify/core/errors/exceptions.dart';
 import 'package:gramify/core/network/dio_service.dart';
 import 'package:gramify/core/shared_pref_repo.dart';
-import 'package:gramify/features/auth/data/models/user_model.dart';
+import 'package:gramify/features/wrapper/data/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract interface class AuthDatasource {
@@ -11,7 +11,6 @@ abstract interface class AuthDatasource {
   Future<UserModel?> login({required String email, required String password});
   Future<UserModel?> logOut();
   Future<bool> changePassword({required String email});
-  Future<UserModel> fetchUserDetails({required String accessToken});
 }
 
 class AuthDatasourceImpl implements AuthDatasource {
@@ -54,11 +53,6 @@ class AuthDatasourceImpl implements AuthDatasource {
     } catch (err) {
       throw ApiExceptions(errorMessage: err.toString(), statusCode: 407);
     }
-  }
-
-  @override
-  Future<UserModel> fetchUserDetails({required String accessToken}) {
-    throw UnimplementedError();
   }
 
   @override

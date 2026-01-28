@@ -1,4 +1,4 @@
-import 'package:gramify/features/auth/domain/entites/user.dart';
+import 'package:gramify/features/wrapper/domain/entities/user.dart';
 
 sealed class AuthStates {}
 

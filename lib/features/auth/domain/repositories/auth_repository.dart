@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:gramify/core/errors/failure.dart';
-import 'package:gramify/features/auth/domain/entites/user.dart';
+import 'package:gramify/features/wrapper/domain/entities/user.dart';
 
 abstract interface class AuthRepository {
   Future<Either<Failure, User>> signUp({required String email, required password, required String username, required String phone});

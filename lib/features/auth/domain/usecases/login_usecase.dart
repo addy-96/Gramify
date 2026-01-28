@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:gramify/core/errors/failure.dart';
 import 'package:gramify/core/usecase_interface.dart';
-import 'package:gramify/features/auth/domain/entites/user.dart';
+import 'package:gramify/features/wrapper/domain/entities/user.dart';
 import 'package:gramify/features/auth/domain/repositories/auth_repository.dart';
 
 class LoginUsecase implements UsecaseInterface<User, LoginParams> {

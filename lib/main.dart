@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gramify/core/dependicies.dart';
 import 'package:gramify/core/routes/go_router.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:gramify/features/wrapper/presentation/bloc/nav_bar_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,8 +33,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => AuthBloc(signupUsecase: serviceLocator(), loginUsecase: serviceLocator(), pref: serviceLocator()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(create: (_) => AuthBloc(signupUsecase: serviceLocator(), loginUsecase: serviceLocator(), pref: serviceLocator())),
+        BlocProvider<NavBarCubit>(create: (_) => NavBarCubit()),
+      ],
       child: MaterialApp.router(routerConfig: router),
     );
   }

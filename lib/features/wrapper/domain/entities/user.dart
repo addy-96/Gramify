@@ -1,4 +1,4 @@
-import 'package:gramify/features/auth/domain/entites/profile.dart';
+import 'package:gramify/features/wrapper/domain/entities/profile.dart';
 
 class User {
   final String id;

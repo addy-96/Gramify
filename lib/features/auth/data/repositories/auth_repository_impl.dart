@@ -2,7 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:gramify/core/errors/exceptions.dart';
 import 'package:gramify/core/errors/failure.dart';
 import 'package:gramify/features/auth/data/datasorces/auth_datasource.dart';
-import 'package:gramify/features/auth/domain/entites/user.dart';
+import 'package:gramify/features/wrapper/domain/entities/user.dart';
 import 'package:gramify/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
