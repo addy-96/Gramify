@@ -27,21 +27,19 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<RegisterScreen> {
-  final GlobalKey _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
 
-  void _onRegiester() {
-    context.read<AuthBloc>().add(
-      SignUpEvent(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-        phone: _phoneController.text.trim(),
-        username: _usernameController.text.trim(),
-      ),
-    );
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _phoneController.dispose();
+    super.dispose();
   }
 
   @override
@@ -49,7 +47,9 @@ class _SignupScreenState extends State<RegisterScreen> {
     return AppGradientScaffold(
       body: BlocConsumer<AuthBloc, AuthStates>(
         listener: (context, state) {
-          if (state is AuthenticatedState) {}
+          if (state is AuthenticatedState) {
+            // to add navigation here
+          }
           if (state is AuthErrorState) {
             return appSnackBar(context, state.message);
           }
@@ -77,17 +77,29 @@ class _SignupScreenState extends State<RegisterScreen> {
                           const Gap(AppSpacing.componentLarge),
                           Text('Create Your account', style: AppTextStyles.titleLarge().copyWith(fontWeight: FontWeight.bold)),
                           AppTextField(
+                            maxLength: 20,
+                            inputType: TextInputType.text,
                             hintText: 'Username',
                             controller: _usernameController,
                             validator: (value) => Utils.validateInput(Validator.username, value),
                           ),
                           AppTextField(
                             hintText: 'Email Address',
+                            inputType: TextInputType.emailAddress,
                             controller: _emailController,
                             validator: (value) => Utils.validateInput(Validator.email, value),
                           ),
-                          AppTextField(hintText: 'Phone', controller: _phoneController, validator: (value) => Utils.validateInput(Validator.phone, value)),
                           AppTextField(
+                            maxLength: 10,
+                            inputType: TextInputType.number,
+                            hintText: 'Phone',
+                            controller: _phoneController,
+                            validator: (value) => Utils.validateInput(Validator.phone, value),
+                          ),
+                          AppTextField(
+                            maxLength: 20,
+                            obsecure: true,
+                            inputType: TextInputType.text,
                             hintText: 'Password',
                             suffixIcon: FontAwesomeIcons.eye,
                             controller: _passwordController,
@@ -114,6 +126,19 @@ class _SignupScreenState extends State<RegisterScreen> {
         },
       ),
     );
+  }
+
+  void _onRegiester() {
+    if (_formKey.currentState!.validate()) {
+      context.read<AuthBloc>().add(
+        SignUpEvent(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+          phone: _phoneController.text.trim(),
+          username: _usernameController.text.trim(),
+        ),
+      );
+    }
   }
 }
 

@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gramify/core/theme/text_styles.dart';
 
-class AppTextField extends StatelessWidget {
-  const AppTextField({super.key, required this.hintText, this.suffixIcon, required this.controller, this.validator});
+class AppTextField extends StatefulWidget {
+  AppTextField({super.key, required this.hintText, this.suffixIcon, required this.controller, this.validator, this.maxLength, this.inputType, this.obsecure});
   final String hintText;
   final IconData? suffixIcon;
   final TextEditingController controller;
   final FormFieldValidator? validator;
+  final int? maxLength;
+  final TextInputType? inputType;
+  bool? obsecure = false;
 
+  @override
+  State<AppTextField> createState() => _AppTextFieldState();
+}
+
+class _AppTextFieldState extends State<AppTextField> {
   final double radius = 20.0;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,17 +27,35 @@ class AppTextField extends StatelessWidget {
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 5, offset: const Offset(0, 2))],
       ),
       child: TextFormField(
-        validator: validator,
-        controller: controller,
+        keyboardType: widget.inputType,
+        maxLength: widget.maxLength,
+        obscureText: widget.obsecure ?? false,
+        validator: widget.validator,
+        controller: widget.controller,
         style: AppTextStyles.bodyLarge(),
         cursorColor: Colors.black,
         cursorRadius: const Radius.circular(10),
         cursorWidth: 2,
         cursorErrorColor: Colors.red,
         decoration: InputDecoration(
-          hintText: hintText,
+          counterText: '',
+          hintText: widget.hintText,
           suffixIcon:
-              suffixIcon != null ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [FaIcon(suffixIcon, color: Colors.grey.shade500)]) : null,
+              widget.suffixIcon != null
+                  ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          if (widget.obsecure != null) {
+                            setState(() => widget.obsecure = !widget.obsecure!);
+                          }
+                        },
+                        icon: FaIcon(widget.suffixIcon, color: Colors.grey.shade500),
+                      ),
+                    ],
+                  )
+                  : null,
           hintStyle: AppTextStyles.bodyLarge().copyWith(fontWeight: FontWeight.bold, color: Colors.grey.shade500),
           contentPadding: const EdgeInsets.all(20),
           fillColor: Colors.white,

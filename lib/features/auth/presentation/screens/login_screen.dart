@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gramify/core/enums.dart';
 import 'package:gramify/core/routes/go_routes.dart';
 import 'package:gramify/core/theme/spacing.dart';
 import 'package:gramify/core/theme/text_styles.dart';
+import 'package:gramify/core/utils.dart';
 import 'package:gramify/core/widgets/app_filled_button.dart';
 import 'package:gramify/core/widgets/app_gradient_scaffold.dart';
+import 'package:gramify/core/widgets/app_snckbar.dart';
 import 'package:gramify/core/widgets/app_text_field.dart';
+import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:gramify/features/auth/presentation/bloc/auth_events.dart';
+import 'package:gramify/features/auth/presentation/bloc/auth_states.dart';
 import 'package:gramify/features/auth/presentation/widgets/screen_switch_text_btn.dart';
 import 'package:gramify/features/auth/presentation/widgets/sso_button.dart';
 import 'package:gramify/features/auth/presentation/widgets/terms_and_condition.dart';
@@ -20,8 +27,15 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  void _onLogin() {
+    if (_formKey.currentState!.validate()) {
+      context.read<AuthBloc>().add(LoginEvent(email: _emailController.text.trim(), password: _passwordController.text.trim()));
+    }
+  }
 
   @override
   void dispose() {
@@ -33,27 +47,67 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return AppGradientScaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.bodyxSmall, horizontal: AppSpacing.bodyxLarge),
-        child: Column(
-          spacing: AppSpacing.componentxMedium,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Gap(AppSpacing.componentLarge),
-            Text('Log in Your account', style: AppTextStyles.titleLarge().copyWith(fontWeight: FontWeight.bold)),
-            AppTextField(hintText: 'Email Address', controller: _emailController),
-            AppTextField(hintText: 'Password', suffixIcon: FontAwesomeIcons.eye, controller: _passwordController),
-            const Gap(AppSpacing.bodySmall),
-            Center(child: AppFilledButton(text: 'Log in', onTap: () {})),
-            screenSwitchTextBtn("Forgot your password?", "Reset password", () {}),
-            Center(child: Text('OR', style: AppTextStyles.bodyLarge().copyWith(color: Colors.grey.shade600, fontWeight: FontWeight.bold))),
-            Row(children: [kSsoButton(icon: FontAwesomeIcons.google), const Gap(AppSpacing.bodyLarge), kSsoButton(icon: FontAwesomeIcons.facebook)]),
-            termsAndCondition('By logging in, you agree to our '),
-            const Gap(AppSpacing.bodySmall),
-            screenSwitchTextBtn("Dont't have an Account?", "Sign Up", () => context.goNamed(GoRoutes.registerRoute)),
-          ],
-        ),
+      body: BlocConsumer<AuthBloc, AuthStates>(
+        listener: (context, state) {
+          if (state is AuthenticatedState) {
+            // Navigate to home/dashboard
+          }
+          if (state is AuthErrorState) {
+            appSnackBar(context, state.message);
+          }
+        },
+        builder: (context, state) {
+          if (state is AuthLoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.bodyxSmall, horizontal: AppSpacing.bodyxLarge),
+              child: SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height - AppSpacing.bodyxSmall * 2),
+                  child: IntrinsicHeight(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const Gap(AppSpacing.componentLarge),
+                          Text('Log in Your account', style: AppTextStyles.titleLarge().copyWith(fontWeight: FontWeight.bold)),
+                          AppTextField(
+                            hintText: 'Email Address',
+                            controller: _emailController,
+                            inputType: TextInputType.emailAddress,
+                            validator: (value) => Utils.validateInput(Validator.email, value),
+                          ),
+                          AppTextField(
+                            hintText: 'Password',
+                            controller: _passwordController,
+                            suffixIcon: FontAwesomeIcons.eye,
+                            obsecure: true,
+                            validator: (value) => Utils.validateInput(Validator.password, value),
+                          ),
+                          const Gap(AppSpacing.bodySmall),
+                          Center(child: AppFilledButton(text: 'Log in', onTap: _onLogin)),
+                          screenSwitchTextBtn("Forgot your password?", "Reset password", () {}),
+                          Center(child: Text('OR', style: AppTextStyles.bodyLarge().copyWith(color: Colors.grey.shade600, fontWeight: FontWeight.bold))),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [kSsoButton(icon: FontAwesomeIcons.google), const Gap(AppSpacing.bodyLarge), kSsoButton(icon: FontAwesomeIcons.facebook)],
+                          ),
+                          Row(mainAxisAlignment: MainAxisAlignment.center, children: [termsAndCondition('By logging in, you agree to our ')]),
+                          const Gap(AppSpacing.bodySmall),
+                          screenSwitchTextBtn("Dont't have an Account?", "Sign Up", () => context.goNamed(GoRoutes.registerRoute)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

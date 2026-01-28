@@ -16,16 +16,28 @@ class Utils {
   static String? validateInput(Validator validator, String text) {
     switch (validator) {
       case Validator.email:
-        return _emailRegex.hasMatch(text);
+        if (_emailRegex.hasMatch(text)) {
+          return null;
+        }
+        return "Please enter a valid email address";
 
       case Validator.password:
-        return _passwordRegex.hasMatch(text);
+        if (_passwordRegex.hasMatch(text)) {
+          return null;
+        }
+        return "Password must be at least 8 characters and include a number";
 
       case Validator.username:
-        return _usernameRegex.hasMatch(text);
+        if (_usernameRegex.hasMatch(text)) {
+          return null;
+        }
+        return "Username must be 3–20 characters and contain only letters, numbers, or underscores";
 
       case Validator.phone:
-        return _phoneRegex.hasMatch(text);
+        if (_phoneRegex.hasMatch(text)) {
+          return null;
+        }
+        return "Please enter a valid 10-digit phone number";
     }
   }
 }

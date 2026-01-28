@@ -61,7 +61,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     if (_hasAgreedToTerms) {
                       context.pushNamed(GoRoutes.registerRoute);
                     } else {
-                      gSnack(context, "Please agree too terms");
+                      gSnack(context, "Please agree to terms!");
                     }
                   },
                 ),
