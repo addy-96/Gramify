@@ -3,10 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gramify/core/theme/text_styles.dart';
 
 class AppTextField extends StatelessWidget {
-  const AppTextField({super.key, required this.hintText, this.suffixIcon, required this.controller});
+  const AppTextField({super.key, required this.hintText, this.suffixIcon, required this.controller, this.validator});
   final String hintText;
   final IconData? suffixIcon;
   final TextEditingController controller;
+  final FormFieldValidator? validator;
 
   final double radius = 20.0;
 
@@ -16,13 +17,10 @@ class AppTextField extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white70,
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05), blurRadius: 5, offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 5, offset: const Offset(0, 2))],
       ),
-      child: TextField(
+      child: TextFormField(
+        validator: validator,
         controller: controller,
         style: AppTextStyles.bodyLarge(),
         cursorColor: Colors.black,
@@ -31,7 +29,8 @@ class AppTextField extends StatelessWidget {
         cursorErrorColor: Colors.red,
         decoration: InputDecoration(
           hintText: hintText,
-          suffixIcon: suffixIcon != null ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [FaIcon(suffixIcon, color: Colors.grey.shade500)]) : null,
+          suffixIcon:
+              suffixIcon != null ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [FaIcon(suffixIcon, color: Colors.grey.shade500)]) : null,
           hintStyle: AppTextStyles.bodyLarge().copyWith(fontWeight: FontWeight.bold, color: Colors.grey.shade500),
           contentPadding: const EdgeInsets.all(20),
           fillColor: Colors.white,

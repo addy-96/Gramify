@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gramify/core/enums.dart';
 import 'package:gramify/core/routes/go_routes.dart';
 import 'package:gramify/core/theme/spacing.dart';
 import 'package:gramify/core/theme/text_styles.dart';
+import 'package:gramify/core/utils.dart';
 import 'package:gramify/core/widgets/app_filled_button.dart';
 import 'package:gramify/core/widgets/app_gradient_scaffold.dart';
 import 'package:gramify/core/widgets/app_snckbar.dart';
@@ -25,6 +27,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<RegisterScreen> {
+  final GlobalKey _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -46,9 +49,7 @@ class _SignupScreenState extends State<RegisterScreen> {
     return AppGradientScaffold(
       body: BlocConsumer<AuthBloc, AuthStates>(
         listener: (context, state) {
-          if (state is AuthenticatedState) {
-            
-          }
+          if (state is AuthenticatedState) {}
           if (state is AuthErrorState) {
             return appSnackBar(context, state.message);
           }
@@ -66,28 +67,44 @@ class _SignupScreenState extends State<RegisterScreen> {
                     minHeight: MediaQuery.of(context).size.height - AppSpacing.bodyxSmall * 2, // fill screen minus padding
                   ),
                   child: IntrinsicHeight(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 20,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const Gap(AppSpacing.componentLarge),
-                        Text('Create Your account', style: AppTextStyles.titleLarge().copyWith(fontWeight: FontWeight.bold)),
-                        AppTextField(hintText: 'Username', controller: _usernameController),
-                        AppTextField(hintText: 'Email Address', controller: _emailController),
-                        AppTextField(hintText: 'Phone', controller: _phoneController),
-                        AppTextField(hintText: 'Password', suffixIcon: FontAwesomeIcons.eye, controller: _passwordController),
-                        const Gap(AppSpacing.bodySmall),
-                        Center(child: AppFilledButton(text: 'Sign Up', onTap: _onRegiester)),
-                        Center(child: Text('OR', style: AppTextStyles.bodyLarge().copyWith(color: Colors.grey.shade600, fontWeight: FontWeight.bold))),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [kSsoButton(icon: FontAwesomeIcons.google), const Gap(AppSpacing.bodyLarge), kSsoButton(icon: FontAwesomeIcons.facebook)],
-                        ),
-                        Row(mainAxisAlignment: MainAxisAlignment.center, children: [termsAndCondition('By signing up, you agree to our ')]),
-                        const Gap(AppSpacing.bodySmall),
-                        screenSwitchTextBtn("Already have Account?", "Log in", () => context.goNamed(GoRoutes.loginRoute)),
-                      ],
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 20,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const Gap(AppSpacing.componentLarge),
+                          Text('Create Your account', style: AppTextStyles.titleLarge().copyWith(fontWeight: FontWeight.bold)),
+                          AppTextField(
+                            hintText: 'Username',
+                            controller: _usernameController,
+                            validator: (value) => Utils.validateInput(Validator.username, value),
+                          ),
+                          AppTextField(
+                            hintText: 'Email Address',
+                            controller: _emailController,
+                            validator: (value) => Utils.validateInput(Validator.email, value),
+                          ),
+                          AppTextField(hintText: 'Phone', controller: _phoneController, validator: (value) => Utils.validateInput(Validator.phone, value)),
+                          AppTextField(
+                            hintText: 'Password',
+                            suffixIcon: FontAwesomeIcons.eye,
+                            controller: _passwordController,
+                            validator: (value) => Utils.validateInput(Validator.password, value),
+                          ),
+                          const Gap(AppSpacing.bodySmall),
+                          Center(child: AppFilledButton(text: 'Sign Up', onTap: _onRegiester)),
+                          Center(child: Text('OR', style: AppTextStyles.bodyLarge().copyWith(color: Colors.grey.shade600, fontWeight: FontWeight.bold))),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [kSsoButton(icon: FontAwesomeIcons.google), const Gap(AppSpacing.bodyLarge), kSsoButton(icon: FontAwesomeIcons.facebook)],
+                          ),
+                          Row(mainAxisAlignment: MainAxisAlignment.center, children: [termsAndCondition('By signing up, you agree to our ')]),
+                          const Gap(AppSpacing.bodySmall),
+                          screenSwitchTextBtn("Already have Account?", "Log in", () => context.goNamed(GoRoutes.loginRoute)),
+                        ],
+                      ),
                     ),
                   ),
                 ),

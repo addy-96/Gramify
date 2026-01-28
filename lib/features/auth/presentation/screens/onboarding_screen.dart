@@ -1,5 +1,5 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gramify/core/routes/go_routes.dart';
@@ -9,11 +9,19 @@ import 'package:gramify/core/theme/text_styles.dart';
 import 'package:gramify/core/utils.dart';
 import 'package:gramify/core/widgets/app_filled_button.dart';
 import 'package:gramify/core/widgets/app_gradient_scaffold.dart';
+import 'package:gramify/core/widgets/gsnack.dart';
 import 'package:gramify/features/auth/presentation/widgets/screen_switch_text_btn.dart';
 import 'package:gramify/features/auth/presentation/widgets/terms_and_condition.dart';
 
-class OnboardingScreen extends StatelessWidget {
+class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
+
+  @override
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  var _hasAgreedToTerms = false;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +44,12 @@ class OnboardingScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     child: Opacity(
                       opacity: 0.9,
-                      child: Image.asset(height: Utils.getScreenHeight(context) / 4, width: Utils.getScreenWidth(context) / 1.7, 'assets/images/onboarding.png', fit: BoxFit.cover),
+                      child: Image.asset(
+                        height: Utils.getScreenHeight(context) / 4,
+                        width: Utils.getScreenWidth(context) / 1.7,
+                        'assets/images/onboarding.png',
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -45,7 +58,11 @@ class OnboardingScreen extends StatelessWidget {
                 AppFilledButton(
                   text: 'Sign Up Free',
                   onTap: () {
-                    context.pushNamed(GoRoutes.registerRoute);
+                    if (_hasAgreedToTerms) {
+                      context.pushNamed(GoRoutes.registerRoute);
+                    } else {
+                      gSnack(context, "Please agree too terms");
+                    }
                   },
                 ),
                 Row(
@@ -54,11 +71,20 @@ class OnboardingScreen extends StatelessWidget {
                   children: [
                     InkWell(
                       borderRadius: BorderRadius.circular(5),
-                      onTap: () {},
+                      onTap: () {
+                        setState(() => _hasAgreedToTerms = !_hasAgreedToTerms);
+                      },
                       child: Container(
                         height: 25,
                         width: 25,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(width: 2, color: Colors.grey.shade500)),
+                        padding: const EdgeInsets.all(1),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(width: 2, color: Colors.grey.shade500),
+                          color: _hasAgreedToTerms ? Appcolors.brandGreen : null,
+                        ),
+                        child:
+                            _hasAgreedToTerms ? const Center(child: FaIcon(FontAwesomeIcons.check, color: Appcolors.white, size: 20)) : const SizedBox.shrink(),
                       ),
                     ),
                     const Gap(10),

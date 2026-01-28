@@ -9,7 +9,7 @@ Widget termsAndCondition(String initText) => RichText(
     children: [
       TextSpan(text: initText),
       TextSpan(text: "Terms ", style: AppTextStyles.bodyLarge().copyWith(color: Appcolors.brandGreen), recognizer: TapGestureRecognizer()..onTap = () {}),
-      TextSpan(text: "& ", style: AppTextStyles.label()),
+      TextSpan(text: "& ", style: AppTextStyles.label(color: Colors.grey.shade500)),
       TextSpan(text: "Privacy Policy", style: AppTextStyles.label().copyWith(color: Appcolors.brandGreen), recognizer: TapGestureRecognizer()..onTap = () {}),
     ],
   ),

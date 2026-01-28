@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
             AppTextField(hintText: 'Password', suffixIcon: FontAwesomeIcons.eye, controller: _passwordController),
             const Gap(AppSpacing.bodySmall),
             Center(child: AppFilledButton(text: 'Log in', onTap: () {})),
-            screenSwitchTextBtn("Forgot your password?", "Reset password", () {}, false),
+            screenSwitchTextBtn("Forgot your password?", "Reset password", () {}),
             Center(child: Text('OR', style: AppTextStyles.bodyLarge().copyWith(color: Colors.grey.shade600, fontWeight: FontWeight.bold))),
             Row(children: [kSsoButton(icon: FontAwesomeIcons.google), const Gap(AppSpacing.bodyLarge), kSsoButton(icon: FontAwesomeIcons.facebook)]),
             termsAndCondition('By logging in, you agree to our '),

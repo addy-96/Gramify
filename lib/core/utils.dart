@@ -5,19 +5,27 @@ class Utils {
   static double getScreenHeight(BuildContext context) => MediaQuery.of(context).size.height;
   static double getScreenWidth(BuildContext context) => MediaQuery.of(context).size.width;
 
-  static bool validateInput(Validator validator) {
+  static final RegExp _emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+
+  static final RegExp _passwordRegex = RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$');
+
+  static final RegExp _usernameRegex = RegExp(r'^[a-zA-Z0-9_]{3,20}$');
+
+  static final RegExp _phoneRegex = RegExp(r'^\d{10}$');
+
+  static String? validateInput(Validator validator, String text) {
     switch (validator) {
       case Validator.email:
-        return false;
+        return _emailRegex.hasMatch(text);
+
       case Validator.password:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return _passwordRegex.hasMatch(text);
+
       case Validator.username:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return _usernameRegex.hasMatch(text);
+
       case Validator.phone:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return _phoneRegex.hasMatch(text);
     }
   }
 }
