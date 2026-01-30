@@ -141,39 +141,3 @@ class _SignupScreenState extends State<RegisterScreen> {
     }
   }
 }
-
-  // Widget _authOption(String text, {bool showDivider = false}) => Expanded(
-  //   child: Column(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     children: [
-  //       Text(text, style: AppTextStyles.bodyLarge().copyWith(fontWeight: FontWeight.bold)),
-  //       showDivider ? Divider(color: Colors.black, indent: 5, thickness: 3, radius: BorderRadius.circular(100)) : const SizedBox.shrink(),
-  //     ],
-  //   ),
-  // );
-
-                // Padding(
-                //   padding: const EdgeInsets.only(top: AppSpacing.bodyxxLarge),
-                //   child: Row(
-                //     spacing: AppSpacing.bodyxxLarge,
-                //     children: [
-                //       Expanded(
-                //         child: BackdropFilter(
-                //           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                //           blendMode: BlendMode.srcIn,
-                //           child: Container(
-                //             decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(20)),
-                //             height: Utils.getScreenHeight(context) / 14,
-                //             child: Padding(
-                //               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                //               child: Row(children: [_authOption('Sign Up'), _authOption('Login')]),
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //       const FaIcon(FontAwesomeIcons.magnifyingGlass),
-                //       const FaIcon(FontAwesomeIcons.info),
-                //       const FaIcon(FontAwesomeIcons.bell),
-                //     ],
-                //   ),
-                // ),

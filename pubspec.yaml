@@ -34,6 +34,7 @@ flutter:
     - env/env.dev
     - env/env.prod
     - assets/images/
+    - assets/samples/
 
   fonts:
   - family: Inter

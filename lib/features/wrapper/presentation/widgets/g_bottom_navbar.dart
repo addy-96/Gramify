@@ -10,8 +10,9 @@ class GBottomNavbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
       child: Material(
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(100),
         child: Container(
           height: Utils.getScreenHeight(context) / 10,
@@ -24,11 +25,11 @@ class GBottomNavbar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                buildNavItem(context, FontAwesomeIcons.house, 0),
-                buildNavItem(context, FontAwesomeIcons.magnifyingGlass, 1),
+                buildNavItem(context, context.watch<NavBarCubit>().state == 0 ? FontAwesomeIcons.solidHouse : FontAwesomeIcons.house, 0),
+                buildNavItem(context, context.watch<NavBarCubit>().state == 1 ? FontAwesomeIcons.magnifyingGlassPlus : FontAwesomeIcons.magnifyingGlass, 1),
                 buildNavItem(context, FontAwesomeIcons.circlePlus, 2),
-                buildNavItem(context, FontAwesomeIcons.heart, 3),
-                buildNavItem(context, FontAwesomeIcons.user, 4),
+                buildNavItem(context, context.watch<NavBarCubit>().state == 3 ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart, 3),
+                buildNavItem(context, context.watch<NavBarCubit>().state == 4 ? FontAwesomeIcons.solidMap : FontAwesomeIcons.map, 4),
               ],
             ),
           ),
