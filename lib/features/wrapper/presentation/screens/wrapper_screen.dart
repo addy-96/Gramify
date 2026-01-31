@@ -37,20 +37,8 @@ class WrapperScreen extends StatelessWidget {
                   ],
                 ),
                 const Gap(30),
-                Text('Highlights', style: AppTextStyles.titleSmall().copyWith(fontWeight: FontWeight.bold)),
                 const Gap(10),
-                SizedBox(
-                  height: Utils.getScreenHeight(context) / 10,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      for (var i = 0; i < 6; i++)
-                        Padding(padding: const EdgeInsets.all(8.0), child: CircleAvatar(radius: 30, backgroundColor: Colors.grey.shade400)),
-                    ],
-                  ),
-                ),
-                const Gap(10),
-                Expanded(child: ListView(children: const [Post(), Post(), Post(), Post()])),
+                Expanded(child: ListView(children: [_buildHighLights(context), const Post(), const Post(), const Post(), const Post()])),
               ],
             ),
           ),
@@ -59,6 +47,23 @@ class WrapperScreen extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildHighLights(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Highlights', style: AppTextStyles.titleSmall().copyWith(fontWeight: FontWeight.bold)),
+      const Gap(10),
+      SizedBox(
+        height: Utils.getScreenHeight(context) / 10,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: [
+            for (var i = 0; i < 6; i++) Padding(padding: const EdgeInsets.all(8.0), child: CircleAvatar(radius: 30, backgroundColor: Colors.grey.shade400)),
+          ],
+        ),
+      ),
+    ],
+  );
 }
 
 

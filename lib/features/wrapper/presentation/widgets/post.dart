@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gramify/core/theme/text_styles.dart';
-import 'package:gramify/core/utils.dart';
 
 class Post extends StatelessWidget {
   const Post({super.key});
@@ -8,7 +7,7 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: SizedBox(
         width: double.infinity,
         child: Material(
@@ -27,7 +26,6 @@ class Post extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
                 child: SizedBox(
-                  height: Utils.getScreenHeight(context) / 2.5,
                   child: GridView.count(
                     crossAxisCount: 2,
                     shrinkWrap: true,

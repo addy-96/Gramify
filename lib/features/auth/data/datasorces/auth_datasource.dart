@@ -3,13 +3,14 @@ import 'package:gramify/core/backend/api_routes.dart';
 import 'package:gramify/core/errors/exceptions.dart';
 import 'package:gramify/core/network/dio_service.dart';
 import 'package:gramify/core/shared_pref_repo.dart';
+import 'package:gramify/features/auth/data/models/auth_token_model.dart';
 import 'package:gramify/features/wrapper/data/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract interface class AuthDatasource {
-  Future<UserModel?> signUp({required String email, required String password, required String username, required String phone});
-  Future<UserModel?> login({required String email, required String password});
-  Future<UserModel?> logOut();
+  Future<AuthTokenModel> signUp({required String email, required String password, required String username, required String phone});
+  Future<AuthTokenModel> login({required String email, required String password});
+  Future<void> logOut();
   Future<bool> changePassword({required String email});
 }
 
@@ -24,12 +25,12 @@ class AuthDatasourceImpl implements AuthDatasource {
   }
 
   @override
-  Future<UserModel?> login({required String email, required String password}) async {
+  Future<AuthTokenModel> login({required String email, required String password}) async {
     try {
       final response = await dioService.dio.post(ApiRoutes.loginAPI, data: {'email': email, 'password': password});
       pref.setString('accessToken', response.data['data']['accessToken']);
       pref.setString('refreshToken', response.data['data']['refreshToken']);
-      return UserModel.fromJson(response.data['data']);
+      return AuthTokenModel.fromJson(response.data['data']);
     } on ApiExceptions catch (_) {
       rethrow;
     } on DioException catch (e) {
@@ -40,12 +41,12 @@ class AuthDatasourceImpl implements AuthDatasource {
   }
 
   @override
-  Future<UserModel?> signUp({required String email, required String password, required String username, required String phone}) async {
+  Future<AuthTokenModel> signUp({required String email, required String password, required String username, required String phone}) async {
     try {
       final response = await dioService.dio.post(ApiRoutes.registerAPI, data: {'email': email, 'password': password, 'username': username, 'phone': phone});
       pref.setString(SharedPrefRepo.accessToken, response.data['data']['accessToken']);
       pref.setString(SharedPrefRepo.refreshToken, response.data['data']['refreshToken']);
-      return UserModel.fromJson(response.data);
+      return AuthTokenModel.fromJson(response.data['data']);
     } on ApiExceptions catch (_) {
       rethrow;
     } on DioException catch (e) {
@@ -56,7 +57,7 @@ class AuthDatasourceImpl implements AuthDatasource {
   }
 
   @override
-  Future<UserModel?> logOut() {
+  Future<void> logOut() {
     throw UnimplementedError();
   }
 }

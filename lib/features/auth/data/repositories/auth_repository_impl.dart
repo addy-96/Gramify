@@ -2,7 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:gramify/core/errors/exceptions.dart';
 import 'package:gramify/core/errors/failure.dart';
 import 'package:gramify/features/auth/data/datasorces/auth_datasource.dart';
-import 'package:gramify/features/wrapper/domain/entities/user.dart';
+import 'package:gramify/features/auth/domain/entites/auth_token.dart';
 import 'package:gramify/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -15,13 +15,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> login({required String email, required String password}) async {
+  Future<Either<Failure, AuthToken>> login({required String email, required String password}) async {
     try {
-      final userModel = await authDatasource.login(email: email, password: password);
-      if (userModel == null) {
-        return left(const ServerFailure('User is null'));
-      }
-      return right(userModel);
+      final authTokens = await authDatasource.login(email: email, password: password);
+      return right(authTokens);
     } on ApiExceptions catch (e) {
       return left(ServerFailure(e.errorMessage));
     } catch (e) {
@@ -30,13 +27,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> signUp({required String email, required password, required String username, required String phone}) async {
+  Future<Either<Failure, AuthToken>> signUp({required String email, required password, required String username, required String phone}) async {
     try {
-      final userModel = await authDatasource.signUp(email: email, password: password, username: username, phone: phone);
-      if (userModel == null) {
-        return left(const ServerFailure('User is null'));
-      }
-      return right(userModel);
+      final authTokens = await authDatasource.signUp(email: email, password: password, username: username, phone: phone);
+      return right(authTokens);
     } on ApiExceptions catch (e) {
       return left(ServerFailure(e.errorMessage));
     } catch (e) {
