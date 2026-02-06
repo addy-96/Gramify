@@ -80,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             hintText: 'Email Address',
                             controller: _emailController,
                             inputType: TextInputType.emailAddress,
-                            validator: (value) => Utils.validateInput(Validator.email, value),
+                            validator: (value) => Utils.validateTextFieldInput(Validator.email, value),
                           ),
                           const Gap(AppSpacing.bodyxLarge),
                           AppTextField(
@@ -88,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             controller: _passwordController,
                             suffixIcon: FontAwesomeIcons.eye,
                             obsecure: true,
-                            validator: (value) => Utils.validateInput(Validator.password, value),
+                            validator: (value) => Utils.validateTextFieldInput(Validator.password, value),
                           ),
                           const Gap(AppSpacing.bodyxLarge),
                           Center(child: AppFilledButton(text: 'Log in', onTap: _onLogin)),

@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:gramify/core/enums.dart';
+import 'package:gramify/core/errors/exceptions.dart';
+import 'package:gramify/core/models.dart';
 
 class Utils {
   static double getScreenHeight(BuildContext context) => MediaQuery.of(context).size.height;
@@ -13,7 +16,7 @@ class Utils {
 
   static final RegExp _phoneRegex = RegExp(r'^\d{10}$');
 
-  static String? validateInput(Validator validator, String text) {
+  static String? validateTextFieldInput(Validator validator, String text) {
     switch (validator) {
       case Validator.email:
         if (_emailRegex.hasMatch(text)) {
@@ -39,5 +42,10 @@ class Utils {
         }
         return "Please enter a valid 10-digit phone number";
     }
+  }
+
+  static GResponse handleAPIResposne(Response res) {
+    if (res.statusCode != null && res.statusCode! >= 200 && res.statusCode! < 300) return GResponse(message: res.data['msg'], jsonData: res.data['data']);
+    throw ApiExceptions(errorMessage: res.data['msg']);
   }
 }

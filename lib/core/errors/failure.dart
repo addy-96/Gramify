@@ -14,3 +14,7 @@ class ServerFailure extends Failure {
 class ValidationFailure extends Failure {
   const ValidationFailure(super.message);
 }
+
+class LocalFailure extends Failure {
+  const LocalFailure(super.message);
+}

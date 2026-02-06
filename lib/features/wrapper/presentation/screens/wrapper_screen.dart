@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gramify/core/routes/go_routes.dart';
 import 'package:gramify/core/theme/spacing.dart';
 import 'package:gramify/core/theme/text_styles.dart';
 import 'package:gramify/core/utils.dart';
 import 'package:gramify/core/widgets/app_gradient_scaffold.dart';
+import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:gramify/features/auth/presentation/bloc/auth_events.dart';
 import 'package:gramify/features/wrapper/presentation/widgets/g_bottom_navbar.dart';
 import 'package:gramify/features/wrapper/presentation/widgets/post.dart';
 
@@ -33,10 +38,15 @@ class WrapperScreen extends StatelessWidget {
                         Text('Username', style: AppTextStyles.bodyLarge().copyWith(fontWeight: FontWeight.bold)),
                       ],
                     ),
-                    IconButton(onPressed: () {}, icon: const FaIcon(FontAwesomeIcons.message, color: Colors.black87)),
+                    IconButton(
+                      onPressed: () {
+                        context.read<AuthBloc>().add(LogOutEvent());
+                        context.goNamed(GoRoutes.loginRoute);
+                      },
+                      icon: const FaIcon(FontAwesomeIcons.message, color: Colors.black87),
+                    ),
                   ],
                 ),
-                const Gap(30),
                 const Gap(10),
                 Expanded(child: ListView(children: [_buildHighLights(context), const Post(), const Post(), const Post(), const Post()])),
               ],

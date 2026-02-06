@@ -1,6 +1,10 @@
 class ApiRoutes {
   //auth
-  static const registerAPI = 'auth/register';
-  static const loginAPI = 'auth/login';
-  static const changePassword = 'auth/changePasswod';
+  static const registerAPIroute = 'auth/register';
+  static const loginAPIroute = 'auth/login';
+  static const changePasswordAPIroute = 'auth/changePasswod';
+  static const refreshAPIroute = 'auth/refresh';
+
+  //user 
+  static const userRoute = 'user/';
 }

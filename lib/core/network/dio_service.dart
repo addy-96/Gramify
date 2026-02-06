@@ -7,7 +7,7 @@ class DioService {
 
   void addInterceptors() {
     if (authInterceptor != null) {
-      dio.interceptors.addAll([LogInterceptor(), authInterceptor!]);
+      dio.interceptors.addAll([authInterceptor!]);
     }
   }
 
@@ -23,5 +23,6 @@ class DioService {
     if (authorization) {
       addInterceptors();
     }
+    dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true, error: true));
   }
 }

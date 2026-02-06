@@ -16,4 +16,6 @@ final class SignUpEvent extends AuthEvents {
   SignUpEvent({required this.email, required this.password, required this.phone, required this.username});
 }
 
+final class LogOutEvent extends AuthEvents {}
+
 final class CheckAuthStatusEvent extends AuthEvents {}

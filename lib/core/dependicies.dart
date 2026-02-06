@@ -8,6 +8,7 @@ import 'package:gramify/features/auth/data/datasorces/auth_datasource.dart';
 import 'package:gramify/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:gramify/features/auth/domain/repositories/auth_repository.dart';
 import 'package:gramify/features/auth/domain/usecases/login_usecase.dart';
+import 'package:gramify/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:gramify/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,13 +37,13 @@ void _initServer() {
 }
 
 void _initAuth() {
-  serviceLocator.registerSingleton<AuthDatasource>(
-    AuthDatasourceImpl(apiRoutes: serviceLocator(), dioService: serviceLocator(instanceName: 'noAuth'), pref: serviceLocator()),
-  );
+  serviceLocator.registerSingleton<AuthDatasource>(AuthDatasourceImpl(apiRoutes: serviceLocator(), dioService: serviceLocator(instanceName: 'noAuth')));
 
-  serviceLocator.registerSingleton<AuthRepository>(AuthRepositoryImpl(authDatasource: serviceLocator()));
+  serviceLocator.registerSingleton<AuthRepository>(AuthRepositoryImpl(authDatasource: serviceLocator(), pref: serviceLocator()));
 
   serviceLocator.registerSingleton<SignupUsecase>(SignupUsecase(authRepository: serviceLocator()));
 
   serviceLocator.registerSingleton<LoginUsecase>(LoginUsecase(authRepository: serviceLocator()));
+
+  serviceLocator.registerSingleton<LogoutUsecase>(LogoutUsecase(authRepository: serviceLocator()));
 }
