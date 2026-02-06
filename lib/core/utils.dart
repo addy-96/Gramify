@@ -41,6 +41,18 @@ class Utils {
           return null;
         }
         return "Please enter a valid 10-digit phone number";
+      case Validator.firstName:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case Validator.lastName:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case Validator.state:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case Validator.country:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 

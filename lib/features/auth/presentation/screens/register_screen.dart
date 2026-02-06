@@ -11,7 +11,7 @@ import 'package:gramify/core/utils.dart';
 import 'package:gramify/core/widgets/app_filled_button.dart';
 import 'package:gramify/core/widgets/app_gradient_scaffold.dart';
 import 'package:gramify/core/widgets/app_text_field.dart';
-import 'package:gramify/core/widgets/gsnack.dart';
+import 'package:gramify/core/widgets/app_snack.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_events.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_states.dart';
@@ -51,7 +51,7 @@ class _SignupScreenState extends State<RegisterScreen> {
             context.goNamed(GoRoutes.wrapperRoute);
           }
           if (state is AuthErrorState) {
-            gSnack(context, state.message);
+            appSnack(context, state.message);
           }
         },
         builder: (context, state) {

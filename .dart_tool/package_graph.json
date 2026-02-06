@@ -9,6 +9,7 @@
       "dependencies": [
         "cupertino_icons",
         "dio",
+        "dotted_border",
         "flutter",
         "flutter_bloc",
         "flutter_dotenv",
@@ -48,6 +49,13 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "dotted_border",
+      "version": "3.1.0",
+      "dependencies": [
+        "flutter"
       ]
     },
     {

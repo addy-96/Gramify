@@ -3,4 +3,5 @@ class GoRoutes {
   static const loginRoute = 'login';
   static const registerRoute = 'regiester';
   static const wrapperRoute = 'wrapper';
+  static const fillProfileRoute = 'fill-profile';
 }

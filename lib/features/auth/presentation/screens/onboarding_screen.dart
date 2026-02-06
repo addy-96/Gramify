@@ -10,7 +10,7 @@ import 'package:gramify/core/theme/text_styles.dart';
 import 'package:gramify/core/utils.dart';
 import 'package:gramify/core/widgets/app_filled_button.dart';
 import 'package:gramify/core/widgets/app_gradient_scaffold.dart';
-import 'package:gramify/core/widgets/gsnack.dart';
+import 'package:gramify/core/widgets/app_snack.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_events.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_states.dart';
@@ -41,7 +41,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: BlocConsumer<AuthBloc, AuthStates>(
           listener: (context, state) {
             if (state is AuthErrorState) {
-              gSnack(context, state.message);
+              appSnack(context, state.message);
             } else if (state is AuthenticatedState) {
               context.goNamed(GoRoutes.wrapperRoute);
             }
@@ -83,7 +83,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         if (_hasAgreedToTerms) {
                           context.pushNamed(GoRoutes.registerRoute);
                         } else {
-                          gSnack(context, "Please agree to terms!");
+                          appSnack(context, "Please agree to terms!");
                         }
                       },
                     ),

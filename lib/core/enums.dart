@@ -1,6 +1,1 @@
-enum Validator {
-  email,
-  password,
-  username,
-  phone,
-}
+enum Validator { email, password, username, phone, firstName, lastName, state, country }
