@@ -15,3 +15,5 @@ final class AuthErrorState extends AuthStates {
   final String message;
   AuthErrorState({required this.message});
 }
+
+final class ProfileNotFilledState extends AuthStates {}

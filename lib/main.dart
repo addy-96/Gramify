@@ -36,7 +36,14 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
-          create: (_) => AuthBloc(signupUsecase: serviceLocator(), loginUsecase: serviceLocator(), pref: serviceLocator(), logoutUsecase: serviceLocator()),
+          create:
+              (_) => AuthBloc(
+                signupUsecase: serviceLocator(),
+                loginUsecase: serviceLocator(),
+                pref: serviceLocator(),
+                logoutUsecase: serviceLocator(),
+                checkProfileUsecase: serviceLocator(),
+              ),
         ),
         BlocProvider<NavBarCubit>(create: (_) => NavBarCubit()),
       ],

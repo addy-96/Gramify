@@ -8,6 +8,7 @@ import 'package:gramify/features/auth/data/models/auth_token_model.dart';
 abstract interface class AuthDatasource {
   Future<AuthTokenModel> signUp({required String email, required String password, required String username, required String phone});
   Future<AuthTokenModel> login({required String email, required String password});
+  Future<bool> checkIfProfileFilled({required String refreshToken});
   Future<bool> changePassword({required String email});
 }
 
@@ -39,7 +40,10 @@ class AuthDatasourceImpl implements AuthDatasource {
   @override
   Future<AuthTokenModel> signUp({required String email, required String password, required String username, required String phone}) async {
     try {
-      final response = await dioService.dio.post(ApiRoutes.registerAPIroute, data: {'email': email, 'password': password, 'username': username, 'phone': phone});
+      final response = await dioService.dio.post(
+        ApiRoutes.registerAPIroute,
+        data: {'email': email, 'password': password, 'username': username, 'phone': phone},
+      );
       return AuthTokenModel.fromJson(Utils.handleAPIResposne(response).jsonData);
     } on ApiExceptions catch (_) {
       rethrow;
@@ -47,6 +51,17 @@ class AuthDatasourceImpl implements AuthDatasource {
       throw ApiExceptions(errorMessage: e.response?.data['msg'] ?? e.response?.statusCode);
     } catch (err) {
       throw ApiExceptions(errorMessage: err.toString(), statusCode: 407);
+    }
+  }
+
+  @override
+  Future<bool> checkIfProfileFilled({required String refreshToken}) async {
+    try {
+      final response = await dioService.dio.get(ApiRoutes.checkProfileAPIroute);
+      if (response.statusCode == 200) return true;
+      return false;
+    } catch (err) {
+      throw ApiExceptions(errorMessage: err.toString());
     }
   }
 }

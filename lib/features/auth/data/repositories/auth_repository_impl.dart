@@ -55,4 +55,15 @@ class AuthRepositoryImpl implements AuthRepository {
       return left(LocalFailure(err.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, bool>> checkIfProfileFilled() async {
+    try {
+      final refreshToken = pref.getString(SharedPrefRepo.refreshToken);
+      final res = await authDatasource.checkIfProfileFilled(refreshToken: refreshToken!);
+      return right(res);
+    } catch (err) {
+      return left(LocalFailure(err.toString()));
+    }
+  }
 }

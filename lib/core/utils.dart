@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gramify/core/enums.dart';
 import 'package:gramify/core/errors/exceptions.dart';
 import 'package:gramify/core/models.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Utils {
   static double getScreenHeight(BuildContext context) => MediaQuery.of(context).size.height;
@@ -42,22 +43,36 @@ class Utils {
         }
         return "Please enter a valid 10-digit phone number";
       case Validator.firstName:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        if (text.trim().isEmpty) {
+          return "This field cannot be empty";
+        }
+        return null;
       case Validator.lastName:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        if (text.trim().isEmpty) {
+          return "This field cannot be empty";
+        }
+        return null;
       case Validator.state:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        if (text.trim().isEmpty) {
+          return "This field cannot be empty";
+        }
+        return null;
       case Validator.country:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        if (text.trim().isEmpty) {
+          return "This field cannot be empty";
+        }
+        return null;
     }
   }
 
   static GResponse handleAPIResposne(Response res) {
     if (res.statusCode != null && res.statusCode! >= 200 && res.statusCode! < 300) return GResponse(message: res.data['msg'], jsonData: res.data['data']);
     throw ApiExceptions(errorMessage: res.data['msg']);
+  }
+
+  static Future<XFile?> pickImageFromGallery() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    return image;
   }
 }

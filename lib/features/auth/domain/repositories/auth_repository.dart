@@ -7,4 +7,5 @@ abstract interface class AuthRepository {
   Future<Either<Failure, AuthToken>> login({required String email, required String password});
   Future<Either<Failure, bool>> logOut();
   Future<Either<Failure, bool>> changePassword({required String email, required String otp});
+  Future<Either<Failure, bool>> checkIfProfileFilled();
 }

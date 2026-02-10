@@ -32,6 +32,7 @@ class _SignupScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  bool _hasCHeckkProfileFilled = false;
 
   @override
   void dispose() {
@@ -48,10 +49,18 @@ class _SignupScreenState extends State<RegisterScreen> {
       body: BlocConsumer<AuthBloc, AuthStates>(
         listener: (context, state) {
           if (state is AuthenticatedState) {
-            context.goNamed(GoRoutes.wrapperRoute);
+            if (_hasCHeckkProfileFilled) {
+              context.goNamed(GoRoutes.wrapperRoute);
+              return;
+            }
+            context.read<AuthBloc>().add(CheckIfUserFilledProfileEvent(authToken: state.authToken));
+            _hasCHeckkProfileFilled = true;
           }
           if (state is AuthErrorState) {
             appSnack(context, state.message);
+          }
+          if (state is ProfileNotFilledState) {
+            context.goNamed(GoRoutes.fillProfileRoute);
           }
         },
         builder: (context, state) {
