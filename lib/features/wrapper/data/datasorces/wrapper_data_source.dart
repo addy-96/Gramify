@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class WrapperDataSource {
   Future<UserModel> fetchUser();
   Future<UserModel> editProfile(ProfileModel user);
+  Future<String> uploadUserProfileImage(String filePath);
 }
 
 class RemoteDataSourceImpl implements WrapperDataSource {
@@ -44,5 +45,10 @@ class RemoteDataSourceImpl implements WrapperDataSource {
     } catch (err) {
       throw ApiExceptions(errorMessage: err.toString());
     }
+  }
+
+  @override
+  Future<String> uploadUserProfileImage(String filePath) async {
+    throw UnimplementedError();
   }
 }

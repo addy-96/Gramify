@@ -1,5 +1,3 @@
-import 'package:gramify/features/auth/domain/entites/auth_token.dart';
-
 sealed class AuthEvents {}
 
 final class LoginEvent extends AuthEvents {
@@ -18,11 +16,11 @@ final class SignUpEvent extends AuthEvents {
   SignUpEvent({required this.email, required this.password, required this.phone, required this.username});
 }
 
-final class CheckIfUserFilledProfileEvent extends AuthEvents {
-  final AuthToken authToken;
-  CheckIfUserFilledProfileEvent({required this.authToken});
-}
-
 final class LogOutEvent extends AuthEvents {}
 
 final class CheckAuthStatusEvent extends AuthEvents {}
+
+final class CheckUsernameAvailablity extends AuthEvents {
+  final String username;
+  CheckUsernameAvailablity({required this.username});
+}

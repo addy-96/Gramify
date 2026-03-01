@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:gramify/core/bloc_observer.dart';
 import 'package:gramify/core/dependicies.dart';
 import 'package:gramify/core/routes/go_router.dart';
 import 'package:gramify/features/auth/presentation/bloc/auth_bloc.dart';
@@ -10,6 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await loadEnv();
   await initDependcies();
+  Bloc.observer = BlocObserverImpl();
   runApp(const MyApp());
 }
 
@@ -42,7 +44,7 @@ class MyApp extends StatelessWidget {
                 loginUsecase: serviceLocator(),
                 pref: serviceLocator(),
                 logoutUsecase: serviceLocator(),
-                checkProfileUsecase: serviceLocator(),
+                checkUsernameUsecase: serviceLocator(),
               ),
         ),
         BlocProvider<NavBarCubit>(create: (_) => NavBarCubit()),

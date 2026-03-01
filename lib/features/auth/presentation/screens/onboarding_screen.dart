@@ -25,7 +25,7 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  var _hasAgreedToTerms = false;
+  bool _hasAgreedToTerms = false;
 
   @override
   void initState() {
@@ -38,16 +38,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return AppGradientScaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.bodyxLarge),
-        child: BlocConsumer<AuthBloc, AuthStates>(
+        child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
-            if (state is AuthErrorState) {
-              appSnack(context, state.message);
-            } else if (state is AuthenticatedState) {
+            if (state.errorMessage != null) {
+              appSnack(context, state.errorMessage!);
+            }
+            if (state.isAuthenticated) {
               context.goNamed(GoRoutes.wrapperRoute);
             }
           },
           builder: (context, state) {
-            if (state is AuthLoadingState) {
+            // Show loading spinner if isLoading
+            if (state.isLoading) {
               return const Center(child: CircularProgressIndicator(color: Appcolors.white));
             }
             return Column(
@@ -93,9 +95,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       children: [
                         InkWell(
                           borderRadius: BorderRadius.circular(5),
-                          onTap: () {
-                            setState(() => _hasAgreedToTerms = !_hasAgreedToTerms);
-                          },
+                          onTap: () => setState(() => _hasAgreedToTerms = !_hasAgreedToTerms),
                           child: Container(
                             height: 25,
                             width: 25,

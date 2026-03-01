@@ -31,12 +31,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _onLogin() {
-    if (_formKey.currentState!.validate()) {
-      context.read<AuthBloc>().add(LoginEvent(email: _emailController.text.trim(), password: _passwordController.text.trim()));
-    }
-  }
-
   @override
   void dispose() {
     _emailController.dispose();
@@ -47,17 +41,17 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return AppGradientScaffold(
-      body: BlocConsumer<AuthBloc, AuthStates>(
+      body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthenticatedState) {
+          if (state.isAuthenticated) {
             context.goNamed(GoRoutes.wrapperRoute);
           }
-          if (state is AuthErrorState) {
-            appSnack(context, state.message);
+          if (state.errorMessage != null) {
+            appSnack(context, state.errorMessage!);
           }
         },
         builder: (context, state) {
-          if (state is AuthLoadingState) {
+          if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
           return SafeArea(
@@ -114,5 +108,11 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       ),
     );
+  }
+
+  void _onLogin() {
+    if (_formKey.currentState!.validate()) {
+      context.read<AuthBloc>().add(LoginEvent(email: _emailController.text.trim(), password: _passwordController.text.trim()));
+    }
   }
 }

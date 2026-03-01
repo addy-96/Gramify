@@ -8,8 +8,8 @@ import 'package:gramify/features/auth/data/models/auth_token_model.dart';
 abstract interface class AuthDatasource {
   Future<AuthTokenModel> signUp({required String email, required String password, required String username, required String phone});
   Future<AuthTokenModel> login({required String email, required String password});
-  Future<bool> checkIfProfileFilled({required String refreshToken});
   Future<bool> changePassword({required String email});
+  Future<bool> checkUsernameAvailability({required String typedUsername});
 }
 
 class AuthDatasourceImpl implements AuthDatasource {
@@ -55,13 +55,16 @@ class AuthDatasourceImpl implements AuthDatasource {
   }
 
   @override
-  Future<bool> checkIfProfileFilled({required String refreshToken}) async {
+  Future<bool> checkUsernameAvailability({required String typedUsername}) async {
     try {
-      final response = await dioService.dio.get(ApiRoutes.checkProfileAPIroute);
-      if (response.statusCode == 200) return true;
-      return false;
+      final response = await dioService.dio.get(ApiRoutes.checkUsernameAPIroute, data: {'typedusername': typedUsername});
+      return response.statusCode == 200;
+    } on ApiExceptions catch (_) {
+      rethrow;
+    } on DioException catch (e) {
+      throw ApiExceptions(errorMessage: e.response?.data['msg'] ?? e.response?.statusCode);
     } catch (err) {
-      throw ApiExceptions(errorMessage: err.toString());
+      throw ApiExceptions(errorMessage: err.toString(), statusCode: 407);
     }
   }
 }

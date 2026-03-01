@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gramify/core/debouncer.dart';
 import 'package:gramify/core/enums.dart';
 import 'package:gramify/core/routes/go_routes.dart';
 import 'package:gramify/core/theme/spacing.dart';
@@ -32,7 +33,7 @@ class _SignupScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  bool _hasCHeckkProfileFilled = false;
+  final _debouncer = Debouncer(milliseconds: 1000);
 
   @override
   void dispose() {
@@ -46,25 +47,17 @@ class _SignupScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return AppGradientScaffold(
-      body: BlocConsumer<AuthBloc, AuthStates>(
+      body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthenticatedState) {
-            if (_hasCHeckkProfileFilled) {
-              context.goNamed(GoRoutes.wrapperRoute);
-              return;
-            }
-            context.read<AuthBloc>().add(CheckIfUserFilledProfileEvent(authToken: state.authToken));
-            _hasCHeckkProfileFilled = true;
+          if (state.isAuthenticated) {
+            context.goNamed(GoRoutes.wrapperRoute);
           }
-          if (state is AuthErrorState) {
-            appSnack(context, state.message);
-          }
-          if (state is ProfileNotFilledState) {
-            context.goNamed(GoRoutes.fillProfileRoute);
+          if (state.errorMessage != null) {
+            appSnack(context, state.errorMessage!);
           }
         },
         builder: (context, state) {
-          if (state is AuthLoadingState) {
+          if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
           return SafeArea(
@@ -86,12 +79,20 @@ class _SignupScreenState extends State<RegisterScreen> {
                           const Gap(AppSpacing.componentLarge),
                           Text('Create Your account', style: AppTextStyles.titleLarge().copyWith(fontWeight: FontWeight.bold)),
                           AppTextField(
+                            onChanged: _onChanged,
                             maxLength: 20,
                             inputType: TextInputType.text,
                             hintText: 'Username',
                             controller: _usernameController,
                             validator: (value) => Utils.validateTextFieldInput(Validator.username, value),
                           ),
+                          if (state.usernameStatus == UsernameStatus.checking)
+                            const Padding(
+                              padding: EdgeInsets.only(left: 8.0),
+                              child: SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+                            ),
+                          if (state.usernameStatus == UsernameStatus.available) const Icon(Icons.check, color: Colors.green),
+                          if (state.usernameStatus == UsernameStatus.unavailable) const Icon(Icons.close, color: Colors.red),
                           AppTextField(
                             hintText: 'Email Address',
                             inputType: TextInputType.emailAddress,
@@ -148,5 +149,12 @@ class _SignupScreenState extends State<RegisterScreen> {
         ),
       );
     }
+  }
+
+  void _onChanged(String value) {
+    if (value == "" || value.trim().isEmpty) return;
+    _debouncer.run(() {
+      context.read<AuthBloc>().add(CheckUsernameAvailablity(username: value));
+    });
   }
 }

@@ -57,13 +57,12 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> checkIfProfileFilled() async {
+  Future<Either<Failure, bool>> checkUsernameAvailabilty({required String typedUsername}) async {
     try {
-      final refreshToken = pref.getString(SharedPrefRepo.refreshToken);
-      final res = await authDatasource.checkIfProfileFilled(refreshToken: refreshToken!);
-      return right(res);
+      final isAvailable = await authDatasource.checkUsernameAvailability(typedUsername: typedUsername);
+      return right(isAvailable);
     } catch (err) {
-      return left(LocalFailure(err.toString()));
+      return left(ServerFailure(err.toString()));
     }
   }
 }

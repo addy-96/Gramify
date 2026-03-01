@@ -2,7 +2,6 @@ import 'package:fpdart/fpdart.dart';
 import 'package:gramify/core/errors/failure.dart';
 import 'package:gramify/features/wrapper/data/datasorces/wrapper_data_source.dart';
 import 'package:gramify/features/wrapper/data/models/profile_model.dart';
-import 'package:gramify/features/wrapper/data/models/user_model.dart';
 import 'package:gramify/features/wrapper/domain/entities/profile.dart';
 import 'package:gramify/features/wrapper/domain/entities/user.dart';
 import 'package:gramify/features/wrapper/domain/repositories/wrapper_repository.dart';
@@ -36,5 +35,11 @@ class WrapperRepositoriesImpl implements WrapperRepository {
     } catch (err) {
       return left(ServerFailure(err.toString()));
     }
+  }
+  
+  @override
+  Future<Either<Failure, String>> uploadUserProfileImage(String filePath) {
+    // TODO: implement uploadUserProfileImage
+    throw UnimplementedError();
   }
 }

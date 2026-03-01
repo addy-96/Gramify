@@ -1,19 +1,19 @@
-import 'package:gramify/features/auth/domain/entites/auth_token.dart';
+enum UsernameStatus { initial, checking, available, unavailable }
 
-sealed class AuthStates {}
+class AuthState {
+  final bool isLoading;
+  final bool isAuthenticated;
+  final String? errorMessage;
+  final UsernameStatus usernameStatus;
 
-final class AuthLoadingState extends AuthStates {}
+  AuthState({this.isLoading = false, this.isAuthenticated = false, this.errorMessage, this.usernameStatus = UsernameStatus.initial});
 
-final class AuthenticatedState extends AuthStates {
-  final AuthToken authToken;
-  AuthenticatedState({required this.authToken});
+  AuthState copyWith({bool? isLoading, bool? isAuthenticated, String? errorMessage, UsernameStatus? usernameStatus}) {
+    return AuthState(
+      isLoading: isLoading ?? this.isLoading,
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+      errorMessage: errorMessage,
+      usernameStatus: usernameStatus ?? this.usernameStatus,
+    );
+  }
 }
-
-final class UnAuthenticatedState extends AuthStates {}
-
-final class AuthErrorState extends AuthStates {
-  final String message;
-  AuthErrorState({required this.message});
-}
-
-final class ProfileNotFilledState extends AuthStates {}

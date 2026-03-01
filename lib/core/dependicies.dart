@@ -7,7 +7,7 @@ import 'package:gramify/core/shared_pref_repo.dart';
 import 'package:gramify/features/auth/data/datasorces/auth_datasource.dart';
 import 'package:gramify/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:gramify/features/auth/domain/repositories/auth_repository.dart';
-import 'package:gramify/features/auth/domain/usecases/check_profile_usecase.dart';
+import 'package:gramify/features/auth/domain/usecases/check_username_usecase.dart';
 import 'package:gramify/features/auth/domain/usecases/login_usecase.dart';
 import 'package:gramify/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:gramify/features/auth/domain/usecases/signup_usecase.dart';
@@ -48,5 +48,5 @@ void _initAuth() {
 
   serviceLocator.registerSingleton<LogoutUsecase>(LogoutUsecase(authRepository: serviceLocator()));
 
-  serviceLocator.registerSingleton<CheckProfileUsecase>(CheckProfileUsecase(authRepository: serviceLocator()));
+  serviceLocator.registerSingleton<CheckUsernameUsecase>(CheckUsernameUsecase(authRepository: serviceLocator()));
 }

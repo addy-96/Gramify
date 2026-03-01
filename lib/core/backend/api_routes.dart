@@ -4,8 +4,7 @@ class ApiRoutes {
   static const loginAPIroute = 'auth/login';
   static const changePasswordAPIroute = 'auth/changePasswod';
   static const refreshAPIroute = 'auth/refresh';
-  static const checkProfileAPIroute = 'auth/profile-check';
-
+  static const checkUsernameAPIroute = 'auth/check-username';
   //user
   static const userRouteAPIroute = 'user/';
   static const editProfileAPIroute = 'user/edit';

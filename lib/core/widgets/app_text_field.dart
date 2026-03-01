@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gramify/core/theme/text_styles.dart';
 
 class AppTextField extends StatefulWidget {
-  AppTextField({super.key, required this.hintText, this.suffixIcon, required this.controller, this.validator, this.maxLength, this.inputType, this.obsecure});
+  AppTextField({super.key, required this.hintText, this.suffixIcon, required this.controller, this.validator, this.maxLength, this.inputType, this.obsecure, this.onChanged});
   final String hintText;
   final IconData? suffixIcon;
   final TextEditingController controller;
@@ -11,6 +11,7 @@ class AppTextField extends StatefulWidget {
   final int? maxLength;
   final TextInputType? inputType;
   bool? obsecure = false;
+  ValueChanged<String>? onChanged;
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -27,6 +28,7 @@ class _AppTextFieldState extends State<AppTextField> {
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 5, offset: const Offset(0, 2))],
       ),
       child: TextFormField(
+        onChanged: widget.onChanged,
         keyboardType: widget.inputType,
         maxLength: widget.maxLength,
         obscureText: widget.obsecure ?? false,
